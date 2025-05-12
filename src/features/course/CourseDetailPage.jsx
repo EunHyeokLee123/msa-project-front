@@ -33,7 +33,7 @@ import { API_BASE_URL, COURSE } from '../../configs/host-config';
 
 const CourseDetail = ({ courseId }) => {
   const [course, setCourse] = useState(null);
-  const { addCart } = useContext(CartContext);
+  const { addCart, orderCourse } = useContext(CartContext);
   const navigate = useNavigate();
   //임시
   courseId = 3;
@@ -73,6 +73,19 @@ const CourseDetail = ({ courseId }) => {
     }
   };
 
+  // 수강신청하기 클릭 이벤트 핸들러
+  const handleOrderCourse = () => {
+    const product = {
+      id: course.productId,
+      name: course.productName,
+      price: course.price,
+    };
+
+    console.log('구매할 강의:', product);
+    orderCourse(product);
+    navigate('/order/cart');
+  };
+
   return (
     <div className='course-detail'>
       <div className='course-header'>
@@ -86,7 +99,7 @@ const CourseDetail = ({ courseId }) => {
         <div className='side-info'>
           <div className='price'>{course.price.toLocaleString()}원</div>
           <button onClick={handleAddToCart}>장바구니 담기</button>
-          <button onClick={handleAddToCart}>수강신청 하기</button>
+          <button onClick={handleOrderCourse}>수강신청 하기</button>
           {/* <ul>
                         <li>강의 수: {course.courseCount}개</li>
                         <li>총 시간: {course.duration}</li>

@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 
 // 리듀서 함수 정의
 const cartReducer = (state, action) => {
@@ -27,6 +27,34 @@ const cartReducer = (state, action) => {
         };
       }
 
+    case 'ORDER_COURSE':
+      const existProduct = state.productsInCart.find(
+        (p) => p.id === action.product.id,
+      );
+
+      let updatedProducts;
+      let updatedSelected;
+
+      if (existProduct) {
+        // 이미 장바구니에 있는 경우. 체크만
+        updatedProducts = state.productsInCart;
+        updatedSelected = [...state.selectedProductIds, action.product.id];
+      } else {
+        // 없으면 추가하고 체크
+        updatedProducts = [...state.productsInCart, action.product];
+        sessionStorage.setItem(
+          'productsInCart',
+          JSON.stringify(updatedProducts),
+        );
+        updatedSelected = [...state.selectedProductIds, action.product.id];
+      }
+
+      return {
+        ...state,
+        productsInCart: updatedProducts,
+        selectedProductIds: updatedSelected,
+      };
+
     case 'CLEAR_CART':
       sessionStorage.clear();
       return {
@@ -47,6 +75,7 @@ export const CartContextProvider = (props) => {
     // JSON 문자열로 저장한 객체, 배열을 JS 타입으로 변환하는 JSON.parse()
     // totalQuantity는 정수로 변환 -> 연산해야 되니까.
     productsInCart: JSON.parse(sessionStorage.getItem('productsInCart')) || [],
+    selectedProductIds: [],
   });
 
   const addCart = (product) => {
@@ -54,7 +83,16 @@ export const CartContextProvider = (props) => {
       type: 'ADD_CART',
       product,
     });
-    // console.log('장바구니: ', cartState);
+  };
+
+  const [forceSelectProductId, setForceSelectProductId] = useState(null);
+
+  const orderCourse = (product) => {
+    dispatch({
+      type: 'ORDER_COURSE',
+      product,
+    });
+    setForceSelectProductId(product.id);
   };
 
   const clearCart = () => {
@@ -65,9 +103,12 @@ export const CartContextProvider = (props) => {
     <CartContext.Provider
       value={{
         productsInCart: cartState.productsInCart,
-        totalQuantity: cartState.totalQuantity,
+        forceSelectProductId,
+        setForceSelectProductId,
         addCart,
         clearCart,
+        orderCourse,
+        selectedProductIds: cartState.selectedProductIds,
       }}
     >
       {props.children}
