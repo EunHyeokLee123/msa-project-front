@@ -11,18 +11,18 @@ const clientHostName = window.location.hostname;
 
 let backendHostName;
 
-if (clientHostName === "localhost") {
+if (clientHostName === 'localhost') {
   // 개발중이라는 의미
-  backendHostName = "http://localhost:8000";
+  backendHostName = 'http://localhost:8000';
 }
 // 배포를 했다는 가정하에
-else if (clientHostName === "playdatashop.com") {
+else if (clientHostName === 'playdatashop.com') {
   // 배포해서 현재 서비스 중
-  backendHostName = "https://api.playdatashop.com";
+  backendHostName = 'https://api.playdatashop.com';
 }
 
 export const API_BASE_URL = backendHostName;
-export const USER = "/user-service/user";
-export const COURSE = "/course-service/courses";
-export const ORDER = "/order-service/order";
-export const POST = "/post-service/post";
+export const USER = '/user-service/user';
+export const COURSE = '/courses';
+export const ORDER = '/order-service/order';
+export const POST = '/post-service/post';
