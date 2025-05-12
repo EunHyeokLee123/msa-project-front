@@ -1,3 +1,28 @@
+import gitImg from '../../assets/git.png';
+import javaImg from '../../assets/java.jpg';
+import sqlImg from '../../assets/sql.png';
+import linuxImg from '../../assets/Linux.png';
+import algorithmImg from '../../assets/algorithm.png';
+import jdbcImg from '../../assets/jdbc.png';
+import htmlcssImg from '../../assets/html-css.jpg';
+import jsImg from '../../assets/js.png';
+import reactImg from '../../assets/react.png';
+import springImg from '../../assets/spring.jpg';
+
+
+const categoryImages = {
+    Git: gitImg,
+    Java: javaImg,
+    SQL: sqlImg,
+    Linux: linuxImg,
+    Algorithm: algorithmImg,
+    JDBC: jdbcImg,
+    'HTML/CSS': htmlcssImg,
+    JS: jsImg,
+    React: reactImg,
+    Spring: springImg
+};
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CourseDetail.scss';
@@ -20,7 +45,10 @@ const CourseDetail = ({ courseId }) => {
     return (
         <div className="course-detail">
             <div className="course-header">
-                <img src={course.image} alt={course.productName} />
+                <img
+                    src={categoryImages[course.category]}
+                    alt={course.category}
+                />
                 <div className="info">
                     <h2>{course.productName}</h2>
                     <p className="subtitle">{course.description}</p>
