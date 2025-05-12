@@ -1,20 +1,23 @@
-import './App.css';
-import PostCard from './components/PostCard';
-import CreatePost from './components/CreatePost';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/TokenContext';
+
+import LoginPage from './page/LoginPage';
+import SignupPage from './page/SignUpPage';
+
 
 function App() {
   return (
     <>
-      <AuthProvider>
-        <Router>
+          
+          <Router>
           <Routes>
-            <Route path='/post' element={<PostCard />} />
-            <Route path='/create' element={<CreatePost />} />
+      <Route path="/login" element={<LoginPage/>} />
+       <Route path='/signup'element={ <SignupPage/>}/>
           </Routes>
         </Router>
-      </AuthProvider>
+      
     </>
   );
 }
