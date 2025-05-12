@@ -1,11 +1,10 @@
 // src/contexts/AuthContext.js
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext } from 'react';
 
 // 하드코딩된 토큰
 const token =
-  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeXU5OTlAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NDcwMjcyOTUsImV4cCI6MTc0NzAzMDg5NX0.rtb0sX6aHYXpdEOG1Ek3LzqwykAljfoqqvi4gjpDQUA";
-// Context 생성
+  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYUBuYXZlci5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc0NzA1MzAwNSwiZXhwIjoxNzQ3MDU2NjA1fQ.vyqXE5I_N7Vts-TSEle2MJBrLWKODqC9ITQJ_mKNP5g';
 const AuthContext = createContext(token);
 
 // Custom Hook
