@@ -2,17 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import PostItem from './PostItem';
 import Comment from './Comment';
-import { useNavigate } from 'react-router-dom'; // 추가
+import { useLocation, useNavigate } from 'react-router-dom'; // 추가
 import { Button, Box } from '@mui/material'; // 추가
 import { useAuth } from '../context/TokenContext';
 
 const PostCard = () => {
-  const courseId = 4;
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const token = useAuth();
 
+  const courseId = location.state?.courseId;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -138,6 +138,14 @@ const PostCard = () => {
           질문 생성
         </Button>
       </Box>
+      {posts.length === 0 && (
+        <Box
+          textAlign='center'
+          sx={{ mb: 2, fontSize: '1.1rem', color: '#555' }}
+        >
+          질문이 없습니다! 등록해보세요!
+        </Box>
+      )}
       {/* 게시물 리스트 */}
       {posts.map((post) => (
         <div key={post.id}>

@@ -8,22 +8,27 @@ import CourseUploadPage from './features/course/CourseUploadPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/TokenContext';
 import Footer from './components/Footer';
+import MainPage from './components/MainPage';
+import { CategoryProvider } from './context/CategoryContext';
 
 function App() {
   return (
     <>
       <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path='/header' element={<Header />} />
-            <Route path='/footer' element={<Footer />} />
-            <Route path='/info' element={<CourseDetail />} />
-            <Route path='/list' element={<CourseListPage />} />
-            <Route path='/create' element={<CourseUploadPage />} />
-            <Route path='/post' element={<PostCard />} />
-            <Route path='/create' element={<CreatePost />} />
-          </Routes>
-        </Router>
+        <CategoryProvider>
+          <Router>
+            <Header />
+            <Routes>
+              <Route path='/' element={<MainPage />} />
+              <Route path='/info' element={<CourseDetail />} />
+              <Route path='/list' element={<CourseListPage />} />
+              <Route path='/create' element={<CourseUploadPage />} />
+              <Route path='/post' element={<PostCard />} />
+              <Route path='/create' element={<CreatePost />} />
+            </Routes>
+            <Footer />
+          </Router>
+        </CategoryProvider>
       </AuthProvider>
     </>
   );

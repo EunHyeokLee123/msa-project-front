@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LanguageIcon from '@mui/icons-material/Language';
+import { useCategory } from '../context/CategoryContext';
+import { Link } from 'react-router-dom';
 
 const navItems = ['강의', '로드맵', '멘토링', '커뮤니티'];
 
@@ -26,9 +28,15 @@ const categoryTabs = [
   'JS',
   'React',
   'Spring',
+  '카테고리',
+  'java',
 ];
 
 const Header = () => {
+  const { setSelectedCategory } = useCategory();
+
+  const [activeTab, setActiveTab] = useState('Git');
+
   return (
     <AppBar position='static' color='inherit' elevation={1}>
       <Box sx={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -37,7 +45,14 @@ const Header = () => {
           <Box display='flex' alignItems='center'>
             <Typography
               variant='h6'
-              sx={{ color: '#00c471', fontWeight: 'bold', mr: 2 }}
+              component={Link} // 여기를 Link로 변경
+              to='/' // 메인 페이지로 이동
+              sx={{
+                color: '#00c471',
+                fontWeight: 'bold',
+                mr: 2,
+                textDecoration: 'none', // 링크 밑줄 제거
+              }}
             >
               Inflearn
             </Typography>
@@ -96,7 +111,21 @@ const Header = () => {
             }}
           >
             {categoryTabs.map((label, index) => (
-              <Button key={index} sx={{ color: '#555' }}>
+              <Button
+                key={index}
+                sx={{
+                  color: '#555',
+                  backgroundColor:
+                    activeTab === label ? '#f0f0f0' : 'transparent', // 연한 회색
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                }}
+                onClick={() => {
+                  setSelectedCategory(label);
+                  setActiveTab(label);
+                }}
+              >
                 {label}
               </Button>
             ))}

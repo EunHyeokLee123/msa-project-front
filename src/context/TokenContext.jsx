@@ -4,7 +4,7 @@ import React, { createContext, useContext } from 'react';
 
 // 하드코딩된 토큰
 const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb29uMTExQG5hdmVyLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzQ3MDk0ODY2LCJleHAiOjE3NDcwOTg0NjZ9.6I_bAAuY8W9oU7d4SL1An0Yv4SM73Q_3dB8LBTsMbIs';
+  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb29uMTExQG5hdmVyLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzQ3MTAwODczLCJleHAiOjE3NDcxMDQ0NzN9.5tx2uZADdl5GeCxo0Tj6dzhCgLc4Rsj75H8Ohgm0HI8';
 // Context 생성
 const AuthContext = createContext(token);
 

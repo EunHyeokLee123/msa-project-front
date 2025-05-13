@@ -1,13 +1,13 @@
-import gitImg from '../../assets/git.png';
-import javaImg from '../../assets/java.jpg';
-import sqlImg from '../../assets/sql.png';
-import linuxImg from '../../assets/Linux.png';
-import algorithmImg from '../../assets/algorithm.png';
-import jdbcImg from '../../assets/jdbc.png';
-import htmlcssImg from '../../assets/html-css.jpg';
-import jsImg from '../../assets/js.png';
-import reactImg from '../../assets/react.png';
-import springImg from '../../assets/spring.jpg';
+import gitImg from '../assets/git.png';
+import javaImg from '../assets/java.jpg';
+import sqlImg from '../assets/sql.png';
+import linuxImg from '../assets/Linux.png';
+import algorithmImg from '../assets/algorithm.png';
+import jdbcImg from '../assets/jdbc.png';
+import htmlcssImg from '../assets/html-css.jpg';
+import jsImg from '../assets/js.png';
+import reactImg from '../assets/react.png';
+import springImg from '../assets/spring.jpg';
 
 const categoryImages = {
   Git: gitImg,
@@ -20,30 +20,34 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  java: javaImg,
+  카테고리: sqlImg,
 };
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './CourseListPage.scss';
+import { useCategory } from '../context/CategoryContext';
+import { useNavigate } from 'react-router-dom';
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 40;
 
-const CourseListPage = () => {
+const MainPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { selectedCategory } = useCategory();
+
+  const navigate = useNavigate();
+
   const fetchCourses = async (page) => {
     setLoading(true);
     try {
-      const baseUrl = 'http://localhost:8000/course-service/courses/list';
-      const url =
-        page !== undefined
-          ? `${baseUrl}?page=${page}&size=${PAGE_SIZE}`
-          : baseUrl;
-
-      const response = await axios.get(url);
+      const baseUrl = `http://localhost:8000/course-service/courses/category/${selectedCategory}`;
+      const response = await axios.get(baseUrl, {
+        params: { page: page },
+      });
 
       if (response.data.content) {
         // 페이징 결과
@@ -63,7 +67,7 @@ const CourseListPage = () => {
 
   useEffect(() => {
     fetchCourses(page);
-  }, [page]);
+  }, [selectedCategory, page]);
 
   const handlePrev = () => {
     if (page > 0) setPage(page - 1);
@@ -77,10 +81,23 @@ const CourseListPage = () => {
     return <div className='course-list'>로딩 중...</div>;
   }
 
+  if (!courses || courses.length === 0) {
+    return <div className='course-list'>현재 강의가 없습니다.</div>;
+  }
+
   return (
     <div className='course-list'>
       {courses.map((course) => (
-        <div key={course.productId} className='course-card'>
+        <div
+          key={course.productId}
+          className='course-card'
+          onClick={() =>
+            navigate('/post', {
+              state: { courseId: course.productId },
+            })
+          }
+          style={{ cursor: 'pointer' }}
+        >
           <img src={categoryImages[course.category]} alt={course.category} />
 
           <div className='info'>
@@ -98,7 +115,6 @@ const CourseListPage = () => {
           </div>
         </div>
       ))}
-
       <div className='pagination'>
         <button onClick={handlePrev} disabled={page === 0}>
           이전
@@ -120,4 +136,4 @@ const CourseListPage = () => {
   );
 };
 
-export default CourseListPage;
+export default MainPage;
