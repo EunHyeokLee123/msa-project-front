@@ -56,7 +56,7 @@ const AdminOrderListComponent = () => {
     const fetchOrders = async () => {
       try {
         const res = await axiosInstance.get(
-          `${API_BASE_URL}${ORDER}/admin/all-orders`,
+          `${API_BASE_URL}${ORDER}/my-course-order/${userId}`,
         );
         setOrderList(res.data.result);
       } catch (e) {
@@ -80,7 +80,6 @@ const AdminOrderListComponent = () => {
               <TableCell>강의명</TableCell>
               <TableCell>구매자번호</TableCell>
               <TableCell>주문상태</TableCell>
-              <TableCell>액션</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,17 +95,6 @@ const AdminOrderListComponent = () => {
                     {order.orderStatus === 'ORDERED'
                       ? '주문 완료'
                       : '주문 취소됨'}
-                  </TableCell>
-                  <TableCell>
-                    {order.orderStatus === 'ORDERED' && (
-                      <Button
-                        color='secondary'
-                        size='small'
-                        onClick={() => cancelOrder(order.id, order.orderDate)}
-                      >
-                        CANCEL
-                      </Button>
-                    )}
                   </TableCell>
                 </TableRow>
               </React.Fragment>
