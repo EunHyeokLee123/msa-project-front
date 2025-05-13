@@ -10,14 +10,12 @@ import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
-import Home from './page/Home';
 
 import OrderListComponent from './components/feature/order/OrderListComponent';
 import AdminOrderListComponent from './components/feature/order/AdminOrderListComponent';
 import CourseDetails from './components/CourseDetails';
 import CourseListPage from './features/course/CourseListPage';
 import OrderPage from './components/feature/order/OrderPage';
-import { CartContextProvider } from './context/CartContext';
 
 function App() {
   return (
