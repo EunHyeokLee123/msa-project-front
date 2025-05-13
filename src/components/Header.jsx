@@ -11,7 +11,7 @@ import {
   Tab,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import LanguageIcon from '@mui/icons-material/Language';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCategory } from '../context/CategoryContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/TokenContext';
@@ -91,7 +91,7 @@ const Header = () => {
           {/* 언어 & 로그인 */}
           <Box display='flex' alignItems='center'>
             <IconButton>
-              <LanguageIcon />
+              <ShoppingCartIcon />
             </IconButton>
             {isLoggedIn ? (
               <Button
@@ -149,6 +149,7 @@ const Header = () => {
                 onClick={() => {
                   setSelectedCategory(label);
                   setActiveTab(label);
+                  navigate('/');
                 }}
               >
                 {label}
