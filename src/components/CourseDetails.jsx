@@ -24,14 +24,15 @@ const categoryImages = {
   java: javaImg,
 };
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import PostCard from './PostCard';
+import CartContext from '../context/CartContext';
 
 const CourseDetails = () => {
   const [course, setCourse] = useState(null);
-
+  const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
   const courseId = location.state?.courseId;
 
@@ -45,6 +46,34 @@ const CourseDetails = () => {
         console.error('강의 상세 정보를 불러오는데 실패했습니다:', err);
       });
   }, [courseId]);
+
+  // 장바구니 클릭 이벤트 핸들러
+  const handleAddToCart = () => {
+    const product = {
+      id: course.productId,
+      name: course.productName,
+      price: course.price,
+    };
+
+    console.log('장바구니 추가 대상:', product);
+
+    if (confirm('강의를 수강바구니에 추가하시겠습니까?')) {
+      addCart(product); // 장바구니에 추가
+    }
+  };
+
+  // 수강신청하기 클릭 이벤트 핸들러
+  const handleOrderCourse = () => {
+    const product = {
+      id: course.productId,
+      name: course.productName,
+      price: course.price,
+    };
+
+    console.log('구매할 강의:', product);
+    orderCourse(product);
+    navigate('/order/cart');
+  };
 
   if (!course) return <div className='course-detail'>로딩 중...</div>;
 
@@ -60,8 +89,8 @@ const CourseDetails = () => {
         </div>
         <div className='side-info'>
           <div className='price'>{course.price.toLocaleString()}원</div>
-          <button>장바구니 담기</button>
-          <button>수강신청 하기</button>
+          <button onClick={handleAddToCart}>장바구니 담기</button>
+          <button onClick={handleOrderCourse}>수강신청 하기</button>
           {/* <ul>
                         <li>강의 수: {course.courseCount}개</li>
                         <li>총 시간: {course.duration}</li>

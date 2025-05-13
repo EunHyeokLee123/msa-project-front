@@ -8,13 +8,10 @@ import { AuthProvider } from './context/TokenContext';
 import Footer from './components/Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
-
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
 import Home from './page/Home';
-import CourseListPage from './features/course/CourseListPage';
-import OrderPage from './components/feature/order/OrderPage';
-import { CartContextProvider } from './context/CartContext';
+
 import OrderListComponent from './components/feature/order/OrderListComponent';
 import AdminOrderListComponent from './components/feature/order/AdminOrderListComponent';
 import CourseDetails from './components/CourseDetails';
