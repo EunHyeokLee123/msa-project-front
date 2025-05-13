@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-
-// 로그인 API 시뮬레이션 (실제 백엔드 연동 시 대체)
-const loginRequest = async ({ id, password }) => {
-  // 예시: "testuser", "testpass"로 로그인 성공 처리
-  if (id === 'testuser' && password === 'testpass') {
-    return { success: true };
-  }
-  return { success: false };
-};
+import axios from 'axios';
+import {
+  TextField,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Box
+} from '@mui/material';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -33,7 +35,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!id) {
-      setIdError('아이디를 입력해주세요.');
+      setIdError('이메일을 입력해주세요.');
       return;
     }
 
@@ -43,39 +45,66 @@ const Login = () => {
     }
 
     try {
-      const result = await loginRequest({ id, password });
-      if (result.success) {
+      const response = await axios.post('http://localhost:8000/user-service/user/login', {
+        email: id,
+        password: password
+      });
+
+      if (response.status === 200) {
         alert('로그인 성공!');
-        // 예: 홈으로 이동 또는 토큰 저장 등
-      } else {
-        setLoginError('아이디 또는 비밀번호가 올바르지 않습니다.');
+        // 예: 토큰 저장, 페이지 이동 등
+        // localStorage.setItem('token', response.data.token);
+        // navigate('/'); // React Router 사용 시
       }
     } catch (err) {
-      alert('서버 오류입니다. 관리자에게 문의하세요.');
+      if (err.response && err.response.status === 401) {
+        setLoginError('아이디 또는 비밀번호가 올바르지 않습니다.');
+      } else {
+        alert('서버 오류입니다. 관리자에게 문의하세요.');
+      }
       console.error(err);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <h2>로그인</h2>
-      <form onSubmit={onSubmitHandler}>
-        <div>
-          <label>아이디</label>
-          <input type='text' value={id} onChange={onChangeIdHandler} />
-          <div style={{ color: 'red' }}>{idError}</div>
-        </div>
-
-        <div>
-          <label>비밀번호</label>
-          <input type='password' value={password} onChange={onChangePasswordHandler} />
-          <div style={{ color: 'red' }}>{passwordError}</div>
-        </div>
-
-        <button type='submit'>로그인</button>
-        <div style={{ color: 'red', marginTop: '10px' }}>{loginError}</div>
-      </form>
-    </div>
+    <Grid container justifyContent='center'>
+      <Grid item xs={12} sm={8} md={5}>
+        <Card sx={{ mt: 8 }}>
+          <CardHeader title='로그인' sx={{ textAlign: 'center' }} />
+          <CardContent>
+            <Box component="form" onSubmit={onSubmitHandler}>
+              <TextField
+                label="이메일"
+                fullWidth
+                margin="normal"
+                value={id}
+                onChange={onChangeIdHandler}
+                error={!!idError}
+                helperText={idError}
+              />
+              <TextField
+                label="비밀번호"
+                type="password"
+                fullWidth
+                margin="normal"
+                value={password}
+                onChange={onChangePasswordHandler}
+                error={!!passwordError}
+                helperText={passwordError}
+              />
+              {loginError && (
+                <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                  {loginError}
+                </Typography>
+              )}
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                로그인
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

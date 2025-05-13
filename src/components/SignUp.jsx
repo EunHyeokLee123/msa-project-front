@@ -1,45 +1,46 @@
 import React, { useState } from 'react';
-
-// 예시: ID 중복 확인 API 시뮬레이션 (실제 백엔드 연동 시 대체)
-const idDuplicateCheck = async (id) => {
-  if (id === 'testuser') return false;
-  return true;
-};
-
-// 예시: 회원가입 요청 API 시뮬레이션 (실제 백엔드 연동 시 대체)
-const signupRequest = async ({ id, email, password }) => {
-  console.log('회원가입 데이터 전송:', { id, email, password });
-  return { success: true };
-};
+import axios from 'axios';
+import {
+  TextField,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Box,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio
+} from '@mui/material';
 
 const Signup = () => {
-  const [id, setId] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [role, setRole] = useState('USER');
 
-  const [idError, setIdError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
 
-  const [isIdCheck, setIsIdCheck] = useState(false);
-  const [isIdAvailable, setIsIdAvailable] = useState(false);
-
-  const onChangeIdHandler = (e) => {
-    const idValue = e.target.value;
-    setId(idValue);
-    setIsIdCheck(false);
+  const onChangeUsernameHandler = (e) => {
+    const value = e.target.value;
+    setUsername(value);
+    setUsernameError(value ? '' : '이름을 입력해주세요.');
   };
 
   const onChangeEmailHandler = (e) => {
-    const emailValue = e.target.value;
-    setEmail(emailValue);
-
+    const value = e.target.value;
+    setEmail(value);
     const emailRegex = /^[\w.-]+@[a-z\d.-]+\.[a-z]{2,}$/i;
-    if (!emailValue) {
+    if (!value) {
       setEmailError('이메일을 입력해주세요.');
-    } else if (!emailRegex.test(emailValue)) {
+    } else if (!emailRegex.test(value)) {
       setEmailError('유효한 이메일 형식을 입력해주세요.');
     } else {
       setEmailError('');
@@ -50,134 +51,123 @@ const Signup = () => {
     const { name, value } = e.target;
     if (name === 'password') {
       setPassword(value);
-      passwordCheckHandler(value, confirm);
+      validatePasswords(value, confirm);
     } else {
       setConfirm(value);
-      passwordCheckHandler(password, value);
+      validatePasswords(password, value);
     }
   };
 
-  const idCheckHandler = async () => {
-    const idRegex = /^[a-z\d]{5,10}$/;
-    if (id === '') {
-      setIdError('아이디를 입력해주세요.');
-      setIsIdAvailable(false);
-      return;
-    } else if (!idRegex.test(id)) {
-      setIdError('아이디는 5~10자의 영소문자, 숫자만 입력 가능합니다.');
-      setIsIdAvailable(false);
-      return;
-    }
-
-    try {
-      const responseData = await idDuplicateCheck(id);
-      if (responseData) {
-        setIdError('사용 가능한 아이디입니다.');
-        setIsIdCheck(true);
-        setIsIdAvailable(true);
-      } else {
-        setIdError('이미 사용중인 아이디입니다.');
-        setIsIdAvailable(false);
-      }
-    } catch (error) {
-      alert('서버 오류입니다. 관리자에게 문의하세요.');
-      console.error(error);
-    }
-  };
-
-  const passwordCheckHandler = (password, confirm) => {
-    const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
-    if (password === '') {
-      setPasswordError('비밀번호를 입력해주세요.');
-    } else if (!passwordRegex.test(password)) {
-      setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
-    } else {
-      setPasswordError('');
-    }
-
-    if (confirm && confirm !== password) {
-      setConfirmError('비밀번호가 일치하지 않습니다.');
-    } else {
-      setConfirmError('');
-    }
+  const validatePasswords = (pw, cf) => {
+    const pwRegex = /^[a-z\d!@*&-_]{8,16}$/;
+    setPasswordError(
+      !pw ? '비밀번호를 입력해주세요.' :
+        !pwRegex.test(pw) ? '비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 허용됩니다.' :
+        ''
+    );
+    setConfirmError(cf && pw !== cf ? '비밀번호가 일치하지 않습니다.' : '');
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
-    if (!isIdCheck || !isIdAvailable) {
-      alert('아이디 중복 확인을 해주세요.');
-      return;
-    }
-
-    if (emailError || !email) {
-      alert('이메일을 확인해주세요.');
-      return;
-    }
-
-    if (passwordError || confirmError || !password || !confirm) {
-      alert('비밀번호를 확인해주세요.');
+    if (usernameError || !username || emailError || !email || passwordError || confirmError || !password || !confirm) {
+      alert('입력값을 확인해주세요.');
       return;
     }
 
     try {
-      const result = await signupRequest({ id, email, password });
-      if (result.success) {
+      const res = await axios.post('http://localhost:8000/user-service/user/create', {
+        username,
+        email,
+        password,
+        role
+      });
+      if (res.status === 201) {
         alert('회원가입 성공!');
-        // 필요 시 폼 초기화
-      } else {
-        alert('회원가입 실패. 다시 시도해주세요.');
+        setUsername('');
+        setEmail('');
+        setPassword('');
+      
+        setRole('USER');
       }
     } catch (err) {
-      alert('서버 오류입니다. 관리자에게 문의하세요.');
+      alert('회원가입 실패: ' + (err.response?.data?.message || '서버 오류'));
       console.error(err);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <h2>회원가입</h2>
-      <form onSubmit={onSubmitHandler}>
-        <div>
-          <label>아이디</label>
-          <input type='text' value={id} onChange={onChangeIdHandler} />
-          <button type='button' onClick={idCheckHandler}>
-            중복 확인
-          </button>
-          <div style={{ color: isIdAvailable ? 'green' : 'red' }}>{idError}</div>
-        </div>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={8} md={6}>
+        <Card sx={{ mt: 8 }}>
+          <CardHeader title="회원가입" sx={{ textAlign: 'center' }} />
+          <CardContent>
+            <Box component="form" onSubmit={onSubmitHandler}>
+              <TextField
+                fullWidth
+                label="이름"
+                value={username}
+                onChange={onChangeUsernameHandler}
+                error={!!usernameError}
+                helperText={usernameError}
+                margin="normal"
+              />
 
-        <div>
-          <label>이메일</label>
-          <input type='text' value={email} onChange={onChangeEmailHandler} />
-          <div style={{ color: 'red' }}>{emailError}</div>
-        </div>
+              <TextField
+                fullWidth
+                label="이메일"
+                value={email}
+                onChange={onChangeEmailHandler}
+                error={!!emailError}
+                helperText={emailError}
+                margin="normal"
+              />
 
-        <div>
-          <label>비밀번호</label>
-          <input
-            type='password'
-            name='password'
-            value={password}
-            onChange={onChangePasswordHandler}
-          />
-          <div style={{ color: 'red' }}>{passwordError}</div>
-        </div>
+              <FormControl component="fieldset" margin="normal">
+                <FormLabel component="legend">권한</FormLabel>
+                <RadioGroup
+                  row
+                  name="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <FormControlLabel value="USER" control={<Radio />} label="일반 유저" />
+                  <FormControlLabel value="ADMIN" control={<Radio />} label="관리자" />
+                </RadioGroup>
+              </FormControl>
 
-        <div>
-          <label>비밀번호 확인</label>
-          <input
-            type='password'
-            name='confirm'
-            value={confirm}
-            onChange={onChangePasswordHandler}
-          />
-          <div style={{ color: 'red' }}>{confirmError}</div>
-        </div>
+              <TextField
+                fullWidth
+                label="비밀번호"
+                type="password"
+                name="password"
+                value={password}
+                onChange={onChangePasswordHandler}
+                error={!!passwordError}
+                helperText={passwordError}
+                margin="normal"
+              />
 
-        <button type='submit'>회원가입</button>
-      </form>
-    </div>
+              <TextField
+                fullWidth
+                label="비밀번호 확인"
+                type="password"
+                name="confirm"
+                value={confirm}
+                onChange={onChangePasswordHandler}
+                error={!!confirmError}
+                helperText={confirmError}
+                margin="normal"
+              />
+
+              <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
+                회원가입
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 
