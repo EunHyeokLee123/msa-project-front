@@ -16,6 +16,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import CartContext from '../../../context/CartContext';
 import axiosInstance from '../../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../../configs/host-config';
+import { useAuth } from '../../../context/TokenContext';
 
 const OrderPage = () => {
   const {
@@ -24,6 +25,7 @@ const OrderPage = () => {
     forceSelectProductId,
   } = useContext(CartContext);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const user = useAuth();
 
   console.log(productsInCart);
 
@@ -38,6 +40,7 @@ const OrderPage = () => {
     ) {
       setSelectedProducts((prev) => [...prev, forceSelectProductId]);
     }
+    console.log('장바구니 변경됨:', productsInCart);
   }, [forceSelectProductId]);
 
   // 체크박스 클릭 시 선택된 제품을 추적
@@ -72,6 +75,10 @@ const OrderPage = () => {
     const yesOrNo = confirm(
       `${orderProducts.length}개의 강의를 신청하시겠습니까?`,
     );
+    if (user.role === 'ADMIN') {
+      alert('학생만 구매 가능합니다.');
+      return;
+    }
 
     if (!yesOrNo) {
       alert('구매가 취소되었습니다.');
@@ -92,6 +99,7 @@ const OrderPage = () => {
     } catch (err) {
       // handleAxiosError(err);
       console.error('강의 구매 실패!: ', err);
+      alert('로그인을 하세요.');
     }
   };
 

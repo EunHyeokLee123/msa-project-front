@@ -21,16 +21,6 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
-  Git: gitImg,
-  Java: javaImg,
-  SQL: sqlImg,
-  Linux: linuxImg,
-  Algorithm: algorithmImg,
-  JDBC: jdbcImg,
-  'HTML/CSS': htmlcssImg,
-  JS: jsImg,
-  React: reactImg,
-  Spring: springImg,
 };
 
 import React, { useContext, useEffect, useState } from 'react';
@@ -47,15 +37,15 @@ const CourseDetail = ({ courseId }) => {
   const navigate = useNavigate();
   //임시
   courseId = 3;
-  const token = useAuth();
-  console.log('토큰: ', token);
+  const user = useAuth();
+  console.log('토큰: ', user);
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       })
       .then((res) => {
@@ -80,6 +70,7 @@ const CourseDetail = ({ courseId }) => {
 
     if (confirm('강의를 수강바구니에 추가하시겠습니까?')) {
       addCart(product); // 장바구니에 추가
+      alert('강의가 수강바구니에 추가되었습니다!');
     }
   };
 
@@ -91,7 +82,7 @@ const CourseDetail = ({ courseId }) => {
       price: course.price,
     };
 
-    console.log('구매할 강의:', product);
+    console.log('구매할 강의 대상:', product);
     orderCourse(product);
     navigate('/order/cart');
   };

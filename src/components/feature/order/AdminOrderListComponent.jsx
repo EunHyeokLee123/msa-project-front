@@ -16,15 +16,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../../configs/host-config';
 import { useAuth } from '../../../context/TokenContext';
-import AuthContext from '../../../context/UserContext';
 
 const AdminOrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
-  const { onLogout } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const { userId } = useParams();
   const token = useAuth();
-  console.log('토큰: ', token);
   console.log('userId: ', userId);
 
   useEffect(() => {
