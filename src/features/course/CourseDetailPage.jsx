@@ -21,6 +21,16 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  Git: gitImg,
+  Java: javaImg,
+  SQL: sqlImg,
+  Linux: linuxImg,
+  Algorithm: algorithmImg,
+  JDBC: jdbcImg,
+  'HTML/CSS': htmlcssImg,
+  JS: jsImg,
+  React: reactImg,
+  Spring: springImg,
 };
 
 import React, { useContext, useEffect, useState } from 'react';

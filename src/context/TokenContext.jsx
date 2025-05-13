@@ -4,7 +4,8 @@ import React, { createContext, useContext } from 'react';
 
 // 하드코딩된 토큰
 const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYUBuYXZlci5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc0NzA1MzAwNSwiZXhwIjoxNzQ3MDU2NjA1fQ.vyqXE5I_N7Vts-TSEle2MJBrLWKODqC9ITQJ_mKNP5g';
+  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb29uMTExQG5hdmVyLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzQ3MTA1MzUxLCJleHAiOjE3NDcxMDg5NTF9.VwiLen7dQm24fFJ6iZ31yXKRNJrqg58eftgeG8FxNjQ';
+// Context 생성
 const AuthContext = createContext(token);
 
 // Custom Hook
@@ -14,3 +15,27 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={token}>{children}</AuthContext.Provider>;
 };
+
+// 나중에 localStorage에 있는 값들을 받아서 전역적으로 사용하게끔
+// 할 때 사용할 코드들
+// // Context 생성
+// const AuthContext = createContext(null);
+
+// // Custom Hook
+// export const useAuth = () => useContext(AuthContext);
+
+// // Provider
+// export const AuthProvider = ({ children }) => {
+//   const [token, setToken] = useState(null);
+
+//   useEffect(() => {
+//     const storedToken = localStorage.getItem('token');
+//     setToken(storedToken);
+//   }, []);
+
+//   return (
+//     <AuthContext.Provider value={token}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
