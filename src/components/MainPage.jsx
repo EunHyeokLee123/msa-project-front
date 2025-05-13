@@ -20,16 +20,18 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
-  java: javaImg,
-  카테고리: sqlImg,
+  // java: javaImg,
+  // 카테고리: sqlImg,
 };
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCategory } from '../context/CategoryContext';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, COURSE } from '../../configs/host-config';
+import './CourseSearchPage.scss';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 40;
 
 const MainPage = () => {
   const [courses, setCourses] = useState([]);
@@ -38,16 +40,14 @@ const MainPage = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const { selectedCategory } = useCategory();
-
   const navigate = useNavigate();
 
-  const fetchCourses = async () => {
+  const fetchCourses = async (page) => {
     setLoading(true);
     try {
-      const baseUrl = `http://localhost:8000/course-service/courses/category/${selectedCategory}`;
-
+      const baseUrl = `${API_BASE_URL}`;
       const response = await axios.get(baseUrl, {
-        params: { page: page, size: PAGE_SIZE },
+        params: { page: page },
       });
 
       if (response.data.content) {
@@ -65,10 +65,6 @@ const MainPage = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchCourses(page);
-  }, [selectedCategory, page]);
 
   const handlePrev = () => {
     if (page > 0) setPage(page - 1);
@@ -89,16 +85,7 @@ const MainPage = () => {
   return (
     <div className='course-list'>
       {courses.map((course) => (
-        <div
-          key={course.productId}
-          className='course-card'
-          onClick={() =>
-            navigate('/items', {
-              state: { courseId: course.productId },
-            })
-          }
-          style={{ cursor: 'pointer' }}
-        >
+        <div key={course.productId} className='course-card'>
           <img src={categoryImages[course.category]} alt={course.category} />
 
           <div className='info'>

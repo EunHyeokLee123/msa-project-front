@@ -25,6 +25,9 @@ const categoryImages = {
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CourseListPage.scss';
+import { API_BASE_URL, COURSE } from '../../configs/host-config';
+import { useCategory } from '../context/CategoryContext';
+import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 12;
 
@@ -34,14 +37,19 @@ const CourseListPage = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { selectedCategory } = useCategory();
+  const navigate = useNavigate();
+
   const fetchCourses = async (page) => {
     setLoading(true);
     try {
-      const baseUrl = 'http://localhost:8000/course-service/courses/list';
-      const url =
-        page !== undefined
-          ? `${baseUrl}?page=${page}&size=${PAGE_SIZE}`
-          : baseUrl;
+      if (page !== undefined) {
+        url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
+      } else if (selectedCategory !== undefined) {
+        url = `${API_BASE_URL}${COURSE}/category/${selectedCategory}`;
+      } else {
+        url = `${API_BASE_URL}`;
+      }
 
       const response = await axios.get(url);
 
@@ -63,6 +71,10 @@ const CourseListPage = () => {
 
   useEffect(() => {
     fetchCourses(page);
+  }, [selectedCategory, page]);
+
+  useEffect(() => {
+    fetchCourses(page);
   }, [page]);
 
   const handlePrev = () => {
@@ -77,10 +89,23 @@ const CourseListPage = () => {
     return <div className='course-list'>로딩 중...</div>;
   }
 
+  if (!courses || courses.length === 0) {
+    return <div className='course-list'>현재 강의가 없습니다.</div>;
+  }
+
   return (
     <div className='course-list'>
       {courses.map((course) => (
-        <div key={course.productId} className='course-card'>
+        <div
+          key={course.productId}
+          className='course-card'
+          onClick={() =>
+            navigate('/items', {
+              state: { courseId: course.productId },
+            })
+          }
+          style={{ cursor: 'pointer' }}
+        >
           <img src={categoryImages[course.category]} alt={course.category} />
 
           <div className='info'>

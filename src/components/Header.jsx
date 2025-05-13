@@ -19,7 +19,6 @@ import { AuthProvider, useAuth } from '../context/TokenContext';
 const navItems = ['강의', '로드맵', '멘토링', '커뮤니티'];
 
 const categoryTabs = [
-  '전체',
   'Git',
   'Java',
   'SQL',
@@ -37,7 +36,7 @@ const categoryTabs = [
 const Header = () => {
   const { setSelectedCategory } = useCategory();
 
-  const [activeTab, setActiveTab] = useState('전체');
+  const [activeTab, setActiveTab] = useState('Git');
 
   const navigate = useNavigate();
 
@@ -51,18 +50,13 @@ const Header = () => {
           <Box display='flex' alignItems='center'>
             <Typography
               variant='h6'
-              component='div'
-              onClick={() => {
-                setSelectedCategory('전체'); // 나중에 Category에 전체조회가 구현되면 전체로 바꿈.
-                setActiveTab('전체'); //
-                navigate('/'); //
-              }}
+              component={Link} // 여기를 Link로 변경
+              to='/' // 메인 페이지로 이동
               sx={{
                 color: '#00c471',
                 fontWeight: 'bold',
                 mr: 2,
                 textDecoration: 'none', // 링크 밑줄 제거
-                cursor: 'pointer',
               }}
             >
               Inflearn
