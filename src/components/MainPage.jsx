@@ -29,7 +29,7 @@ import axios from 'axios';
 import { useCategory } from '../context/CategoryContext';
 import { useNavigate } from 'react-router-dom';
 
-const PAGE_SIZE = 40;
+const PAGE_SIZE = 30;
 
 const MainPage = () => {
   const [courses, setCourses] = useState([]);
@@ -41,12 +41,13 @@ const MainPage = () => {
 
   const navigate = useNavigate();
 
-  const fetchCourses = async (page) => {
+  const fetchCourses = async () => {
     setLoading(true);
     try {
       const baseUrl = `http://localhost:8000/course-service/courses/category/${selectedCategory}`;
+
       const response = await axios.get(baseUrl, {
-        params: { page: page },
+        params: { page: page, size: PAGE_SIZE },
       });
 
       if (response.data.content) {
