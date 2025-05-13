@@ -1,4 +1,3 @@
-import './App.css';
 import PostCard from './components/PostCard';
 import CreatePost from './components/CreatePost';
 import Header from './components/Header';
@@ -10,13 +9,6 @@ import Footer from './components/Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 
-// import {
-//   BrowserRouter as Router,
-//   Routes,
-//   Route,
-//   BrowserRouter,
-// } from 'react-router-dom';
-
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
 import Home from './page/Home';
@@ -25,6 +17,10 @@ import OrderPage from './components/feature/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
 import OrderListComponent from './components/feature/order/OrderListComponent';
 import AdminOrderListComponent from './components/feature/order/AdminOrderListComponent';
+import CourseDetails from './components/CourseDetails';
+import CourseListPage from './features/course/CourseListPage';
+import OrderPage from './components/feature/order/OrderPage';
+import { CartContextProvider } from './context/CartContext';
 
 function App() {
   return (
@@ -39,8 +35,10 @@ function App() {
               <Route path='/list' element={<CourseListPage />} />
               <Route path='/create' element={<CourseUploadPage />} />
               <Route path='/post' element={<PostCard />} />
-              <Route path='/create' element={<CreatePost />} />
-
+              <Route path='/post/create' element={<CreatePost />} />
+              <Route path='/login' element={<LoginPage />} />
+              <Route path='/signup' element={<SignupPage />} />
+              <Route path='/items' element={<CourseDetails />} />
               <Route
                 path='/courses/info/:courseId'
                 element={<CourseDetail />}
@@ -52,18 +50,10 @@ function App() {
                 element={<AdminOrderListComponent />}
               />
             </Routes>
-            <Footer />
           </Router>
+          <Footer />
         </CategoryProvider>
       </AuthProvider>
-
-      <Router>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignupPage />} />
-        </Routes>
-      </Router>
     </>
   );
 }

@@ -9,10 +9,15 @@ const CreatePost = () => {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
-  const token = useAuth();
+  const { token, isLoggedIn } = useAuth();
 
   const handleSubmit = async () => {
     console.log('버튼이 클릭되었음!');
+    if (!isLoggedIn) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
 
     if (title.trim().length < 5) {
       alert('제목은 최소 5자 이상이어야 합니다.');
@@ -43,7 +48,9 @@ const CreatePost = () => {
 
       if (response.status === 201) {
         alert('질문이 등록되었습니다!');
-        navigate('/post'); // 등록 후 홈으로 이동
+        navigate('/items', {
+          state: { courseId: response.data.result.productId },
+        }); // 등록 후 홈으로 이동
       }
     } catch (err) {
       console.error(err);

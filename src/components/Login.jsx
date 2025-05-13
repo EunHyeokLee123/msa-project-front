@@ -8,8 +8,10 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Box
+  Box,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/TokenContext';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -18,6 +20,10 @@ const Login = () => {
   const [idError, setIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const onChangeIdHandler = (e) => {
     setId(e.target.value);
@@ -45,16 +51,25 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/user-service/user/login', {
-        email: id,
-        password: password
-      });
+      const response = await axios.post(
+        'http://localhost:8000/user-service/user/login',
+        {
+          email: id,
+          password: password,
+        },
+      );
 
       if (response.status === 200) {
         alert('로그인 성공!');
+        console.log(response);
+
         // 예: 토큰 저장, 페이지 이동 등
-        // localStorage.setItem('token', response.data.token);
-        // navigate('/'); // React Router 사용 시
+        const token = response.data.result.token;
+        const role = response.data.result.role;
+        localStorage.setItem('token', response.data.result.token);
+        localStorage.setItem('role', response.data.result.role);
+        login(token, role);
+        navigate('/'); // React Router 사용 시
       }
     } catch (err) {
       if (err.response && err.response.status === 401) {
@@ -72,33 +87,50 @@ const Login = () => {
         <Card sx={{ mt: 8 }}>
           <CardHeader title='로그인' sx={{ textAlign: 'center' }} />
           <CardContent>
-            <Box component="form" onSubmit={onSubmitHandler}>
+            <Box component='form' onSubmit={onSubmitHandler}>
               <TextField
-                label="이메일"
+                label='이메일'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={id}
                 onChange={onChangeIdHandler}
                 error={!!idError}
                 helperText={idError}
               />
               <TextField
-                label="비밀번호"
-                type="password"
+                label='비밀번호'
+                type='password'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={password}
                 onChange={onChangePasswordHandler}
                 error={!!passwordError}
                 helperText={passwordError}
               />
               {loginError && (
-                <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                <Typography color='error' variant='body2' sx={{ mt: 1 }}>
                   {loginError}
                 </Typography>
               )}
-              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+              <Button
+                type='submit'
+                variant='contained'
+                color='primary'
+                fullWidth
+                sx={{ mt: 2 }}
+              >
                 로그인
+              </Button>
+              <Button
+                variant='contained'
+                color='primary'
+                fullWidth
+                sx={{ mt: 2 }}
+                onClick={() => {
+                  navigate('/signup');
+                }}
+              >
+                회원가입
               </Button>
             </Box>
           </CardContent>

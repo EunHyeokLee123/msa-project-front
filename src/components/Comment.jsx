@@ -21,7 +21,9 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 
-  const token = useAuth();
+  const { token, isLoggedIn } = useAuth();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -30,9 +32,6 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
           'http://localhost:8000/post-service/post/comment/find',
           {
             params: { id: post.id },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           },
         );
         setComments(response.data.result);
@@ -47,6 +46,12 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
 
   const handleCreateComment = async () => {
     const trimmed = newComment.trim();
+
+    if (!isLoggedIn) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
 
     if (!trimmed) return;
 

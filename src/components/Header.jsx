@@ -11,9 +11,10 @@ import {
   Tab,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import LanguageIcon from '@mui/icons-material/Language';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCategory } from '../context/CategoryContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from '../context/TokenContext';
 
 const navItems = ['강의', '로드맵', '멘토링', '커뮤니티'];
 
@@ -36,6 +37,10 @@ const Header = () => {
   const { setSelectedCategory } = useCategory();
 
   const [activeTab, setActiveTab] = useState('Git');
+
+  const navigate = useNavigate();
+
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <AppBar position='static' color='inherit' elevation={1}>
@@ -86,11 +91,31 @@ const Header = () => {
           {/* 언어 & 로그인 */}
           <Box display='flex' alignItems='center'>
             <IconButton>
-              <LanguageIcon />
+              <ShoppingCartIcon />
             </IconButton>
-            <Button variant='contained' sx={{ ml: 1 }}>
-              로그인
-            </Button>
+            {isLoggedIn ? (
+              <Button
+                variant='contained'
+                sx={{ ml: 1 }}
+                onClick={() => {
+                  logout(); // ✅ 로그아웃 기능 실행
+                  alert('로그아웃되었습니다.');
+                  navigate('/');
+                }}
+              >
+                로그아웃
+              </Button>
+            ) : (
+              <Button
+                variant='contained'
+                sx={{ ml: 1 }}
+                onClick={() => {
+                  navigate('/login'); // ✅ 로그인 페이지 이동
+                }}
+              >
+                로그인
+              </Button>
+            )}
           </Box>
         </Toolbar>
 
@@ -124,6 +149,7 @@ const Header = () => {
                 onClick={() => {
                   setSelectedCategory(label);
                   setActiveTab(label);
+                  navigate('/');
                 }}
               >
                 {label}
