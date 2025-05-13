@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../configs/host-config';
 import { useAuth } from '../../context/TokenContext';
@@ -21,15 +21,13 @@ const AdminOrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
 
   const navigate = useNavigate();
-  const { userId } = useParams();
   const token = useAuth();
-  console.log('userId: ', userId);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await axiosInstance.get(
-          `${API_BASE_URL}${ORDER}/my-course-order/${userId}`,
+          `${API_BASE_URL}${ORDER}/my-course-order`,
         );
         setOrderList(res.data.result);
       } catch (e) {

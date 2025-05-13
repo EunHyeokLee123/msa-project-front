@@ -47,7 +47,7 @@ function App() {
                   element={<OrderListComponent />}
                 />
                 <Route
-                  path='/order/my-course-order/:userId'
+                  path='/order/my-course-order'
                   element={<AdminOrderListComponent />}
                 />
               </Routes>
