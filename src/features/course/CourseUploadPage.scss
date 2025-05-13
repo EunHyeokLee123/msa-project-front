@@ -1,0 +1,79 @@
+.course-form {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Noto Sans KR', sans-serif;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-top: 16px;
+    font-weight: bold;
+  }
+
+  input[type='text'],
+  input[type='number'],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  textarea {
+    height: 120px;
+    resize: vertical;
+  }
+
+  .category-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .radio-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    input {
+      display: none;
+    }
+
+    &.selected {
+      background-color: #1dc078;
+      color: #fff;
+      border-color: #1dc078;
+    }
+  }
+
+  button {
+    margin-top: 24px;
+    width: 100%;
+    padding: 12px;
+    background-color: #1dc078;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #16a865;
+    }
+  }
+}
