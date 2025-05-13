@@ -8,10 +8,8 @@ import { AuthProvider } from './context/TokenContext';
 import Footer from './components/Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
-
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
-import Home from './page/Home';
 import CourseDetails from './components/CourseDetails';
 import CourseListPage from './features/course/CourseListPage';
 import OrderPage from './components/feature/order/OrderPage';

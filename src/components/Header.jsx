@@ -90,27 +90,42 @@ const Header = () => {
 
           {/* 언어 & 로그인 */}
           <Box display='flex' alignItems='center'>
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                navigate('/order/cart');
+              }}
+            >
               <ShoppingCartIcon />
             </IconButton>
             {isLoggedIn ? (
-              <Button
-                variant='contained'
-                sx={{ ml: 1 }}
-                onClick={() => {
-                  logout(); // ✅ 로그아웃 기능 실행
-                  alert('로그아웃되었습니다.');
-                  navigate('/');
-                }}
-              >
-                로그아웃
-              </Button>
+              <>
+                <Button
+                  variant='contained'
+                  sx={{ ml: 1 }}
+                  onClick={() => {
+                    navigate('/mypage');
+                  }}
+                >
+                  MyPage
+                </Button>
+                <Button
+                  variant='contained'
+                  sx={{ ml: 1 }}
+                  onClick={() => {
+                    logout();
+                    alert('로그아웃되었습니다.');
+                    navigate('/');
+                  }}
+                >
+                  로그아웃
+                </Button>
+              </>
             ) : (
               <Button
                 variant='contained'
                 sx={{ ml: 1 }}
                 onClick={() => {
-                  navigate('/login'); // ✅ 로그인 페이지 이동
+                  navigate('/login');
                 }}
               >
                 로그인
