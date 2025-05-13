@@ -29,7 +29,7 @@ const categoryImages = {
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import CartContext from '../../context/CartContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/TokenContext';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import './CourseDetailPage.scss';
@@ -38,9 +38,12 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
-  const courseId = location.state?.courseId;
+  // const courseId = location.state?.courseId;
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+
   const user = useAuth();
-  console.log('토큰: ', user.token);
+  console.log('user토큰: ', user.token);
 
   useEffect(() => {
     axios
@@ -62,7 +65,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (token === undefined) {
+    if (typeof user.token === 'undefined' || !user.token) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -83,7 +86,7 @@ const CourseDetailPage = () => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (token === undefined) {
+    if (typeof user.token === 'undefined' || !user.token) {
       alert('로그인이 필요합니다!');
       return;
     }

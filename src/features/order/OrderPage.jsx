@@ -99,7 +99,6 @@ const OrderPage = () => {
     } catch (err) {
       // handleAxiosError(err);
       console.error('강의 구매 실패!: ', err);
-      alert('로그인을 하세요.');
     }
   };
 
