@@ -10,11 +10,7 @@ import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
-
-import OrderListComponent from './components/feature/order/OrderListComponent';
-import AdminOrderListComponent from './components/feature/order/AdminOrderListComponent';
-import CourseDetails from './components/CourseDetails';
-import CourseListPage from './features/course/CourseListPage';
+import CourseSearchPage from './features/course/CourseSearchPage';
 import OrderPage from './components/feature/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
 
@@ -28,7 +24,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path='/' element={<MainPage />} />
-                <Route path='/info' element={<CourseDetail />} />
+                <Route path='/info/:courseId' element={<CourseDetail />} />
                 <Route
                   path='/list?page=:page&size:size'
                   element={<CourseSearchPage />}
@@ -42,8 +38,7 @@ function App() {
                 <Route path='/post/create' element={<CreatePost />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />
-                <Route path='/items' element={<CourseDetails />} />
-                {/* <Route path='/info/:courseId' element={<CourseDetail />} /> */}
+                {/* <Route path='/items' element={<CourseDetails />} /> */}
                 <Route path='/order/cart' element={<OrderPage />} />
                 <Route
                   path='/order/my-order'

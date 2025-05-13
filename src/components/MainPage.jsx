@@ -26,56 +26,34 @@ const categoryImages = {
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useCategory } from '../context/CategoryContext';
 import { useNavigate } from 'react-router-dom';
-
-const PAGE_SIZE = 40;
+import { API_BASE_URL, COURSE } from '../configs/host-config';
+import './CourseSearchPage.scss';
 
 const MainPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const { selectedCategory } = useCategory();
 
   const navigate = useNavigate();
 
-  const fetchCourses = async (page) => {
+  const fetchCourses = async () => {
     setLoading(true);
     try {
-      const baseUrl = `http://localhost:8000/course-service/courses/category/${selectedCategory}`;
-      const response = await axios.get(baseUrl, {
-        params: { page: page },
-      });
+      const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+      const response = await axios.get(baseUrl);
 
-      if (response.data.content) {
-        // 페이징 결과
-        setCourses(response.data.content);
-        setTotalPages(response.data.totalPages);
-      } else {
-        // 전체 목록
-        setCourses(response.data);
-        setTotalPages(1);
-      }
+      console.log(response);
+      setCourses(response.data);
+      setLoading(false);
     } catch (error) {
       console.error('강의 불러오기 실패:', error);
-    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCourses(page);
-  }, [selectedCategory, page]);
-
-  const handlePrev = () => {
-    if (page > 0) setPage(page - 1);
-  };
-
-  const handleNext = () => {
-    if (page < totalPages - 1) setPage(page + 1);
-  };
+    fetchCourses();
+  }, []);
 
   if (loading) {
     return <div className='course-list'>로딩 중...</div>;
@@ -92,11 +70,10 @@ const MainPage = () => {
           key={course.productId}
           className='course-card'
           onClick={() =>
-            navigate('/items', {
+            navigate('/info/:courseId', {
               state: { courseId: course.productId },
             })
           }
-          style={{ cursor: 'pointer' }}
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
@@ -115,23 +92,6 @@ const MainPage = () => {
           </div>
         </div>
       ))}
-      <div className='pagination'>
-        <button onClick={handlePrev} disabled={page === 0}>
-          이전
-        </button>
-        {[...Array(totalPages)].map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setPage(idx)}
-            className={page === idx ? 'active' : ''}
-          >
-            {idx + 1}
-          </button>
-        ))}
-        <button onClick={handleNext} disabled={page === totalPages - 1}>
-          다음
-        </button>
-      </div>
     </div>
   );
 };

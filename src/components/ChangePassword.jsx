@@ -99,7 +99,12 @@ const ChangePassword = () => {
               )}
 
               <Box mt={2}>
-                <Button type='submit' variant='contained' color='primary' fullWidth>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  color='primary'
+                  fullWidth
+                >
                   비밀번호 변경
                 </Button>
               </Box>

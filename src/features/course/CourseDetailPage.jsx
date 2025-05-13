@@ -8,6 +8,7 @@ import htmlcssImg from '../../assets/html-css.jpg';
 import jsImg from '../../assets/js.png';
 import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
+import PostCard from '../../components/PostCard';
 import './CourseDetailPage.scss';
 
 const categoryImages = {
@@ -21,24 +22,25 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  java: javaImg,
+  카테고리: sqlImg,
 };
 
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import CartContext from '../../context/CartContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/TokenContext';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
-// import './CourseDetail.scss';
+import './CourseDetailPage.scss';
 
-const CourseDetail = ({ courseId }) => {
+const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const { addCart, orderCourse } = useContext(CartContext);
-  const navigate = useNavigate();
-  //임시
-  courseId = 3;
-  const user = useAuth();
-  console.log('토큰: ', user);
+  const location = useLocation();
+  const courseId = location.state?.courseId;
+  const token = useAuth();
+  console.log('토큰: ', token);
 
   useEffect(() => {
     axios
@@ -60,6 +62,11 @@ const CourseDetail = ({ courseId }) => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
+    if (token === undefined) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
+
     const product = {
       id: course.productId,
       name: course.productName,
@@ -76,6 +83,11 @@ const CourseDetail = ({ courseId }) => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
+    if (token === undefined) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
+
     const product = {
       id: course.productId,
       name: course.productName,
@@ -101,37 +113,12 @@ const CourseDetail = ({ courseId }) => {
           <div className='price'>{course.price.toLocaleString()}원</div>
           <button onClick={handleAddToCart}>장바구니 담기</button>
           <button onClick={handleOrderCourse}>수강신청 하기</button>
-          {/* <ul>
-                        <li>강의 수: {course.courseCount}개</li>
-                        <li>총 시간: {course.duration}</li>
-                        <li>수강 기간: {course.period}</li>
-                        <li>난이도: {course.level}</li>
-                        <li>수료증: {course.certificate}</li>
-                    </ul> */}
         </div>
       </div>
 
-      {/* <div className="learning-points">
-                <h3>이런 걸 배울 수 있어요</h3>
-                <ul>
-                    {course.learningPoints.map((point, idx) => (
-                        <li key={idx}>✔ {point}</li>
-                    ))}
-                </ul>
-            </div> */}
-
-      {/* <div className="user-reviews">
-                <h3>수강생 리뷰</h3>
-                {course.userReviews.map((review, idx) => (
-                    <div className="review" key={idx}>
-                        <strong>{review.name}</strong>
-                        <span>⭐ {review.rating}</span>
-                        <p>{review.text}</p>
-                    </div>
-                ))}
-            </div> */}
+      <PostCard Id={courseId} />
     </div>
   );
 };
 
-export default CourseDetail;
+export default CourseDetailPage;
