@@ -14,6 +14,16 @@ const CreatePost = () => {
   const handleSubmit = async () => {
     console.log('버튼이 클릭되었음!');
 
+    if (title.trim().length < 5) {
+      alert('제목은 최소 5자 이상이어야 합니다.');
+      return;
+    }
+
+    if (content.trim().length < 10) {
+      alert('내용은 최소 10자 이상이어야 합니다.');
+      return;
+    }
+
     try {
       const response = await axios.post(
         'http://localhost:8000/post-service/post/create',
@@ -37,7 +47,7 @@ const CreatePost = () => {
       }
     } catch (err) {
       console.error(err);
-      alert('질문 등록 중 오류 발생');
+      alert('질문 등록 중 오류 발생, 다시 등록해주시기 바랍니다.');
     }
   };
 

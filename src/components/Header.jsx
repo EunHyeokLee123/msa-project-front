@@ -16,17 +16,16 @@ import LanguageIcon from '@mui/icons-material/Language';
 const navItems = ['강의', '로드맵', '멘토링', '커뮤니티'];
 
 const categoryTabs = [
-  '개발 · 프로그래밍',
-  '게임 개발',
-  '데이터 사이언스',
-  '인공지능',
-  '보안 · 네트워크',
-  '하드웨어',
-  '디자인 · 아트',
-  '기획 · 마케팅',
-  '업무 생산성',
-  '자기계발',
-  '대학 교육',
+  'Git',
+  'Java',
+  'SQL',
+  'Linux',
+  'Algorithm',
+  'JDBC',
+  'HTML/CSS',
+  'JS',
+  'React',
+  'Spring',
 ];
 
 const Header = () => {
@@ -45,7 +44,7 @@ const Header = () => {
 
             {/* 네비게이션 */}
             {navItems.map((item, index) => (
-              <Button key={index} sx={{ mx: 1, color: '#333' }}>
+              <Button key={index} sx={{ mx: 2, color: '#333' }}>
                 {item}
               </Button>
             ))}
@@ -59,7 +58,7 @@ const Header = () => {
               backgroundColor: '#f1f3f5',
               borderRadius: 2,
               px: 2,
-              width: '40%',
+              width: '400px',
             }}
           >
             <SearchIcon sx={{ color: '#777' }} />

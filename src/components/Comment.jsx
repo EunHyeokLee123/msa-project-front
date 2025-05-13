@@ -46,7 +46,14 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
   }, [post.id]);
 
   const handleCreateComment = async () => {
-    if (!newComment.trim()) return;
+    const trimmed = newComment.trim();
+
+    if (!trimmed) return;
+
+    if (trimmed.length < 10) {
+      alert('댓글은 최소 10자 이상 입력해야 합니다.');
+      return;
+    }
 
     try {
       const response = await axios.post(
