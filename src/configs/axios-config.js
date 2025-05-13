@@ -4,6 +4,7 @@
 // axios 인스턴스는 token이 필요한 모든 요청에 활용 될 것입니다.
 
 import axios from 'axios';
+import { useAuth } from '../context/TokenContext';
 
 // Axios 인스턴스 생성
 // 이제부터 토큰이 필요한 요청은 그냥 axios가 아니라
@@ -26,7 +27,12 @@ Axios Interceptor는 요청 또는 응답이 처리되기 전에 실행되는 �
 axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 보내기 전에 항상 처리해야할 내용을 콜백으로 전달
-    const token = localStorage.getItem('ACCESS_TOKEN');
+    // 테스트용으로 임시 하드코딩된 토큰 접근
+    const token =
+      localStorage.getItem('ACCESS_TOKEN') ||
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYUBuYXZlci5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc0NzA1Nzg0NywiZXhwIjoxNzQ3MDYxNDQ3fQ.rrej_q3PXTvqwk4Unr_wOHucUYH00NKREnwp2oqmDs0';
+
+    console.log('토큰: ', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -43,6 +49,7 @@ axiosInstance.interceptors.request.use(
 // 응답용 인터셉터 설정
 axiosInstance.interceptors.response.use(
   // 응답에 문제가 없다면 그대로 응답 객체 리턴
+
   (response) => {
     return response;
   },

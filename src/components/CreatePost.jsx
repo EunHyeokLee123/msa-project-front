@@ -1,22 +1,32 @@
-import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AuthProvider, useAuth } from '../context/TokenContext';
 
 const CreatePost = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const navigate = useNavigate();
 
+  const token = useAuth();
+
   const handleSubmit = async () => {
-    console.log("버튼이 클릭되었음!");
+    console.log('버튼이 클릭되었음!');
+
+    if (title.trim().length < 5) {
+      alert('제목은 최소 5자 이상이어야 합니다.');
+      return;
+    }
+
+    if (content.trim().length < 10) {
+      alert('내용은 최소 10자 이상이어야 합니다.');
+      return;
+    }
 
     try {
-      const token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeXU5OTlAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NDcwMjI3MzAsImV4cCI6MTc0NzAyNjMzMH0.CvgIzD22dhGOILGbqTbnfoY4pb6M01nOCCdCkYTEn_I";
-
       const response = await axios.post(
-        "http://localhost:8000/post-service/post/create",
+        'http://localhost:8000/post-service/post/create',
         {
           title,
           content,
@@ -26,48 +36,48 @@ const CreatePost = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       console.log(response);
 
       if (response.status === 201) {
-        alert("질문이 등록되었습니다!");
-        navigate("/"); // 등록 후 홈으로 이동
+        alert('질문이 등록되었습니다!');
+        navigate('/post'); // 등록 후 홈으로 이동
       }
     } catch (err) {
       console.error(err);
-      alert("질문 등록 중 오류 발생");
+      alert('질문 등록 중 오류 발생, 다시 등록해주시기 바랍니다.');
     }
   };
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h5" mb={2}>
+      <Typography variant='h5' mb={2}>
         질문 작성
       </Typography>
 
       <TextField
         fullWidth
-        label="제목"
+        label='제목'
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        margin="normal"
+        margin='normal'
       />
 
       <TextField
         fullWidth
-        label="내용"
+        label='내용'
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        margin="normal"
+        margin='normal'
         multiline
         rows={6}
       />
 
       <Button
-        variant="contained"
-        color="primary"
+        variant='contained'
+        color='primary'
         onClick={handleSubmit}
         sx={{ mt: 2 }}
       >

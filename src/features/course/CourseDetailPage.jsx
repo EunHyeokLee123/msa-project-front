@@ -8,7 +8,7 @@ import htmlcssImg from '../../assets/html-css.jpg';
 import jsImg from '../../assets/js.png';
 import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
-
+import './CourseDetailPage.scss';
 
 const categoryImages = {
     Git: gitImg,
@@ -20,18 +20,34 @@ const categoryImages = {
     'HTML/CSS': htmlcssImg,
     JS: jsImg,
     React: reactImg,
-    Spring: springImg
+    Spring: springImg,
 };
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import './CourseDetail.scss';
+import CartContext from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/TokenContext';
+import { API_BASE_URL, COURSE } from '../../configs/host-config';
+// import './CourseDetail.scss';
 
-const CourseDetail = ({ courseId }) => {
+const CourseDetailPage = ({ courseId }) => {
     const [course, setCourse] = useState(null);
+    const { addCart, orderCourse } = useContext(CartContext);
+    const navigate = useNavigate();
+    //임시
+    courseId = 3;
+    const token = useAuth();
+    console.log('토큰: ', token);
 
     useEffect(() => {
-        axios.get(`/courses/info/${courseId}`)
+        axios
+            .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
             .then((res) => {
                 setCourse(res.data);
             })
@@ -40,25 +56,50 @@ const CourseDetail = ({ courseId }) => {
             });
     }, [courseId]);
 
-    if (!course) return <div className="course-detail">로딩 중...</div>;
+    if (!course) return <div className='course-detail'>로딩 중...</div>;
+
+    // 장바구니 클릭 이벤트 핸들러
+    const handleAddToCart = () => {
+        const product = {
+            id: course.productId,
+            name: course.productName,
+            price: course.price,
+        };
+
+        console.log('장바구니 추가 대상:', product);
+
+        if (confirm('강의를 수강바구니에 추가하시겠습니까?')) {
+            addCart(product); // 장바구니에 추가
+        }
+    };
+
+    // 수강신청하기 클릭 이벤트 핸들러
+    const handleOrderCourse = () => {
+        const product = {
+            id: course.productId,
+            name: course.productName,
+            price: course.price,
+        };
+
+        console.log('구매할 강의:', product);
+        orderCourse(product);
+        navigate('/order/cart');
+    };
 
     return (
-        <div className="course-detail">
-            <div className="course-header">
-                <img
-                    src={categoryImages[course.category]}
-                    alt={course.category}
-                />
-                <div className="info">
+        <div className='course-detail'>
+            <div className='course-header'>
+                <img src={categoryImages[course.category]} alt={course.category} />
+                <div className='info'>
                     <h2>{course.productName}</h2>
-                    <p className="subtitle">{course.description}</p>
-                    <p className="tags">{course.category}</p>
+                    <p className='subtitle'>{course.description}</p>
+                    <p className='tags'>{course.category}</p>
                     {/* <p className="rating">⭐ {course.rating} ({course.reviews}개 리뷰)</p> */}
                 </div>
-                <div className="side-info">
-                    <div className="price">{course.price.toLocaleString()}원</div>
-                    <button onClick={aaa}>장바구니 담기</button>
-                    <button onClick={bbb}>수강신청 하기</button>
+                <div className='side-info'>
+                    <div className='price'>{course.price.toLocaleString()}원</div>
+                    <button onClick={handleAddToCart}>장바구니 담기</button>
+                    <button onClick={handleOrderCourse}>수강신청 하기</button>
                     {/* <ul>
                         <li>강의 수: {course.courseCount}개</li>
                         <li>총 시간: {course.duration}</li>
@@ -92,4 +133,4 @@ const CourseDetail = ({ courseId }) => {
     );
 };
 
-export default CourseDetail;
+export default CourseDetailPage;

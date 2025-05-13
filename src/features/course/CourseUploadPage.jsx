@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './CourseUploadPage.scss';
+import { API_BASE_URL, COURSE } from '../../configs/host-config';
 
 const categories = ['Git', 'Java', 'SQL', 'Linux', 'Algorithm', 'JDBC', 'HTML/CSS', 'JS', 'React', 'Spring'];
 
@@ -30,7 +31,14 @@ const CourseUploadPage = () => {
         }
 
         try {
-            await axios.post('http://localhost:8181/courses/create', form); // MSA Gateway 경유 가능
+            await axios.post(`${API_BASE_URL}${COURSE}/create`, {
+                            withCredentials: true,
+                            // headers: {
+                            //     Authorization: `Bearer ${token}`,
+                            //     Content-Type: `application/json`,
+                            //     userId: form.userId
+                            // },
+                        }, form); // MSA Gateway 경유 가능
             alert('강의가 등록되었습니다.');
             setForm({
                 title: '',

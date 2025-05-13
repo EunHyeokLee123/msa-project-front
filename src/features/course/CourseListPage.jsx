@@ -26,6 +26,7 @@ const categoryImages = {
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CourseListPage.scss';
+import { API_BASE_URL, COURSE } from '../../configs/host-config';
 
 const PAGE_SIZE = 12;
 
@@ -38,10 +39,9 @@ const CourseListPage = () => {
     const fetchCourses = async (page) => {
         setLoading(true);
         try {
-            const baseUrl = "http://localhost:8000/courses/list";
             const url = page !== undefined
-                ? `${baseUrl}?page=${page}&size=${PAGE_SIZE}`
-                : baseUrl;
+                ? `${API_BASE_URL}${COURSE}/list/?page=${page}&size=${PAGE_SIZE}`
+                : `${API_BASE_URL}${COURSE}/list`;
 
             const response = await axios.get(url);
 
