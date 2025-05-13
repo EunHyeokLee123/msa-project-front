@@ -39,8 +39,8 @@ const CourseDetailPage = () => {
   const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
   const courseId = location.state?.courseId;
-  const token = useAuth();
-  console.log('토큰: ', token);
+  const user = useAuth();
+  console.log('토큰: ', user.token);
 
   useEffect(() => {
     axios

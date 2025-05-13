@@ -13,10 +13,10 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import CartContext from '../../../context/CartContext';
-import axiosInstance from '../../../configs/axios-config';
-import { API_BASE_URL, ORDER } from '../../../configs/host-config';
-import { useAuth } from '../../../context/TokenContext';
+import CartContext from '../../context/CartContext';
+import axiosInstance from '../../configs/axios-config';
+import { API_BASE_URL, ORDER } from '../../configs/host-config';
+import { useAuth } from '../../context/TokenContext';
 
 const OrderPage = () => {
   const {

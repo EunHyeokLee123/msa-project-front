@@ -11,8 +11,10 @@ import { CategoryProvider } from './context/CategoryContext';
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
 import CourseSearchPage from './features/course/CourseSearchPage';
-import OrderPage from './components/feature/order/OrderPage';
+import OrderPage from './features/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
+import OrderListComponent from './features/order/OrderListComponent';
+import AdminOrderListComponent from './features/order/AdminOrderListComponent';
 
 function App() {
   return (

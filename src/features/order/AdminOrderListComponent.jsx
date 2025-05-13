@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../../configs/axios-config';
-import { API_BASE_URL, ORDER } from '../../../configs/host-config';
-import { useAuth } from '../../../context/TokenContext';
+import axiosInstance from '../../configs/axios-config';
+import { API_BASE_URL, ORDER } from '../../configs/host-config';
+import { useAuth } from '../../context/TokenContext';
 
 const AdminOrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
