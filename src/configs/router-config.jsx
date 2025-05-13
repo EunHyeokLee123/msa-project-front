@@ -27,7 +27,13 @@ import MyPageInfoBox from '../my-page/component/view/MyPageInfoBox';
 import MyPageDeliveryBox from '../my-page/component/view/MyPageDeliveryBox';
 import MyPageCouponBox from '../my-page/component/view/MyPageCouponBox';
 
-import { API_BASE_URL, USER, COURSE, ORDER, POST } from '../../configs/host-config';
+import {
+  API_BASE_URL,
+  USER,
+  COURSE,
+  ORDER,
+  POST,
+} from '../../configs/host-config';
 
 // 라우터 설정
 export const router = createBrowserRouter(

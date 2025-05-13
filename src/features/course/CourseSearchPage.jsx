@@ -24,9 +24,9 @@ const categoryImages = {
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './CourseListPage.scss';
+import './CourseSearchPage.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
-import { useCategory } from '../context/CategoryContext';
+import { useCategory } from '../../context/CategoryContext';
 import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 12;

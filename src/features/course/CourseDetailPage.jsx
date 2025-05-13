@@ -22,6 +22,8 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  java: javaImg,
+  카테고리: sqlImg,
 };
 
 import React, { useContext, useEffect, useState } from 'react';
@@ -30,7 +32,6 @@ import CartContext from '../../context/CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/TokenContext';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
-import PostCard from './PostCard';
 import './CourseDetailPage.scss';
 
 const CourseDetailPage = () => {
