@@ -7,10 +7,12 @@ import PostCard from '../components/PostCard';
 import PostItem from '../components/PostItem';
 import CartContext from '../context/CartContext';
 import CourseDetailPage from '../features/course/CourseDetailPage';
-import CourseListPage from '../features/course/CourseListPage';
+import CourseSearchPage from '../features/course/CourseSearchPage';
 import CourseUploadPage from '../features/course/CourseUploadPage';
 import OrderListComponent from '../features/order/OrderListComponent';
 import RootLayout from '../components/Rootlayout';
+import MainPage from '../components/MainPage';
+import Login from '../components/Login';
 import { useEffect } from 'react';
 
 import LoginPage from '../login/LoginPage';
@@ -25,6 +27,8 @@ import MyPageInfoBox from '../my-page/component/view/MyPageInfoBox';
 import MyPageDeliveryBox from '../my-page/component/view/MyPageDeliveryBox';
 import MyPageCouponBox from '../my-page/component/view/MyPageCouponBox';
 
+import { API_BASE_URL, USER, COURSE, ORDER, POST } from '../../configs/host-config';
+
 // 라우터 설정
 export const router = createBrowserRouter(
   [
@@ -35,33 +39,27 @@ export const router = createBrowserRouter(
       children: [
         {
           index: true, // 부모 경로가 활성화 되었을 때 기본으로 사용할 컴포넌트
-          element: <CourseListPage />,
+          element: <MainPage />,
         },
         {
-          path: 'login',
-          element: <LoginPage />,
+          path: `${USER}/login`,
+          element: <Login />,
+        },
+        // {
+        //   path: 'mypage/',
+        //   element: <Mypage />,
+        // },
+        {
+          path: `${COURSE}/list`,
+          element: <CourseSearchPage />,
         },
         {
-          path: 'mypage/',
-          element: <Mypage />,
-          children: [
-            {
-              index: true,
-              element: <MyPageInfoBox />,
-            },
-            {
-              path: 'order',
-              element: <MyPageOrderBox />,
-            },
-            {
-              path: 'delivery',
-              element: <MyPageDeliveryBox />,
-            },
-            {
-              path: 'coupon',
-              element: <MyPageCouponBox />,
-            },
-          ],
+          path: `${COURSE}/category`,
+          element: <CourseSearchPage />,
+        },
+        {
+          path: `${COURSE}/category`,
+          element: <CourseSearchPage />,
         },
       ],
     },

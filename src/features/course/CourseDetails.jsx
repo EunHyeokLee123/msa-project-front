@@ -1,15 +1,16 @@
-import gitImg from '../../assets/git.png';
-import javaImg from '../../assets/java.jpg';
-import sqlImg from '../../assets/sql.png';
-import linuxImg from '../../assets/Linux.png';
-import algorithmImg from '../../assets/algorithm.png';
-import jdbcImg from '../../assets/jdbc.png';
-import htmlcssImg from '../../assets/html-css.jpg';
-import jsImg from '../../assets/js.png';
-import reactImg from '../../assets/react.png';
-import springImg from '../../assets/spring.jpg';
-import PostCard from '../../components/PostCard';
-import './CourseDetailPage.scss';
+// src/features/course/CourseDetailPage.jsx에 병합되어 미사용되는 파일이지만
+// 임시로 남겨둠.
+
+import gitImg from '../assets/git.png';
+import javaImg from '../assets/java.jpg';
+import sqlImg from '../assets/sql.png';
+import linuxImg from '../assets/Linux.png';
+import algorithmImg from '../assets/algorithm.png';
+import jdbcImg from '../assets/jdbc.png';
+import htmlcssImg from '../assets/html-css.jpg';
+import jsImg from '../assets/js.png';
+import reactImg from '../assets/react.png';
+import springImg from '../assets/spring.jpg';
 
 const categoryImages = {
     Git: gitImg,
@@ -22,33 +23,25 @@ const categoryImages = {
     JS: jsImg,
     React: reactImg,
     Spring: springImg,
+    // 카테고리: sqlImg,
+    // java: javaImg,
 };
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import PostCard from '../../components/PostCard';
 import CartContext from '../../context/CartContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/TokenContext';
-import { API_BASE_URL, COURSE } from '../../configs/host-config';
-import PostCard from './PostCard';
-import './CourseDetailPage.scss';
 
-const CourseDetailPage = () => {
+const CourseDetails = () => {
     const [course, setCourse] = useState(null);
     const { addCart, orderCourse } = useContext(CartContext);
     const location = useLocation();
     const courseId = location.state?.courseId;
-    const token = useAuth();
-    console.log('토큰: ', token);
 
     useEffect(() => {
         axios
-            .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
-                withCredentials: true,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
+            .get(`http://localhost:8000/course-service/courses/info/${courseId}`)
             .then((res) => {
                 setCourse(res.data);
             })
@@ -57,15 +50,8 @@ const CourseDetailPage = () => {
             });
     }, [courseId]);
 
-    if (!course) return <div className='course-detail'>로딩 중...</div>;
-
     // 장바구니 클릭 이벤트 핸들러
     const handleAddToCart = () => {
-        if (token === undefined) {
-            alert("로그인이 필요합니다!");
-            return;
-        };
-
         const product = {
             id: course.productId,
             name: course.productName,
@@ -81,11 +67,6 @@ const CourseDetailPage = () => {
 
     // 수강신청하기 클릭 이벤트 핸들러
     const handleOrderCourse = () => {
-        if (token === undefined) {
-            alert("로그인이 필요합니다!");
-            return;
-        };
-
         const product = {
             id: course.productId,
             name: course.productName,
@@ -96,6 +77,8 @@ const CourseDetailPage = () => {
         orderCourse(product);
         navigate('/order/cart');
     };
+
+    if (!course) return <div className='course-detail'>로딩 중...</div>;
 
     return (
         <div className='course-detail'>
@@ -119,4 +102,4 @@ const CourseDetailPage = () => {
     );
 };
 
-export default CourseDetailPage;
+export default CourseDetails;

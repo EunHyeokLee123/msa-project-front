@@ -31,14 +31,19 @@ const CourseUploadPage = () => {
         }
 
         try {
-            await axios.post(`${API_BASE_URL}${COURSE}/create`, {
-                            withCredentials: true,
-                            // headers: {
-                            //     Authorization: `Bearer ${token}`,
-                            //     Content-Type: `application/json`,
-                            //     userId: form.userId
-                            // },
-                        }, form); // MSA Gateway 경유 가능
+            await axios.post(`${API_BASE_URL}${COURSE}/create`,
+                form,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                    // headers: {
+                    //     Authorization: `Bearer ${token}`,
+                    //     Content-Type: `application/json`,
+                    //     userId: form.userId
+                    // },
+                },); // MSA Gateway 경유 가능
             alert('강의가 등록되었습니다.');
             setForm({
                 title: '',
@@ -76,7 +81,7 @@ const CourseUploadPage = () => {
                 ))}
             </div>
 
-            <label>강의 한줄 소개개</label>
+            <label>강의 한줄 소개</label>
             <textarea name="description" value={form.description} onChange={handleChange} />
 
             <label>가격</label>

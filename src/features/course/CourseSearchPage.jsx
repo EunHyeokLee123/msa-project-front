@@ -27,6 +27,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CourseListPage.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
+import { useCategory } from '../context/CategoryContext';
+import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 12;
 
@@ -36,12 +38,19 @@ const CourseListPage = () => {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
 
+    const { selectedCategory } = useCategory();
+    const navigate = useNavigate();
+
     const fetchCourses = async (page) => {
         setLoading(true);
         try {
-            const url = page !== undefined
-                ? `${API_BASE_URL}${COURSE}/list/?page=${page}&size=${PAGE_SIZE}`
-                : `${API_BASE_URL}${COURSE}/list`;
+            if (page !== undefined) {
+                url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`
+            } else if (selectedCategory !== undefined) {
+                url = `${API_BASE_URL}${COURSE}/category/${selectedCategory}`
+            } else {
+                url = `${API_BASE_URL}`
+            }
 
             const response = await axios.get(url);
 
@@ -62,6 +71,10 @@ const CourseListPage = () => {
         }
     };
 
+    useEffect(() => {
+        fetchCourses(page);
+    }, [selectedCategory, page]);
+
 
     useEffect(() => {
         fetchCourses(page);
@@ -79,10 +92,24 @@ const CourseListPage = () => {
         return <div className="course-list">로딩 중...</div>;
     }
 
+    if (!courses || courses.length === 0) {
+        return <div className='course-list'>현재 강의가 없습니다.</div>;
+    }
+
     return (
         <div className="course-list">
             {courses.map((course) => (
-                <div key={course.productId} className="course-card">
+
+                <div
+                    key={course.productId}
+                    className="course-card"
+                    onClick={() =>
+                        navigate('/items', {
+                            state: { courseId: course.productId },
+                        })
+                    }
+                    style={{ cursor: 'pointer' }}
+                >
                     <img
                         src={categoryImages[course.category]}
                         alt={course.category}
@@ -91,7 +118,8 @@ const CourseListPage = () => {
 
                     <div className="info">
                         <h3 className="title">
-                            <a className="filePath" href={course.filePath}>{course.productName}</a>
+                            <a className="filePath" href={course.filePath}>
+                                {course.productName}</a>
                         </h3>
                         <p className="instructor">{course.instructor}</p>
                         <div className="bottom">
@@ -107,11 +135,15 @@ const CourseListPage = () => {
             <div className="pagination">
                 <button onClick={handlePrev} disabled={page === 0}>이전</button>
                 {[...Array(totalPages)].map((_, idx) => (
-                    <button key={idx} onClick={() => setPage(idx)} className={page === idx ? 'active' : ''}>
+                    <button
+                        key={idx}
+                        onClick={() => setPage(idx)}
+                        className={page === idx ? 'active' : ''}>
                         {idx + 1}
                     </button>
                 ))}
-                <button onClick={handleNext} disabled={page === totalPages - 1}>다음</button>
+                <button onClick={handleNext} disabled={page === totalPages - 1}>
+                    다음</button>
             </div>
 
         </div>
