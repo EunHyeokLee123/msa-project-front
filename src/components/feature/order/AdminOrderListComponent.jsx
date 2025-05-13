@@ -17,7 +17,7 @@ import axiosInstance from '../../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../../configs/host-config';
 import AuthContext from '../../../context/UserContext';
 
-const OrderListComponent = () => {
+const AdminOrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
   const { onLogout, userName } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -55,7 +55,9 @@ const OrderListComponent = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axiosInstance.get(`${API_BASE_URL}${ORDER}/my-order`);
+        const res = await axiosInstance.get(
+          `${API_BASE_URL}${ORDER}/admin/all-orders`,
+        );
         setOrderList(res.data.result);
       } catch (e) {
         console.log('orderlistComponent 에러 발생 ', e);
@@ -68,7 +70,7 @@ const OrderListComponent = () => {
   return (
     <div>
       {/* <h2>{userName} 님의 주문 내역</h2> */}
-      <h2>{orderList[0]?.userEmail ?? '사용자'} 님의 주문 내역</h2>
+      <h2>전체 주문 내역</h2>
       <TableContainer>
         <Table>
           <TableHead>
@@ -76,6 +78,7 @@ const OrderListComponent = () => {
               <TableCell>주문번호</TableCell>
               <TableCell>주문일자</TableCell>
               <TableCell>강의명</TableCell>
+              <TableCell>구매자번호</TableCell>
               <TableCell>주문상태</TableCell>
               <TableCell>액션</TableCell>
             </TableRow>
@@ -87,6 +90,8 @@ const OrderListComponent = () => {
                   <TableCell>{order.id}</TableCell>
                   <TableCell>{order.orderDate}</TableCell>
                   <TableCell>{order.productName}</TableCell>
+                  <TableCell>{order.userId}</TableCell>
+
                   <TableCell>
                     {order.orderStatus === 'ORDERED'
                       ? '주문 완료'
@@ -113,4 +118,4 @@ const OrderListComponent = () => {
   );
 };
 
-export default OrderListComponent;
+export default AdminOrderListComponent;

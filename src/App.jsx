@@ -8,6 +8,8 @@ import { AuthProvider } from './context/TokenContext';
 import CourseListPage from './features/course/CourseListPage';
 import OrderPage from './components/feature/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
+import OrderListComponent from './components/feature/order/OrderListComponent';
+import AdminOrderListComponent from './components/feature/order/AdminOrderListComponent';
 
 function App() {
   return (
@@ -26,6 +28,11 @@ function App() {
                 element={<CourseDetail />}
               />
               <Route path='/order/cart' element={<OrderPage />} />
+              <Route path='/order/my-order' element={<OrderListComponent />} />
+              <Route
+                path='/order/admin/all-orders'
+                element={<AdminOrderListComponent />}
+              />
               <Route path='/courses/list' element={<CourseListPage />} />
             </Routes>
           </Router>
