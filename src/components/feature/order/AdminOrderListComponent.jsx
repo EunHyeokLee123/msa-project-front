@@ -12,45 +12,20 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../../configs/host-config';
+import { useAuth } from '../../../context/TokenContext';
 import AuthContext from '../../../context/UserContext';
 
 const AdminOrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
-  const { onLogout, userName } = useContext(AuthContext);
+  const { onLogout } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const cancelOrder = async (id, orderDate) => {
-    console.log('id, orderDate', id, orderDate);
-
-    const orderDateStr = new Date(orderDate);
-    const now = new Date();
-    const diffInMs = now - orderDateStr;
-    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-    if (diffInDays > 7) {
-      alert('주문일로부터 7일이 지나 취소할 수 없습니다.');
-      return;
-    }
-
-    if (!confirm('정말 취소하시겠습니까?')) return;
-
-    try {
-      const res = await axiosInstance.patch(
-        `${API_BASE_URL}${ORDER}/cancel/${id}`,
-      );
-      // 주문 상태 업데이트
-      setOrderList((prevList) =>
-        prevList.map((order) =>
-          order.id === id ? { ...order, orderStatus: 'CANCELED' } : order,
-        ),
-      );
-    } catch (e) {
-      console.log('orderlistComponent 에러 발생 ', e);
-    }
-  };
+  const { userId } = useParams();
+  const token = useAuth();
+  console.log('토큰: ', token);
+  console.log('userId: ', userId);
 
   useEffect(() => {
     const fetchOrders = async () => {

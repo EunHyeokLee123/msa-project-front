@@ -10,12 +10,12 @@ import Footer from './components/Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from 'react-router-dom';
+// import {
+//   BrowserRouter as Router,
+//   Routes,
+//   Route,
+//   BrowserRouter,
+// } from 'react-router-dom';
 
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
@@ -40,6 +40,17 @@ function App() {
               <Route path='/create' element={<CourseUploadPage />} />
               <Route path='/post' element={<PostCard />} />
               <Route path='/create' element={<CreatePost />} />
+
+              <Route
+                path='/courses/info/:courseId'
+                element={<CourseDetail />}
+              />
+              <Route path='/order/cart' element={<OrderPage />} />
+              <Route path='/order/my-order' element={<OrderListComponent />} />
+              <Route
+                path='/order/my-course-order/:userId'
+                element={<AdminOrderListComponent />}
+              />
             </Routes>
             <Footer />
           </Router>

@@ -16,11 +16,14 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../../configs/host-config';
 import AuthContext from '../../../context/UserContext';
+import { useAuth } from '../../../context/TokenContext';
 
 const OrderListComponent = () => {
   const [orderList, setOrderList] = useState([]);
-  const { onLogout, userName } = useContext(AuthContext);
+  const { onLogout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const token = useAuth();
+  console.log('토큰: ', token);
 
   const cancelOrder = async (id, orderDate) => {
     console.log('id, orderDate', id, orderDate);
