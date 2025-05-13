@@ -21,7 +21,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 
-  const token = useAuth();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -30,9 +30,6 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
           'http://localhost:8000/post-service/post/comment/find',
           {
             params: { id: post.id },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           },
         );
         setComments(response.data.result);

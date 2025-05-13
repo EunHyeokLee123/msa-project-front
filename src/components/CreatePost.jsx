@@ -9,7 +9,7 @@ const CreatePost = () => {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
-  const token = useAuth();
+  const { token } = useAuth();
 
   const handleSubmit = async () => {
     console.log('버튼이 클릭되었음!');

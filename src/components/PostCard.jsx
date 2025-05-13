@@ -6,17 +6,16 @@ import { useLocation, useNavigate } from 'react-router-dom'; // 추가
 import { Button, Box } from '@mui/material'; // 추가
 import { useAuth } from '../context/TokenContext';
 
-const PostCard = () => {
+const PostCard = ({ Id }) => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const token = useAuth();
-
-  const courseId = location.state?.courseId;
+  const { token } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const courseId = Id;
 
   useEffect(() => {
     if (!courseId) return;
@@ -25,12 +24,9 @@ const PostCard = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:8000/post-service/post/list?id=${courseId}`,
+          'http://localhost:8000/post-service/post/list',
           {
             params: { id: courseId },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           },
         );
 
@@ -133,7 +129,7 @@ const PostCard = () => {
         <Button
           variant='contained'
           color='primary'
-          onClick={() => navigate('/create')}
+          onClick={() => navigate('/post/create')}
         >
           질문 생성
         </Button>

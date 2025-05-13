@@ -92,7 +92,7 @@ const MainPage = () => {
           key={course.productId}
           className='course-card'
           onClick={() =>
-            navigate('/post', {
+            navigate('/items', {
               state: { courseId: course.productId },
             })
           }

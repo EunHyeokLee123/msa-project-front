@@ -1,4 +1,3 @@
-import './App.css';
 import PostCard from './components/PostCard';
 import CreatePost from './components/CreatePost';
 import Header from './components/Header';
@@ -11,16 +10,10 @@ import Footer from './components/Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from 'react-router-dom';
-
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
 import Home from './page/Home';
+import CourseDetails from './components/CourseDetails';
 
 function App() {
   return (
@@ -35,20 +28,15 @@ function App() {
               <Route path='/list' element={<CourseListPage />} />
               <Route path='/create' element={<CourseUploadPage />} />
               <Route path='/post' element={<PostCard />} />
-              <Route path='/create' element={<CreatePost />} />
+              <Route path='/post/create' element={<CreatePost />} />
+              <Route path='/login' element={<LoginPage />} />
+              <Route path='/signup' element={<SignupPage />} />
+              <Route path='/items' element={<CourseDetails />} />
             </Routes>
             <Footer />
           </Router>
         </CategoryProvider>
       </AuthProvider>
-
-      <Router>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignupPage />} />
-        </Routes>
-      </Router>
     </>
   );
 }

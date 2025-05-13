@@ -1,13 +1,13 @@
-import gitImg from '../../assets/git.png';
-import javaImg from '../../assets/java.jpg';
-import sqlImg from '../../assets/sql.png';
-import linuxImg from '../../assets/Linux.png';
-import algorithmImg from '../../assets/algorithm.png';
-import jdbcImg from '../../assets/jdbc.png';
-import htmlcssImg from '../../assets/html-css.jpg';
-import jsImg from '../../assets/js.png';
-import reactImg from '../../assets/react.png';
-import springImg from '../../assets/spring.jpg';
+import gitImg from '../assets/git.png';
+import javaImg from '../assets/java.jpg';
+import sqlImg from '../assets/sql.png';
+import linuxImg from '../assets/Linux.png';
+import algorithmImg from '../assets/algorithm.png';
+import jdbcImg from '../assets/jdbc.png';
+import htmlcssImg from '../assets/html-css.jpg';
+import jsImg from '../assets/js.png';
+import reactImg from '../assets/react.png';
+import springImg from '../assets/spring.jpg';
 
 const categoryImages = {
   Git: gitImg,
@@ -20,21 +20,24 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  카테고리: sqlImg,
+  java: javaImg,
 };
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './CourseDetailPage.scss';
 import { useLocation } from 'react-router-dom';
+import PostCard from './PostCard';
 
-const CourseDetail = ({ courseId }) => {
+const CourseDetails = () => {
   const [course, setCourse] = useState(null);
 
   const location = useLocation();
+  const courseId = location.state?.courseId;
 
   useEffect(() => {
     axios
-      .get(`/courses/info/${courseId}`)
+      .get(`http://localhost:8000/course-service/courses/info/${courseId}`)
       .then((res) => {
         setCourse(res.data);
       })
@@ -57,8 +60,8 @@ const CourseDetail = ({ courseId }) => {
         </div>
         <div className='side-info'>
           <div className='price'>{course.price.toLocaleString()}원</div>
-          <button onClick={aaa}>장바구니 담기</button>
-          <button onClick={bbb}>수강신청 하기</button>
+          <button>장바구니 담기</button>
+          <button>수강신청 하기</button>
           {/* <ul>
                         <li>강의 수: {course.courseCount}개</li>
                         <li>총 시간: {course.duration}</li>
@@ -88,8 +91,9 @@ const CourseDetail = ({ courseId }) => {
                     </div>
                 ))}
             </div> */}
+      <PostCard Id={courseId} />
     </div>
   );
 };
 
-export default CourseDetail;
+export default CourseDetails;
