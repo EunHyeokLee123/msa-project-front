@@ -39,7 +39,7 @@ const MainPage = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
-  const pageSize = 12;
+  const pageSize = 15;
 
   const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const MainPage = () => {
 
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
-      print('baseUrl : ' + baseUrl);
+
       console.log('baseUrl : ' + baseUrl);
       const response = await axios.get(baseUrl);
       console.log(response);
