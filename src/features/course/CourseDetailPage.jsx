@@ -26,7 +26,7 @@ const categoryImages = {
   카테고리: sqlImg,
 };
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import CartContext from '../../context/CartContext';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -34,6 +34,7 @@ import { useAuth } from '../../context/TokenContext';
 import { API_BASE_URL, COURSE, ORDER } from '../../configs/host-config';
 import './CourseDetailPage.scss';
 import axiosInstance from '../../configs/axios-config';
+import ReactPlayer from 'react-player';
 
 const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
@@ -46,6 +47,9 @@ const CourseDetailPage = () => {
 
   const user = useAuth();
   //console.log('user토큰: ', user.token);
+
+  const [playing, setPlaying] = useState(false);
+  const playerRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -82,7 +86,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (userAuth.token === undefined) {
+    if (user.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -123,6 +127,13 @@ const CourseDetailPage = () => {
     navigate('/order/cart');
   };
 
+  const handleProgress = ({ playedSeconds }) => {
+    if (playedSeconds >= 10) {
+      playerRef.current?.seekTo(0); // 처음으로 되감기
+      setPlaying(false);
+    }
+  };
+
   return (
     <div className='course-detail'>
       <div className='course-header'>
@@ -137,7 +148,9 @@ const CourseDetailPage = () => {
         <div className='side-info'>
           {isEnrolled ? (
             <div className='side-info'>
-              <button onClick={handleAddToCart}>학습하기</button>
+              <button onClick={() => window.open(course.filePath, '_blank')}>
+                학습하기
+              </button>
             </div>
           ) : (
             <div className='side-info'>
@@ -148,6 +161,15 @@ const CourseDetailPage = () => {
           )}
         </div>
       </div>
+
+      <ReactPlayer
+        url={course.filePath}
+        controls
+        className='player'
+        onProgress={handleProgress}
+        ref={playerRef}
+        playing
+      />
 
       <PostCard Id={courseId} type={'course'} />
     </div>
