@@ -1,11 +1,11 @@
 import PostCard from './components/PostCard';
 import CreatePost from './components/CreatePost';
-import Header from './components/Header';
+import Header from '../src/common-layouts/Header';
 import CourseDetail from './features/course/CourseDetailPage';
 import CourseUploadPage from './features/course/CourseUploadPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/TokenContext';
-import Footer from './components/Footer';
+import Footer from '../src/common-layouts//Footer';
 import MainPage from './components/MainPage';
 import { CategoryProvider } from './context/CategoryContext';
 import LoginPage from './page/LoginPage';
