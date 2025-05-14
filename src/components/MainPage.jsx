@@ -29,8 +29,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE } from '../configs/host-config';
 import './CourseSearchPage.scss';
+import { useAuth } from '../context/TokenContext';
 
 const MainPage = () => {
+  const userAuth = useAuth();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,6 +77,18 @@ const MainPage = () => {
               state: { courseId: course.productId },
             })
           }
+          sx={{
+            height: '45px',
+            lineHeight: 1.4,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            color: 'rgb(33, 37, 41)',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            fontWeight: '500',
+            textUnderlinePosition: 'under',
+          }}
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
@@ -84,11 +98,10 @@ const MainPage = () => {
                 {course.productName}
               </a>
             </h3>
-            <p className='instructor'>{course.instructor}</p>
+            <p className='instructor'>{course.username}</p>
             <div className='bottom'>
-              <span className='price'>{course.category}</span>
-              <span className='price'>{course.description}</span>
               <span className='price'>₩{course.price.toLocaleString()}</span>
+              <span className='category'>{course.category}</span>
             </div>
           </div>
         </div>
