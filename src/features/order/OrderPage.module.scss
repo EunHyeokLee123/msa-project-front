@@ -1,0 +1,194 @@
+// .cart-item {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 16px;
+
+//   .thumbnail {
+//     width: 100px;
+//     margin-right: 16px;
+//   }
+
+//   .info {
+//     flex: 1;
+
+//     .title {
+//       font-size: 16px;
+//       font-weight: bold;
+//     }
+
+//     .instructor {
+//       font-size: 14px;
+//       color: gray;
+//     }
+//   }
+
+//   .price {
+//     text-align: right;
+
+//     .original {
+//       text-decoration: line-through;
+//       color: #999;
+//     }
+
+//     .discounted {
+//       font-weight: bold;
+//       color: #e53935;
+//     }
+//   }
+// }
+
+// .cart-container {
+//   margin-top: 40px;
+// }
+
+// .cart-header {
+//   margin: 20px 0;
+// }
+
+// .cart-table {
+//   margin-bottom: 30px;
+// }
+
+// .cart-footer {
+//   margin-bottom: 20px;
+
+//   .cart-total {
+//     margin-top: 1rem;
+//     font-weight: bold;
+//   }
+// }
+
+.courseHeader {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+  background-color: red !important;
+
+  img {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .info {
+    flex: 1;
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
+.cartContainer {
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+
+.cartHeader {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.cartFooter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .cartTotal {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+.cartDiscount {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.cartTotal {
+  font-weight: bold;
+}
+
+.cartFooter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orderPage {
+  margin-top: 40px;
+}
+
+.cartTable {
+  margin-bottom: 20px;
+}
+
+.summaryBox {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #f8f9fae5;
+}
+
+.totalPrice {
+  margin: 20px 0;
+  font-weight: bold;
+  color: #000;
+}
+
+.clearButton {
+  margin-top: 10px;
+}
+
+.p {
+  color: rgb(134, 142, 150);
+}
+
+.cartTable {
+  margin-bottom: 30px;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    height: 120%;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid #e0e0e0; // 일반 셀
+    padding: 12px;
+    text-align: center;
+  }
+
+  th {
+    border-bottom: 2px solid #bdbdbd; // 헤더 셀
+    // background-color: #fafafa;
+    font-weight: 600;
+  }
+
+  tr:last-child td {
+    border-bottom: none; // 마지막 줄 아래선 제거
+  }
+
+  td:first-child,
+  th:first-child {
+    text-align: center;
+  }
+
+  td,
+  th {
+    border-right: none; // 세로선 제거
+  }
+
+  tr:hover {
+    background-color: #f9f9f9;
+  }
+}

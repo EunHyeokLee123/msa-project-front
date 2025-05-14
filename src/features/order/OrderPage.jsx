@@ -3,6 +3,7 @@ import {
   Checkbox,
   Container,
   Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -10,50 +11,156 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import CartContext from '../../context/CartContext';
 import axiosInstance from '../../configs/axios-config';
 import { API_BASE_URL, ORDER } from '../../configs/host-config';
 import { useAuth } from '../../context/TokenContext';
+import styles from './OrderPage.module.scss';
+import { green } from '@mui/material/colors';
+
+import gitImg from '../../assets/git.png';
+import javaImg from '../../assets/java.jpg';
+import sqlImg from '../../assets/sql.png';
+import linuxImg from '../../assets/Linux.png';
+import algorithmImg from '../../assets/algorithm.png';
+import jdbcImg from '../../assets/jdbc.png';
+import htmlcssImg from '../../assets/html-css.jpg';
+import jsImg from '../../assets/js.png';
+import reactImg from '../../assets/react.png';
+import springImg from '../../assets/spring.jpg';
+import PostCard from '../../components/PostCard';
+
+const categoryImages = {
+  Git: gitImg,
+  Java: javaImg,
+  SQL: sqlImg,
+  Linux: linuxImg,
+  Algorithm: algorithmImg,
+  JDBC: jdbcImg,
+  'HTML/CSS': htmlcssImg,
+  JS: jsImg,
+  React: reactImg,
+  Spring: springImg,
+  java: javaImg,
+  카테고리: sqlImg,
+};
 
 const OrderPage = () => {
   const {
-    productsInCart,
+    productsInCart: initialProductsInCart,
     clearCart: onClear,
     forceSelectProductId,
   } = useContext(CartContext);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  // const [selectedProducts, setSelectedProducts] = useState([]);
+  // const [productsInCart, setProductsInCart] = useState(initialProductsInCart);
+  const [selectedProducts, setSelectedProducts] = useState(() => {
+    const savedSelected = JSON.parse(localStorage.getItem('selectedProducts'));
+    return savedSelected || []; // 로컬 스토리지에 선택된 제품이 없다면 빈 배열 반환
+  });
+  const [productsInCart, setProductsInCart] = useState(() => {
+    const savedCart = JSON.parse(localStorage.getItem('productsInCart'));
+    return savedCart || []; // 로컬 스토리지에 제품이 없다면 빈 배열 반환
+  });
   const user = useAuth();
 
-  console.log(productsInCart);
+  console.log('orderpage의 productsInCart: ', productsInCart);
 
   const clearCart = () => {
+    setProductsInCart([]); // 장바구니 상태 비우기
+    setSelectedProducts([]); // 선택된 제품 상태 비우기
+
+    localStorage.setItem('productsInCart', JSON.stringify([]));
+    localStorage.setItem('selectedProductIds', JSON.stringify([]));
+
     onClear();
   };
 
+  const deleteCart = () => {
+    console.log('deleteCart');
+    const updatedCart = productsInCart.filter(
+      (product) => !selectedProducts.includes(product.id),
+    );
+    setProductsInCart(updatedCart); // 장바구니 상태 업데이트
+    setSelectedProducts([]); // 선택된 제품 초기화
+  };
+
+  // useEffect(() => {
+  //   if (
+  //     forceSelectProductId !== null &&
+  //     !selectedProducts.includes(forceSelectProductId)
+  //   ) {
+  //     setSelectedProducts((prevSelected) => [
+  //       ...prevSelected,
+  //       forceSelectProductId,
+  //     ]);
+  //   }
+  //   console.log('장바구니 변경됨:', productsInCart);
+  // }, [forceSelectProductId]);
+
+  // 로컬 스토리지에서 장바구니 상태 불러오기
   useEffect(() => {
-    if (
-      forceSelectProductId !== null &&
-      !selectedProducts.includes(forceSelectProductId)
-    ) {
-      setSelectedProducts((prev) => [...prev, forceSelectProductId]);
-    }
-    console.log('장바구니 변경됨:', productsInCart);
-  }, [forceSelectProductId]);
+    const savedCart = JSON.parse(localStorage.getItem('productsInCart')) || [];
+    const savedSelected =
+      JSON.parse(localStorage.getItem('selectedProductIds')) || [];
+
+    setSelectedProducts(savedSelected);
+    setProductsInCart(savedCart);
+  }, []);
+
+  // 로컬 스토리지 상태 저장 함수
+  const saveCartToLocalStorage = (cart) => {
+    localStorage.setItem('productsInCart', JSON.stringify(cart));
+  };
+
+  const saveSelectedToLocalStorage = (selected) => {
+    localStorage.setItem('selectedProducts', JSON.stringify(selected));
+  };
+
+  // 장바구니 상태가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    console.log('로컬스토리지에 저장');
+    saveCartToLocalStorage(productsInCart); // 장바구니 상태 업데이트
+    saveSelectedToLocalStorage(selectedProducts); // 선택된 제품 상태 업데이트
+  }, [productsInCart, selectedProducts]);
 
   // 체크박스 클릭 시 선택된 제품을 추적
   const handleCheckboxChange = (productId) => {
+    const isChecked = selectedProducts.includes(productId);
+    console.log(`상품 ID ${productId} 체크 상태: ${isChecked}`);
+    // selectedProducts 배열을 업데이트
     setSelectedProducts((prevSelected) => {
+      let updatedSelected;
+
       if (prevSelected.includes(productId)) {
-        // 이미 선택된 제품이 클릭되면 선택 해제
-        return prevSelected.filter((id) => id !== productId);
+        updatedSelected = prevSelected.filter((id) => id !== productId); // 체크 해제
       } else {
-        // 선택되지 않은 제품이면 선택
-        return [...prevSelected, productId];
+        updatedSelected = [...prevSelected, productId]; // 체크 추가
       }
+
+      // 즉시 로컬스토리지에 저장
+      localStorage.setItem(
+        'selectedProductIds',
+        JSON.stringify(updatedSelected),
+      );
+      return updatedSelected;
     });
+  };
+
+  // 선택 항목 개별 삭제
+  const removeProduct = (productId) => {
+    // 장바구니에서 해당 제품을 삭제
+    const updatedCart = productsInCart.filter(
+      (product) => product.id !== productId,
+    );
+    setProductsInCart(updatedCart); // 장바구니 상태 업데이트
+
+    // 선택된 제품 목록에서도 해당 제품을 삭제
+    setSelectedProducts((prev) => prev.filter((id) => id !== productId));
   };
 
   // 선택된 강의들의 총 가격 계산
@@ -103,52 +210,155 @@ const OrderPage = () => {
   };
 
   return (
-    <Container>
-      <Grid container justifyContent='center' style={{ margin: '20px 0' }}>
-        <Typography variant='h5'>수강바구니</Typography>
-      </Grid>
+    <Container className={styles.orderPage}>
+      <Grid container spacing={2}>
+        <Grid item style={{ width: '65%' }}>
+          <Typography variant='h5' gutterBottom>
+            수강바구니
+          </Typography>
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            className={styles.cartTable}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>선택</TableCell>
+                  <TableCell> </TableCell>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>선택</TableCell>
-              <TableCell>제품ID</TableCell>
-              <TableCell>강의명</TableCell>
-              <TableCell>가격</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {productsInCart.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedProducts.includes(product.id)} // 체크 여부
-                    onChange={() => handleCheckboxChange(product.id)} // 클릭 시 선택 상태 변경
-                  />
-                </TableCell>
-                <TableCell>{product.id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Grid
-        container
-        justifyContent='space-between'
-        style={{ marginBottom: '20px' }}
-      >
-        <Button onClick={clearCart} color='secondary' variant='contained'>
-          장바구니 비우기
-        </Button>
-        <Typography variant='h6' style={{ marginTop: '1rem' }}>
-          ₩{totalPrice.toLocaleString()}
-        </Typography>
-        <Button onClick={orderCreate} color='primary' variant='contained'>
-          결제하기
-        </Button>
+                  <TableCell></TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={deleteCart}
+                      color='secondary'
+                      variant='outlined'
+                      className={styles.clearButton}
+                      sx={{
+                        cursor: 'pointer',
+                        border: '0.0625rem solid rgb(206, 212, 218)',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        color: 'rgb(33, 37, 41)',
+                        '&:hover': {
+                          backgroundColor: '#f8f9fae5',
+                        },
+                      }}
+                    >
+                      선택 삭제
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {productsInCart.map((product) => (
+                  <TableRow key={product.id} sx={{ height: '120px' }}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedProducts.includes(product.id)}
+                        onChange={() => handleCheckboxChange(product.id)}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ paddingY: 3 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          width: '100%',
+                        }}
+                        className='courseHeader'
+                      >
+                        <img
+                          src={
+                            categoryImages[product.category] ||
+                            '/placeholder.png'
+                          }
+                          alt={product.category}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                        <div
+                          className='info'
+                          style={{
+                            textAlign: 'left',
+                          }}
+                        >
+                          <h2>{product.name}</h2>
+                          <p className='subtitle'>{product.description}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <IconButton
+                        onClick={() => removeProduct(product.id)}
+                        size='small'
+                      >
+                        x
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>₩{product.price.toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+
+        <Grid item style={{ width: '25%' }}>
+          <Paper elevation={3} className={styles.summaryBox}>
+            <Typography variant='h6' gutterBottom>
+              결제 정보
+            </Typography>
+
+            <TextField
+              label='쿠폰 코드'
+              value='coupon'
+              onChange={(e) => setCoupon(e.target.value)}
+              fullWidth
+              margin='normal'
+            />
+
+            <TextField
+              label='사용 포인트'
+              type='number'
+              value='point'
+              onChange={(e) => setPoint(Number(e.target.value))}
+              fullWidth
+              margin='normal'
+            />
+
+            <Button
+              fullWidth
+              variant='outlined'
+              style={{ marginBottom: '1rem' }}
+            >
+              할인 적용
+            </Button>
+
+            <Typography variant='body1' gutterBottom>
+              원금액: ₩{totalPrice.toLocaleString()}
+            </Typography>
+            <Typography variant='body1' gutterBottom>
+              할인/포인트: 0
+            </Typography>
+            <Typography variant='h6' className={styles.totalPrice}>
+              총 결제 금액: ₩{totalPrice.toLocaleString()}
+            </Typography>
+
+            <Button
+              onClick={orderCreate}
+              fullWidth
+              variant='contained'
+              style={{ backgroundColor: '#00c471', color: '#fff' }}
+            >
+              결제하기
+            </Button>
+            <p>
+              회원 본인은 주문내용을 확인했으며, 구매조건 및 개인정보처리방침과
+              결제에 동의합니다.
+            </p>
+          </Paper>
+        </Grid>
       </Grid>
     </Container>
   );

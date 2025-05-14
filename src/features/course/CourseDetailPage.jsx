@@ -73,6 +73,8 @@ const CourseDetailPage = () => {
     const product = {
       id: course.productId,
       name: course.productName,
+      category: course.category,
+      description: course.description,
       price: course.price,
     };
 
@@ -80,7 +82,7 @@ const CourseDetailPage = () => {
 
     if (confirm('강의를 수강바구니에 추가하시겠습니까?')) {
       addCart(product); // 장바구니에 추가
-      alert('강의가 수강바구니에 추가되었습니다!');
+      // alert('강의가 수강바구니에 추가되었습니다!');
     }
   };
 
@@ -94,6 +96,8 @@ const CourseDetailPage = () => {
     const product = {
       id: course.productId,
       name: course.productName,
+      category: course.category,
+      description: course.description,
       price: course.price,
     };
 

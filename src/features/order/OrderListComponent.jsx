@@ -23,7 +23,7 @@ const OrderListComponent = () => {
 
   const navigate = useNavigate();
   const user = useAuth();
-  console.log('user: ', token);
+  console.log('user: ', user.token);
 
   const cancelOrder = async (id, orderDate) => {
     console.log('id, orderDate', id, orderDate);
@@ -69,46 +69,65 @@ const OrderListComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        width: '60%',
+        margin: 'auto',
+      }}
+    >
       {/* <h2>{userName} 님의 주문 내역</h2> */}
       <h2>{orderList[0]?.userEmail ?? '사용자'} 님의 주문 내역</h2>
       <TableContainer>
-        <Table>
+        <Table
+          sx={
+            {
+              // width: '100%',
+            }
+          }
+        >
           <TableHead>
             <TableRow>
               <TableCell>주문번호</TableCell>
               <TableCell>주문일자</TableCell>
               <TableCell>강의명</TableCell>
               <TableCell>주문상태</TableCell>
-              <TableCell>액션</TableCell>
+              <TableCell>취소요청</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orderList.map((order) => (
-              <React.Fragment key={order.id}>
-                <TableRow>
-                  <TableCell>{order.id}</TableCell>
-                  <TableCell>{order.orderDate}</TableCell>
-                  <TableCell>{order.productName}</TableCell>
-                  <TableCell>
-                    {order.orderStatus === 'ORDERED'
-                      ? '주문 완료'
-                      : '주문 취소됨'}
-                  </TableCell>
-                  <TableCell>
-                    {order.orderStatus === 'ORDERED' && (
-                      <Button
-                        color='secondary'
-                        size='small'
-                        onClick={() => cancelOrder(order.id, order.orderDate)}
-                      >
-                        CANCEL
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-              </React.Fragment>
-            ))}
+            {orderList.length < 1 ? (
+              <TableRow>
+                <TableCell colSpan={5} align='center'>
+                  주문 내역이 없습니다
+                </TableCell>
+              </TableRow>
+            ) : (
+              orderList.map((order) => (
+                <React.Fragment key={order.id}>
+                  <TableRow>
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell>{order.orderDate}</TableCell>
+                    <TableCell>{order.productName}</TableCell>
+                    <TableCell>
+                      {order.orderStatus === 'ORDERED'
+                        ? '주문 완료'
+                        : '주문 취소됨'}
+                    </TableCell>
+                    <TableCell>
+                      {order.orderStatus === 'ORDERED' && (
+                        <Button
+                          color='secondary'
+                          size='small'
+                          onClick={() => cancelOrder(order.id, order.orderDate)}
+                        >
+                          CANCEL
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
