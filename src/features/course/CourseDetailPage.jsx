@@ -114,6 +114,7 @@ const CourseDetailPage = () => {
           <h2>{course.productName}</h2>
           <p className='subtitle'>{course.description}</p>
           <p className='tags'>{course.category}</p>
+          <p className='user_id'>강사 ID: {course.userId}</p>
           {/* <p className="rating">⭐ {course.rating} ({course.reviews}개 리뷰)</p> */}
         </div>
         <div className='side-info'>
