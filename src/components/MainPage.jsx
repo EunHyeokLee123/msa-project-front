@@ -29,31 +29,80 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE } from '../configs/host-config';
 import './CourseSearchPage.scss';
+import { throttle } from 'lodash';
 
 const MainPage = () => {
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLastPage, setLastPage] = useState(false);
+  const pageSize = 12;
 
   const navigate = useNavigate();
 
-  const fetchCourses = async () => {
+  useEffect(() => {
+    fetchCourses(0);
+
+    const throttledScroll = throttle(scrollPagination, 1000);
+
+    window.addEventListener('scroll', throttledScroll);
+
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, []);
+
+  useEffect(() => {
+    if (currentPage > 0) fetchCourses(currentPage);
+  }, [currentPage]);
+
+  //강의 불러오는 함수
+  const fetchCourses = async (page = currentPage) => {
+    if (loading || isLastPage) return;
+    console.log('아직 보여줄 컨텐트 더 있음');
+
+    const params = {
+      size: pageSize,
+      page: currentPage,
+    };
+
+    console.log('백엔드로 보낼 params', params);
+
     setLoading(true);
+
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
-      const response = await axios.get(baseUrl);
+      const response = await axios.get(baseUrl, { params });
 
       console.log(response);
-      setCourses(response.data);
+      console.log('response.length: ', response.data.length);
+
+      if (response.data.length === 0) {
+        setLastPage(true);
+      } else {
+        setCourses((prevCourses) => [...prevCourses, ...response.data]);
+        console.log(
+          'courses ids',
+          courses.map((c) => c.productId),
+        );
+      }
       setLoading(false);
     } catch (error) {
       console.error('강의 불러오기 실패:', error);
+    } finally {
+      // 요청에 대한 응답 처리가 끝나고 난 후 로딩 상태를 다시 false로.
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const scrollPagination = () => {
+    const isBottom =
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.scrollHeight - 200;
+    if (isBottom && !isLastPage && !loading) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+  console.log('스크롤 위치', window.scrollY);
 
   if (loading) {
     return <div className='course-list'>로딩 중...</div>;
@@ -70,7 +119,7 @@ const MainPage = () => {
           key={course.productId}
           className='course-card'
           onClick={() =>
-            navigate('/info/:courseId', {
+            navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
             })
           }
