@@ -43,7 +43,7 @@ const CourseDetailPage = () => {
   const navigate = useNavigate();
 
   const user = useAuth();
-  console.log('user토큰: ', user.token);
+  //console.log('user토큰: ', user.token);
 
   useEffect(() => {
     axios

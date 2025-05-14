@@ -1,6 +1,6 @@
 .course-detail {
   padding: 24px;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 
   .course-header {
     display: flex;
@@ -50,6 +50,7 @@
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 12px;
+        margin-top: 2rem;
       }
 
       button {
@@ -60,6 +61,8 @@
         font-weight: bold;
         border-radius: 4px;
         margin-bottom: 12px;
+        // 버튼 간격
+        margin-left: 30px;
         cursor: pointer;
       }
 

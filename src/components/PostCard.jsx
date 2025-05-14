@@ -129,7 +129,11 @@ const PostCard = ({ Id }) => {
         <Button
           variant='contained'
           color='primary'
-          onClick={() => navigate('/post/create')}
+          onClick={() =>
+            navigate('/post/create', {
+              state: { id: courseId },
+            })
+          }
         >
           질문 생성
         </Button>

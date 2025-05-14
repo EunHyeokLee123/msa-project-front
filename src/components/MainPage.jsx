@@ -69,11 +69,7 @@ const MainPage = () => {
         <div
           key={course.productId}
           className='course-card'
-          onClick={() =>
-            navigate('/info/:courseId', {
-              state: { courseId: course.productId },
-            })
-          }
+          onClick={() => navigate(`/info/${course.productId}`)}
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
