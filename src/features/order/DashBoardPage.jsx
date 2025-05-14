@@ -1,0 +1,96 @@
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../configs/axios-config';
+import { API_BASE_URL, ORDER } from '../../configs/host-config';
+
+import { useAuth } from '../../context/TokenContext';
+
+const DashBoardPage = () => {
+  const [orderList, setOrderList] = useState([]);
+
+  const navigate = useNavigate();
+  const user = useAuth();
+  console.log('user: ', user);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `${API_BASE_URL}${ORDER}/dashboard`,
+        );
+        setOrderList(res.data.result);
+      } catch (e) {
+        console.log('orderlistComponent 에러 발생 ', e);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  return (
+    <div
+      style={{
+        width: '60%',
+        margin: 'auto',
+      }}
+    >
+      {/* <h2>{userName} 님의 주문 내역</h2> */}
+      <h2>내 학습</h2>
+      <TableContainer>
+        <Table
+          sx={
+            {
+              // width: '100%',
+            }
+          }
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>강의명</TableCell>
+              <TableCell>강의번호</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orderList.length < 1 ? (
+              <TableRow>
+                <TableCell colSpan={5} align='center'>
+                  주문 내역이 없습니다
+                </TableCell>
+              </TableRow>
+            ) : (
+              orderList.map((order) => (
+                <React.Fragment key={order.id}>
+                  <TableRow>
+                    <TableCell>{order.productName}</TableCell>
+                    <TableCell>
+                      {order.orderStatus === 'ORDERED'
+                        ? '주문 완료'
+                        : '주문 취소됨'}
+                    </TableCell>
+                    <TableCell>{order.productId}</TableCell>
+                  </TableRow>
+                </React.Fragment>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
+};
+
+export default DashBoardPage;

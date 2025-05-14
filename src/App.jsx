@@ -15,6 +15,8 @@ import OrderPage from './features/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
 import OrderListComponent from './features/order/OrderListComponent';
 import AdminOrderListComponent from './features/order/AdminOrderListComponent';
+import { Dashboard } from '@mui/icons-material';
+import DashBoardPage from './features/order/DashBoardPage';
 
 function App() {
   return (
@@ -46,6 +48,7 @@ function App() {
                   path='/order/my-order'
                   element={<OrderListComponent />}
                 />
+                <Route path='/dashboard' element={<DashBoardPage />} />
                 <Route
                   path='/order/my-course-order'
                   element={<AdminOrderListComponent />}
