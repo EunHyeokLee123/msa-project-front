@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/TokenContext';
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -19,12 +20,12 @@ const MyPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('token'); // JWT token 저장된 값
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/user/userInfo', {
+        const res = await axios.get('http://localhost:8000/user/userInfo', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,7 +47,7 @@ const MyPage = () => {
     }
 
     try {
-      await axios.put('http://localhost:8080/user/password', {
+      await axios.put('http://localhost:8000/user/password', {
         email: userInfo.email,
         currentPassword: userInfo.password, // 실제 환경에서는 현재 비밀번호 받아야 합니다.
         newPassword,

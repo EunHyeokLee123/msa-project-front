@@ -45,7 +45,7 @@ const DashBoardPage = () => {
     };
 
     fetchOrders();
-  }, []);
+  }, [user.role]);
 
   return (
     <>
@@ -91,10 +91,27 @@ const DashBoardPage = () => {
           </Table>
         </TableContainer>
       </div>
+      {/* 조건부 렌더링 */}
+      {user.role === 'USER' ? (
+        // USER일 경우 질문 목록 렌더링
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <h2>질문 목록</h2>
+        </div>
+      ) : user.role === 'ADMIN' ? (
+        // ADMIN일 경우 강의 생성 버튼 중앙 정렬
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => navigate('/create')} // 강의 생성 페이지로 이동
+            style={{ marginTop: '30px' }}
+          >
+            강의 생성
+          </Button>
+        </div>
+      ) : null}
+
       {/* PostCard와 위쪽 컨텐츠 사이 간격 주기 */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <h2>질문 목록</h2>
-      </div>
       <div style={{ marginTop: '60px' }}>
         <PostCard Id={-1} type={'mypage'} />
       </div>
