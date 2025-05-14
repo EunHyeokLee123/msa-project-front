@@ -28,7 +28,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE } from '../configs/host-config';
-import './CourseSearchPage.scss';
+import styles from './MainPage.module.scss';
 import { useAuth } from '../context/TokenContext';
 
 const MainPage = () => {
@@ -42,7 +42,6 @@ const MainPage = () => {
     setLoading(true);
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
-      print("baseUrl : " + baseUrl)
       console.log("baseUrl : " + baseUrl)
       const response = await axios.get(baseUrl);
       console.log(response);
@@ -67,41 +66,31 @@ const MainPage = () => {
   }
 
   return (
-    <div className='course-list'>
+    <div className={styles['course-list']}>
       {courses.map((course) => (
         <div
           key={course.productId}
-          className='course-card'
+          className={styles['course-card']}
           onClick={() =>
             navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
             })
           }
-          sx={{
-            height: '45px',
-            lineHeight: 1.4,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            color: 'rgb(33, 37, 41)',
-            fontSize: '1rem',
-            textDecoration: 'none',
-            fontWeight: '500',
-            textUnderlinePosition: 'under',
-          }}
-        >
-          <img src={categoryImages[course.category]} alt={course.category} />
 
-          <div className='info'>
-            <h3 className='title'>
-              <a className='filePath' href={course.filePath} target='_blank' rel='noopener noreferrer'>
+        >
+          <img src={categoryImages[course.category]} alt={course.category}
+          />
+
+          <div className={styles.info}>
+            <h3 className={styles.title}>
+              <a className={styles.filePath} href={course.filePath} target='_blank' rel='noopener noreferrer'>
                 {course.productName}
               </a>
             </h3>
-            <p className='instructor'>{course.username}</p>
-            <div className='bottom'>
-              <span className='price'>₩{course.price.toLocaleString()}</span>
-              <span className='category'>{course.category}</span>
+            <p className={styles.instructor}>{course.username}    [{course.category}]</p>
+            <div className={styles.bottom}>
+              <span className={styles.price}>₩{course.price.toLocaleString()}</span>
+              {/* <span className={styles.category}>{course.category}</span> */}
             </div>
           </div>
         </div>
