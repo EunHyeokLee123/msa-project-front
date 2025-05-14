@@ -31,7 +31,7 @@ const CourseUploadPage = () => {
         }
 
         try {
-            await axios.post(`${API_BASE_URL}${COURSE}/create`,
+            await axios.post(`${API_BASE_URL}${COURSE}/courseCreate`,
                 form,
                 {
                     headers: {

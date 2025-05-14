@@ -40,13 +40,14 @@ const MainPage = () => {
     setLoading(true);
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+      print("baseUrl : " + baseUrl)
+      console.log("baseUrl : " + baseUrl)
       const response = await axios.get(baseUrl);
-
       console.log(response);
       setCourses(response.data);
       setLoading(false);
     } catch (error) {
-      console.error('강의 불러오기 실패:', error);
+      console.log('강의 불러오기 실패:', error);
       setLoading(false);
     }
   };
