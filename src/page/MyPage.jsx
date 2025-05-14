@@ -73,43 +73,53 @@ const MyPage = () => {
     <Grid container justifyContent='center'>
       <Grid item xs={12} sm={8} md={6}>
         <Card sx={{ mt: 5 }}>
-          <CardHeader title="마이페이지" sx={{ textAlign: 'center' }} />
+          <CardHeader title='마이페이지' sx={{ textAlign: 'center' }} />
           <CardContent>
-            <Typography variant="h6">사용자 정보</Typography>
+            <Typography variant='h6'>사용자 정보</Typography>
             <Typography>Email: {userInfo.email}</Typography>
             <Typography>이름: {userInfo.name}</Typography>
             <Typography>역할: {userInfo.role}</Typography>
 
-            <Box component="form" onSubmit={handlePasswordChange} mt={4}>
-              <Typography variant="h6">비밀번호 변경</Typography>
+            <Box component='form' onSubmit={handlePasswordChange} mt={4}>
+              <Typography variant='h6'>비밀번호 변경</Typography>
               <TextField
-                label="새 비밀번호"
-                type="password"
+                label='새 비밀번호'
+                type='password'
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 fullWidth
-                margin="normal"
+                margin='normal'
               />
               <TextField
-                label="비밀번호 확인"
-                type="password"
+                label='비밀번호 확인'
+                type='password'
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 fullWidth
-                margin="normal"
+                margin='normal'
               />
               {errorMsg && (
-                <Typography color="error" variant="body2">
+                <Typography color='error' variant='body2'>
                   {errorMsg}
                 </Typography>
               )}
-              <Button type="submit" variant="contained" color="primary" fullWidth>
+              <Button
+                type='submit'
+                variant='contained'
+                color='primary'
+                fullWidth
+              >
                 비밀번호 변경
               </Button>
             </Box>
 
             <Box mt={3}>
-              <Button variant="outlined" color="secondary" fullWidth onClick={handleLogout}>
+              <Button
+                variant='outlined'
+                color='secondary'
+                fullWidth
+                onClick={handleLogout}
+              >
                 로그아웃
               </Button>
             </Box>

@@ -149,7 +149,7 @@ const CourseDetailPage = () => {
         </div>
       </div>
 
-      <PostCard Id={courseId} />
+      <PostCard Id={courseId} type={'course'} />
     </div>
   );
 };
