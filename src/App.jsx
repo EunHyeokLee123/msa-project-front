@@ -17,6 +17,7 @@ import OrderListComponent from './features/order/OrderListComponent';
 import AdminOrderListComponent from './features/order/AdminOrderListComponent';
 import { Dashboard } from '@mui/icons-material';
 import DashBoardPage from './features/order/DashBoardPage';
+import MyPage from './page/MyPage';
 
 function App() {
   return (
@@ -37,13 +38,14 @@ function App() {
                   path='/category/:category'
                   element={<CourseSearchPage />}
                 />
-                <Route path='/create' element={<CourseUploadPage />} />
+                <Route path='/courseCreate' element={<CourseUploadPage />} />
                 <Route path='/post' element={<PostCard />} />
                 <Route path='/post/create' element={<CreatePost />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />
                 {/* <Route path='/items' element={<CourseDetails />} /> */}
                 <Route path='/order/cart' element={<OrderPage />} />
+                <Route path='/mypage' element={<MyPage />} />
                 <Route
                   path='/order/my-order'
                   element={<OrderListComponent />}
