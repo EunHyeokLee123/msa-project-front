@@ -20,6 +20,8 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
+  //java: javaImg,
+  //카테고리: sqlImg,
 };
 
 import React, { useEffect, useState } from 'react';
@@ -42,16 +44,21 @@ const CourseListPage = () => {
 
   const fetchCourses = async (page) => {
     setLoading(true);
+
+    let url;
+
     try {
-      if (page !== undefined) {
-        url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
-      } else if (selectedCategory !== undefined) {
-        url = `${API_BASE_URL}${COURSE}/category/${selectedCategory}`;
+      if (selectedCategory !== undefined && selectedCategory !== '') {
+        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
+          selectedCategory,
+        )}?page=${page}&size=${16}`;
       } else {
-        url = `${API_BASE_URL}`;
+        url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
       }
 
       const response = await axios.get(url);
+
+      console.log(response);
 
       if (response.data.content) {
         // 페이징 결과

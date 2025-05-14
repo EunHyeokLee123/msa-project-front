@@ -63,10 +63,6 @@ export const router = createBrowserRouter(
           path: `${COURSE}/category`,
           element: <CourseSearchPage />,
         },
-        {
-          path: `${COURSE}/category`,
-          element: <CourseSearchPage />,
-        },
       ],
     },
     {
