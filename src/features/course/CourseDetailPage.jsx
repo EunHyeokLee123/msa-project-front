@@ -45,8 +45,7 @@ const CourseDetailPage = () => {
   const [orderList, setOrderList] = useState([]);
 
   const user = useAuth();
-  console.log('user토큰: ', user.token);
-  console.log('courseId: ', courseId);
+  //console.log('user토큰: ', user.token);
 
   useEffect(() => {
     axios
@@ -83,7 +82,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (typeof user.token === 'undefined' || !user.token) {
+    if (userAuth.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -106,7 +105,7 @@ const CourseDetailPage = () => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (typeof user.token === 'undefined' || !user.token) {
+    if (user.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -132,6 +131,7 @@ const CourseDetailPage = () => {
           <h2>{course.productName}</h2>
           <p className='subtitle'>{course.description}</p>
           <p className='tags'>{course.category}</p>
+          <p className='user_id'>강사 ID: {course.userId}</p>
           {/* <p className="rating">⭐ {course.rating} ({course.reviews}개 리뷰)</p> */}
         </div>
         <div className='side-info'>
@@ -149,7 +149,7 @@ const CourseDetailPage = () => {
         </div>
       </div>
 
-      <PostCard Id={courseId} />
+      <PostCard Id={courseId} type={'course'} />
     </div>
   );
 };

@@ -37,7 +37,7 @@ const categoryTabs = [
 
 const Header = () => {
   const { setSelectedCategory } = useCategory();
-
+  const [logoClicked, setLogoClicked] = useState(false);
   const [activeTab, setActiveTab] = useState('전체');
 
   const navigate = useNavigate();
@@ -45,7 +45,16 @@ const Header = () => {
   const { isLoggedIn, logout } = useAuth();
 
   return (
-    <AppBar position='static' color='inherit' elevation={1}>
+    <AppBar
+      position='static'
+      color='inherit'
+      elevation={0}
+      sx={{
+        borderLeft: '1px solid white',
+        borderRight: '1px solid white',
+        borderBottom: '1px solid black',
+      }}
+    >
       <Box sx={{ maxWidth: '1280px', margin: '0 auto' }}>
         <Toolbar sx={{ justifyContent: 'space-between', px: 2 }}>
           {/* 로고 */}
@@ -56,10 +65,17 @@ const Header = () => {
                 color: '#00c471',
                 fontWeight: 'bold',
                 mr: 2,
-                textDecoration: 'none', // 링크 밑줄 제거
+                textDecoration: 'none',
                 cursor: 'pointer',
+                backgroundColor: logoClicked ? '#f0f0f0' : 'transparent',
+                borderRadius: 1,
+                px: 1,
+                transition: 'background-color 0.2s ease',
               }}
               onClick={() => {
+                setLogoClicked(true);
+                setTimeout(() => setLogoClicked(false), 150); // 150ms 후 원상복구
+
                 setSelectedCategory('전체');
                 setActiveTab('전체');
                 navigate('/');

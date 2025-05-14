@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, Link } from '@mui/material';
+import GoTopButton from '../components/GoTopButton';
 
 const footerData = [
   {
@@ -86,6 +87,10 @@ const Footer = () => {
             <Typography variant='body2'>Get the app</Typography>
           </Grid>
         </Grid>
+      </Box>
+      {/* GoTopButton 컴포넌트 추가 */}
+      <Box sx={{ position: 'absolute', bottom: 16, right: 16 }}>
+        <GoTopButton />
       </Box>
     </Box>
   );

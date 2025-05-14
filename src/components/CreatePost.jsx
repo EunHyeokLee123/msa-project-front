@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthProvider, useAuth } from '../context/TokenContext';
 
@@ -8,6 +8,8 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const courseId = location.state?.id;
 
   const { token, isLoggedIn } = useAuth();
 
@@ -30,12 +32,14 @@ const CreatePost = () => {
     }
 
     try {
+      console.log(courseId);
+
       const response = await axios.post(
         'http://localhost:8000/post-service/post/create',
         {
           title,
           content,
-          productId: 4, // 필요 시 동적으로
+          productId: courseId, // 필요 시 동적으로
         },
         {
           headers: {
@@ -48,9 +52,7 @@ const CreatePost = () => {
 
       if (response.status === 201) {
         alert('질문이 등록되었습니다!');
-        navigate('/items', {
-          state: { courseId: response.data.result.productId },
-        }); // 등록 후 홈으로 이동
+        navigate(`/info/${courseId}`); // 등록 후 홈으로 이동
       }
     } catch (err) {
       console.error(err);

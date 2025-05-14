@@ -118,17 +118,18 @@ const MainPage = () => {
         <div
           key={course.productId}
           className='course-card'
-          onClick={() =>
-            navigate(`/info/${course.productId}`, {
-              state: { courseId: course.productId },
-            })
-          }
+          onClick={() => navigate(`/info/${course.productId}`)}
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
           <div className='info'>
             <h3 className='title'>
-              <a className='filePath' href={course.filePath}>
+              <a
+                className='filePath'
+                href={course.filePath}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 {course.productName}
               </a>
             </h3>

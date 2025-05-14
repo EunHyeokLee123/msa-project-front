@@ -142,7 +142,9 @@ const Signup = () => {
               />
 
               <FormControl component='fieldset' margin='normal'>
-                <FormLabel component='legend'>권한</FormLabel>
+                <FormLabel component='legend'>
+                  무슨 목적으로 가입하십니까?
+                </FormLabel>
                 <RadioGroup
                   row
                   name='role'
@@ -152,12 +154,12 @@ const Signup = () => {
                   <FormControlLabel
                     value='USER'
                     control={<Radio />}
-                    label='일반 유저'
+                    label='학생'
                   />
                   <FormControlLabel
                     value='ADMIN'
                     control={<Radio />}
-                    label='관리자'
+                    label='강사'
                   />
                 </RadioGroup>
               </FormControl>

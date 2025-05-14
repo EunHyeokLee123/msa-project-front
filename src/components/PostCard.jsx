@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'; // 추가
 import { Button, Box } from '@mui/material'; // 추가
 import { useAuth } from '../context/TokenContext';
 
-const PostCard = ({ Id }) => {
+const PostCard = ({ Id, type }) => {
   const navigate = useNavigate();
 
   const { token } = useAuth();
@@ -15,20 +15,32 @@ const PostCard = ({ Id }) => {
   const [error, setError] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const courseId = Id;
+  const fromId = Id;
 
   useEffect(() => {
-    if (!courseId) return;
+    if (!fromId) return;
 
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          'http://localhost:8000/post-service/post/list',
-          {
-            params: { id: courseId },
-          },
-        );
+        let response;
+        if (type === 'course') {
+          response = await axios.get(
+            'http://localhost:8000/post-service/post/list',
+            {
+              params: { id: fromId },
+            },
+          );
+        } else {
+          response = await axios.get(
+            'http://localhost:8000/post-service/post/myquestions',
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+        }
 
         console.log(response);
 
@@ -48,7 +60,7 @@ const PostCard = ({ Id }) => {
     };
 
     fetchPosts();
-  }, [courseId]);
+  }, [fromId]);
 
   const handleDeletePost = async (postId) => {
     try {
@@ -125,15 +137,21 @@ const PostCard = ({ Id }) => {
   return (
     <div>
       {/* 질문 생성 버튼 */}
-      <Box display='flex' justifyContent='center' sx={{ mt: 3, mb: 2 }}>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={() => navigate('/post/create')}
-        >
-          질문 생성
-        </Button>
-      </Box>
+      {type !== 'mypage' && (
+        <Box display='flex' justifyContent='center' sx={{ mt: 3, mb: 2 }}>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() =>
+              navigate('/post/create', {
+                state: { id: courseId }, // courseId 변수 정의 필요
+              })
+            }
+          >
+            질문 생성
+          </Button>
+        </Box>
+      )}
       {posts.length === 0 && (
         <Box
           textAlign='center'
