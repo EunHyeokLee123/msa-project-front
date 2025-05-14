@@ -34,6 +34,7 @@ import jsImg from '../../assets/js.png';
 import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
 import PostCard from '../../components/PostCard';
+import { useNavigate } from 'react-router-dom';
 
 const categoryImages = {
   Git: gitImg,
@@ -56,17 +57,20 @@ const OrderPage = () => {
     clearCart: onClear,
     forceSelectProductId,
   } = useContext(CartContext);
-  // const [selectedProducts, setSelectedProducts] = useState([]);
-  // const [productsInCart, setProductsInCart] = useState(initialProductsInCart);
+
   const [selectedProducts, setSelectedProducts] = useState(() => {
     const savedSelected = JSON.parse(localStorage.getItem('selectedProducts'));
     return savedSelected || []; // 로컬 스토리지에 선택된 제품이 없다면 빈 배열 반환
   });
+
   const [productsInCart, setProductsInCart] = useState(() => {
     const savedCart = JSON.parse(localStorage.getItem('productsInCart'));
     return savedCart || []; // 로컬 스토리지에 제품이 없다면 빈 배열 반환
   });
+
   const user = useAuth();
+
+  const navigate = useNavigate();
 
   console.log('orderpage의 productsInCart: ', productsInCart);
 
@@ -88,19 +92,6 @@ const OrderPage = () => {
     setProductsInCart(updatedCart); // 장바구니 상태 업데이트
     setSelectedProducts([]); // 선택된 제품 초기화
   };
-
-  // useEffect(() => {
-  //   if (
-  //     forceSelectProductId !== null &&
-  //     !selectedProducts.includes(forceSelectProductId)
-  //   ) {
-  //     setSelectedProducts((prevSelected) => [
-  //       ...prevSelected,
-  //       forceSelectProductId,
-  //     ]);
-  //   }
-  //   console.log('장바구니 변경됨:', productsInCart);
-  // }, [forceSelectProductId]);
 
   // 로컬 스토리지에서 장바구니 상태 불러오기
   useEffect(() => {
@@ -238,6 +229,7 @@ const OrderPage = () => {
                         cursor: 'pointer',
                         border: '0.0625rem solid rgb(206, 212, 218)',
                         backgroundColor: 'rgb(255, 255, 255)',
+                        width: '100px',
                         color: 'rgb(33, 37, 41)',
                         '&:hover': {
                           backgroundColor: '#f8f9fae5',
@@ -258,7 +250,10 @@ const OrderPage = () => {
                         onChange={() => handleCheckboxChange(product.id)}
                       />
                     </TableCell>
-                    <TableCell sx={{ paddingY: 3 }}>
+                    <TableCell
+                      sx={{ paddingY: 3, cursor: 'pointer' }}
+                      onClick={() => navigate(`/info/${product.id}`)}
+                    >
                       <div
                         style={{
                           display: 'flex',

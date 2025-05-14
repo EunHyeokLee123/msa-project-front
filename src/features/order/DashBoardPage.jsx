@@ -55,13 +55,19 @@ const DashBoardPage = () => {
           margin: 'auto',
         }}
       >
-        <h2>내 학습</h2>
+        {user.role === 'USER' ? (
+          // USER일 경우 질문 목록 렌더링
+          <h2>내 학습</h2>
+        ) : user.role === 'ADMIN' ? (
+          // ADMIN일 경우 강의 생성 버튼 중앙 정렬
+          <h2>내 강의</h2>
+        ) : null}
+
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>강의명</TableCell>
-                <TableCell>강의번호</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -76,13 +82,17 @@ const DashBoardPage = () => {
                 orderList.map((order) => (
                   <React.Fragment key={order.id}>
                     <TableRow>
-                      <TableCell>{order.productName}</TableCell>
+                      <TableCell
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/info/${order.productId}`)}
+                      >
+                        {order.productName}
+                      </TableCell>
                       <TableCell>
                         {order.orderStatus === 'ORDERED'
                           ? '주문 완료'
                           : '주문 취소됨'}
                       </TableCell>
-                      <TableCell>{order.productId}</TableCell>
                     </TableRow>
                   </React.Fragment>
                 ))

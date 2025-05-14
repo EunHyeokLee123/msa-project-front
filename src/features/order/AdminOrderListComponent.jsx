@@ -23,6 +23,8 @@ const AdminOrderListComponent = () => {
   const navigate = useNavigate();
   const token = useAuth();
 
+  console.log('여긴 강사 강의 주문 내역 조회');
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -39,7 +41,12 @@ const AdminOrderListComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        width: '60%',
+        margin: 'auto auto 100px',
+      }}
+    >
       {/* <h2>{userName} 님의 주문 내역</h2> */}
       <h2>전체 주문 내역</h2>
       <TableContainer>

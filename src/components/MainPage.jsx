@@ -104,9 +104,9 @@ const MainPage = () => {
   };
   console.log('스크롤 위치', window.scrollY);
 
-  if (loading && currentPage === 0) {
-    return <div className='course-list'>로딩 중...</div>;
-  }
+  // if (loading && currentPage === 0) {
+  //   return <div className='course-list'>로딩 중...</div>;
+  // }
 
   if (currentPage === 0 && (!courses || courses.length === 0)) {
     return <div className='course-list'>현재 강의가 없습니다.</div>;
