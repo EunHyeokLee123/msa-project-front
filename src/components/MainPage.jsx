@@ -42,7 +42,7 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCourses(0);
+    fetchCourses();
 
     const throttledScroll = throttle(scrollPagination, 1000);
 
@@ -52,11 +52,11 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    if (currentPage > 0) fetchCourses(currentPage);
+    if (currentPage > 0) fetchCourses();
   }, [currentPage]);
 
   //강의 불러오는 함수
-  const fetchCourses = async (page = currentPage) => {
+  const fetchCourses = async () => {
     if (loading || isLastPage) return;
     console.log('아직 보여줄 컨텐트 더 있음');
 
@@ -80,12 +80,11 @@ const MainPage = () => {
         setLastPage(true);
       } else {
         setCourses((prevCourses) => [...prevCourses, ...response.data]);
-        console.log(
-          'courses ids',
-          courses.map((c) => c.productId),
-        );
+        // console.log(
+        //   'courses ids',
+        //   courses.map((c) => c.productId),
+        // );
       }
-      setLoading(false);
     } catch (error) {
       console.error('강의 불러오기 실패:', error);
     } finally {
@@ -97,18 +96,18 @@ const MainPage = () => {
   const scrollPagination = () => {
     const isBottom =
       window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.scrollHeight - 200;
+      document.documentElement.scrollHeight - 100;
     if (isBottom && !isLastPage && !loading) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
   console.log('스크롤 위치', window.scrollY);
 
-  if (loading) {
+  if (loading && currentPage === 0) {
     return <div className='course-list'>로딩 중...</div>;
   }
 
-  if (!courses || courses.length === 0) {
+  if (currentPage === 0 && (!courses || courses.length === 0)) {
     return <div className='course-list'>현재 강의가 없습니다.</div>;
   }
 
@@ -142,6 +141,7 @@ const MainPage = () => {
           </div>
         </div>
       ))}
+      {(loading && currentPage) > 0 && <div>loading...</div>}
     </div>
   );
 };
