@@ -29,9 +29,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE } from '../configs/host-config';
 import './CourseSearchPage.scss';
+<<<<<<< HEAD
 import { throttle } from 'lodash';
+=======
+import { useAuth } from '../context/TokenContext';
+>>>>>>> origin/feature/course
 
 const MainPage = () => {
+  const userAuth = useAuth();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -71,8 +76,14 @@ const MainPage = () => {
 
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+<<<<<<< HEAD
       const response = await axios.get(baseUrl, { params });
 
+=======
+      print("baseUrl : " + baseUrl)
+      console.log("baseUrl : " + baseUrl)
+      const response = await axios.get(baseUrl);
+>>>>>>> origin/feature/course
       console.log(response);
       console.log('response.length: ', response.data.length);
 
@@ -87,9 +98,13 @@ const MainPage = () => {
       }
       setLoading(false);
     } catch (error) {
+<<<<<<< HEAD
       console.error('강의 불러오기 실패:', error);
     } finally {
       // 요청에 대한 응답 처리가 끝나고 난 후 로딩 상태를 다시 false로.
+=======
+      console.log('강의 불러오기 실패:', error);
+>>>>>>> origin/feature/course
       setLoading(false);
     }
   };
@@ -118,7 +133,27 @@ const MainPage = () => {
         <div
           key={course.productId}
           className='course-card'
+<<<<<<< HEAD
           onClick={() => navigate(`/info/${course.productId}`)}
+=======
+          onClick={() =>
+            navigate(`/info/${course.productId}`, {
+              state: { courseId: course.productId },
+            })
+          }
+          sx={{
+            height: '45px',
+            lineHeight: 1.4,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            color: 'rgb(33, 37, 41)',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            fontWeight: '500',
+            textUnderlinePosition: 'under',
+          }}
+>>>>>>> origin/feature/course
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
@@ -133,11 +168,10 @@ const MainPage = () => {
                 {course.productName}
               </a>
             </h3>
-            <p className='instructor'>{course.instructor}</p>
+            <p className='instructor'>{course.username}</p>
             <div className='bottom'>
-              <span className='price'>{course.category}</span>
-              <span className='price'>{course.description}</span>
               <span className='price'>₩{course.price.toLocaleString()}</span>
+              <span className='category'>{course.category}</span>
             </div>
           </div>
         </div>

@@ -38,7 +38,7 @@ function App() {
                   path='/category/:category'
                   element={<CourseSearchPage />}
                 />
-                <Route path='/create' element={<CourseUploadPage />} />
+                <Route path='/courseCreate' element={<CourseUploadPage />} />
                 <Route path='/post' element={<PostCard />} />
                 <Route path='/post/create' element={<CreatePost />} />
                 <Route path='/login' element={<LoginPage />} />
