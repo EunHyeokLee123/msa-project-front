@@ -92,6 +92,9 @@ const DashBoardPage = () => {
         </TableContainer>
       </div>
       {/* PostCard와 위쪽 컨텐츠 사이 간격 주기 */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <h2>질문 목록</h2>
+      </div>
       <div style={{ marginTop: '60px' }}>
         <PostCard Id={-1} type={'mypage'} />
       </div>
