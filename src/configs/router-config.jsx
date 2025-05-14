@@ -12,10 +12,9 @@ import CourseUploadPage from '../features/course/CourseUploadPage';
 import OrderListComponent from '../features/order/OrderListComponent';
 import RootLayout from '../components/Rootlayout';
 import MainPage from '../components/MainPage';
-import Login from '../components/Login';
+import Login from '../page/LoginPage';
 import { useEffect } from 'react';
 
-import LoginPage from '../login/LoginPage';
 import Mypage from '../my-page/MyPage';
 import RootLayout from '../components/Rootlayout';
 import BrandStartUp from '../BrandStartUp/BrandStartUp';
@@ -57,10 +56,6 @@ export const router = createBrowserRouter(
         // },
         {
           path: `${COURSE}/list`,
-          element: <CourseSearchPage />,
-        },
-        {
-          path: `${COURSE}/category`,
           element: <CourseSearchPage />,
         },
         {
