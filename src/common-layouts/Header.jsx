@@ -15,10 +15,12 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCategory } from '../context/CategoryContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/TokenContext';
+import { COURSE } from '../configs/host-config';
 
 const navItems = ['강의', '로드맵', '멘토링', '커뮤니티'];
 
 const categoryTabs = [
+  '전체',
   'Git',
   'Java',
   'SQL',
@@ -36,7 +38,7 @@ const categoryTabs = [
 const Header = () => {
   const { setSelectedCategory } = useCategory();
 
-  const [activeTab, setActiveTab] = useState('Git');
+  const [activeTab, setActiveTab] = useState('전체');
 
   const navigate = useNavigate();
 
@@ -50,13 +52,17 @@ const Header = () => {
           <Box display='flex' alignItems='center'>
             <Typography
               variant='h6'
-              component={Link} // 여기를 Link로 변경
-              to='/' // 메인 페이지로 이동
               sx={{
                 color: '#00c471',
                 fontWeight: 'bold',
                 mr: 2,
                 textDecoration: 'none', // 링크 밑줄 제거
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setSelectedCategory('전체');
+                setActiveTab('전체');
+                navigate('/');
               }}
             >
               Inflearn
@@ -164,7 +170,11 @@ const Header = () => {
                 onClick={() => {
                   setSelectedCategory(label);
                   setActiveTab(label);
-                  navigate('/');
+                  if (label === '전체') {
+                    navigate('/');
+                  } else {
+                    navigate('/category/:category');
+                  }
                 }}
               >
                 {label}
