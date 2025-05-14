@@ -73,7 +73,6 @@ const MainPage = () => {
 
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
-      print('baseUrl : ' + baseUrl);
       console.log('baseUrl : ' + baseUrl);
       const response = await axios.get(baseUrl);
       console.log(response);

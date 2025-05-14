@@ -69,7 +69,7 @@ const DashBoardPage = () => {
               {orderList.length < 1 ? (
                 <TableRow>
                   <TableCell colSpan={5} align='center'>
-                    학습 중인 강의가 없습니다
+                    강의가 없습니다
                   </TableCell>
                 </TableRow>
               ) : (
