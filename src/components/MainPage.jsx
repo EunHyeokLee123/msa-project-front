@@ -39,7 +39,7 @@ const MainPage = () => {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+      const baseUrl = 'http://localhost:8000/course-service/courses/all';
       const response = await axios.get(baseUrl);
 
       console.log(response);
@@ -70,7 +70,7 @@ const MainPage = () => {
           key={course.productId}
           className='course-card'
           onClick={() =>
-            navigate('/info/:courseId', {
+            navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
             })
           }
@@ -79,7 +79,7 @@ const MainPage = () => {
 
           <div className='info'>
             <h3 className='title'>
-              <a className='filePath' href={course.filePath}>
+              <a className='filePath' href={course.filePath} target='_blank' rel='noopener noreferrer'>
                 {course.productName}
               </a>
             </h3>

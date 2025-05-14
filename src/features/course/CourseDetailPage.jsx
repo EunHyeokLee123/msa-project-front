@@ -39,15 +39,15 @@ const CourseDetailPage = () => {
   const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
   const courseId = location.state?.courseId;
-  const token = useAuth();
-  console.log('토큰: ', token);
+  const userAuth = useAuth();
+  console.log('토큰: ', userAuth.token);
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${userAuth.token}`,
         },
       })
       .then((res) => {
@@ -62,7 +62,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (token === undefined) {
+    if (userAuth.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -82,7 +82,7 @@ const CourseDetailPage = () => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (token === undefined) {
+    if (userAuth.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
