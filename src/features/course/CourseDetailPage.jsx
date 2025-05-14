@@ -65,7 +65,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (typeof user.token === 'undefined' || !user.token) {
+    if (userAuth.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -88,7 +88,7 @@ const CourseDetailPage = () => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (typeof user.token === 'undefined' || !user.token) {
+    if (user.token === undefined) {
       alert('로그인이 필요합니다!');
       return;
     }
