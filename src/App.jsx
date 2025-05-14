@@ -11,8 +11,10 @@ import { CategoryProvider } from './context/CategoryContext';
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignUpPage';
 import CourseSearchPage from './features/course/CourseSearchPage';
-import OrderPage from './components/feature/order/OrderPage';
+import OrderPage from './features/order/OrderPage';
 import { CartContextProvider } from './context/CartContext';
+import OrderListComponent from './features/order/OrderListComponent';
+import AdminOrderListComponent from './features/order/AdminOrderListComponent';
 
 function App() {
   return (
@@ -40,6 +42,14 @@ function App() {
                 <Route path='/signup' element={<SignupPage />} />
                 {/* <Route path='/items' element={<CourseDetails />} /> */}
                 <Route path='/order/cart' element={<OrderPage />} />
+                <Route
+                  path='/order/my-order'
+                  element={<OrderListComponent />}
+                />
+                <Route
+                  path='/order/my-course-order'
+                  element={<AdminOrderListComponent />}
+                />
               </Routes>
             </Router>
             <Footer />

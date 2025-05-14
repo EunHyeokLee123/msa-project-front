@@ -107,7 +107,7 @@ const CourseListPage = () => {
           key={course.productId}
           className='course-card'
           onClick={() =>
-            navigate('/items', {
+            navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
             })
           }

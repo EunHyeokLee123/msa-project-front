@@ -29,7 +29,7 @@ const categoryImages = {
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import CartContext from '../../context/CartContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/TokenContext';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import './CourseDetailPage.scss';
@@ -38,16 +38,19 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
-  const courseId = location.state?.courseId;
-  const token = useAuth();
-  console.log('토큰: ', token);
+  // const courseId = location.state?.courseId;
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+
+  const user = useAuth();
+  console.log('user토큰: ', user.token);
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       })
       .then((res) => {
@@ -62,7 +65,7 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (token === undefined) {
+    if (typeof user.token === 'undefined' || !user.token) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -70,6 +73,8 @@ const CourseDetailPage = () => {
     const product = {
       id: course.productId,
       name: course.productName,
+      category: course.category,
+      description: course.description,
       price: course.price,
     };
 
@@ -77,12 +82,13 @@ const CourseDetailPage = () => {
 
     if (confirm('강의를 수강바구니에 추가하시겠습니까?')) {
       addCart(product); // 장바구니에 추가
+      // alert('강의가 수강바구니에 추가되었습니다!');
     }
   };
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (token === undefined) {
+    if (typeof user.token === 'undefined' || !user.token) {
       alert('로그인이 필요합니다!');
       return;
     }
@@ -90,10 +96,12 @@ const CourseDetailPage = () => {
     const product = {
       id: course.productId,
       name: course.productName,
+      category: course.category,
+      description: course.description,
       price: course.price,
     };
 
-    console.log('구매할 강의:', product);
+    console.log('구매할 강의 대상:', product);
     orderCourse(product);
     navigate('/order/cart');
   };

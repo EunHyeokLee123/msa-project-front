@@ -28,11 +28,10 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 보내기 전에 항상 처리해야할 내용을 콜백으로 전달
     // 테스트용으로 임시 하드코딩된 토큰 접근
-    const token =
-      localStorage.getItem('ACCESS_TOKEN') ||
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYUBuYXZlci5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc0NzA1Nzg0NywiZXhwIjoxNzQ3MDYxNDQ3fQ.rrej_q3PXTvqwk4Unr_wOHucUYH00NKREnwp2oqmDs0';
-
-    console.log('토큰: ', token);
+    const token = localStorage.getItem('token');
+    // const user = useAuth();
+    // const token = user.token;
+    console.log('axiosconfig 토큰: ', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
