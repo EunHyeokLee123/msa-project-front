@@ -47,16 +47,9 @@ const DashBoardPage = () => {
         margin: 'auto',
       }}
     >
-      {/* <h2>{userName} 님의 주문 내역</h2> */}
       <h2>내 학습</h2>
       <TableContainer>
-        <Table
-          sx={
-            {
-              // width: '100%',
-            }
-          }
-        >
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>강의명</TableCell>
@@ -68,7 +61,7 @@ const DashBoardPage = () => {
             {orderList.length < 1 ? (
               <TableRow>
                 <TableCell colSpan={5} align='center'>
-                  주문 내역이 없습니다
+                  학습 중인 강의가 없습니다
                 </TableCell>
               </TableRow>
             ) : (
