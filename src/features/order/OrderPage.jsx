@@ -319,7 +319,7 @@ const OrderPage = () => {
             />
 
             <TextField
-              label='사용 포인트'
+              label='1,000잎 이상 사용'
               type='number'
               value='point'
               onChange={(e) => setPoint(Number(e.target.value))}
@@ -353,7 +353,12 @@ const OrderPage = () => {
             >
               결제하기
             </Button>
-            <p>
+            <p
+              style={{
+                color: '#868e96',
+                fontSize: '0.75rem',
+              }}
+            >
               회원 본인은 주문내용을 확인했으며, 구매조건 및 개인정보처리방침과
               결제에 동의합니다.
             </p>

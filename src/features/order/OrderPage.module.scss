@@ -1,68 +1,7 @@
-// .cart-item {
-//   display: flex;
-//   align-items: center;
-//   margin-bottom: 16px;
-
-//   .thumbnail {
-//     width: 100px;
-//     margin-right: 16px;
-//   }
-
-//   .info {
-//     flex: 1;
-
-//     .title {
-//       font-size: 16px;
-//       font-weight: bold;
-//     }
-
-//     .instructor {
-//       font-size: 14px;
-//       color: gray;
-//     }
-//   }
-
-//   .price {
-//     text-align: right;
-
-//     .original {
-//       text-decoration: line-through;
-//       color: #999;
-//     }
-
-//     .discounted {
-//       font-weight: bold;
-//       color: #e53935;
-//     }
-//   }
-// }
-
-// .cart-container {
-//   margin-top: 40px;
-// }
-
-// .cart-header {
-//   margin: 20px 0;
-// }
-
-// .cart-table {
-//   margin-bottom: 30px;
-// }
-
-// .cart-footer {
-//   margin-bottom: 20px;
-
-//   .cart-total {
-//     margin-top: 1rem;
-//     font-weight: bold;
-//   }
-// }
-
 .courseHeader {
   display: flex !important;
   align-items: center;
   gap: 16px;
-  background-color: red !important;
 
   img {
     width: 100px;
@@ -124,7 +63,7 @@
 }
 
 .orderPage {
-  margin-top: 40px;
+  margin: 50px auto;
 }
 
 .cartTable {
@@ -149,7 +88,7 @@
 }
 
 .p {
-  color: rgb(134, 142, 150);
+  color: #868e96;
 }
 
 .cartTable {
@@ -172,10 +111,6 @@
     border-bottom: 2px solid #bdbdbd; // 헤더 셀
     // background-color: #fafafa;
     font-weight: 600;
-  }
-
-  tr:last-child td {
-    border-bottom: none; // 마지막 줄 아래선 제거
   }
 
   td:first-child,
