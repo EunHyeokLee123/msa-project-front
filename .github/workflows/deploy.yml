@@ -37,11 +37,6 @@ jobs:
         with:
           args: --delete # S3 버킷에서 로컬에 없는 파일은 지워라
 
+
         # github actions가 s3에 접근해서 파일을 업로드할 때 필요로 하는 값을 환경변수로 세팅
         # 외부로 노출되면 안되는 값은 secrets에 세팅하고 불러오고 있음.
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: 'dist' # 빌드된 파일이 있는 디렉토리
