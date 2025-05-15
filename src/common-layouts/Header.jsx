@@ -31,8 +31,6 @@ const categoryTabs = [
   'JS',
   'React',
   'Spring',
-  '카테고리',
-  'java',
 ];
 
 const Header = () => {
