@@ -187,7 +187,10 @@ const Header = () => {
                   if (label === '전체') {
                     navigate('/');
                   } else {
-                    navigate('/category/:category');
+                    if (label === 'HTML/CSS') {
+                      label = 'HTML'
+                    }
+                    navigate(`/category/${label}`);
                   }
                 }}
               >
