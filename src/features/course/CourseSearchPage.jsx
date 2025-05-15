@@ -64,8 +64,6 @@ const CourseListPage = () => {
         url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
       }
 
-      console.log(url);
-
       const response = await axios.get(url);
 
       console.log(response);

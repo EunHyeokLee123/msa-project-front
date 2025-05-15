@@ -156,6 +156,7 @@ const PostCard = ({ Id, type }) => {
           </Button>
         </Box>
       )}
+
       {posts.length === 0 && (
         <Box
           textAlign='center'

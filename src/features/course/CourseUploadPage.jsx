@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CourseUploadPage.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import { useAuth } from '../../context/TokenContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const categories = [
   'Git',
@@ -21,6 +21,9 @@ const categories = [
 const CourseUploadPage = () => {
   const userAuth = useAuth();
   const navigate = useNavigate();
+  const { courseId } = useParams();
+
+  const id = courseId;
 
   const [form, setForm] = useState({
     productName: '',
@@ -31,6 +34,36 @@ const CourseUploadPage = () => {
   });
 
   const [courseList, setCourseList] = useState([]);
+
+  // ✅ 수정모드일 때 기존 강의 정보 불러오기
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (!id) return; // id가 없으면 새로 등록 모드
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}${COURSE}/info/${id}`);
+
+        console.log(res);
+
+        const course = res.data;
+
+        setForm({
+          productName: course.productName,
+          category: course.category,
+          description: course.description,
+          price: course.price,
+          filePath: course.filePath,
+        });
+      } catch (err) {
+        console.log(err);
+
+        console.error('강의 정보를 불러오는 데 실패했습니다:', err);
+        alert('강의 정보를 불러오는 중 오류가 발생했습니다.');
+      }
+    };
+
+    fetchCourse();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,31 +124,62 @@ const CourseUploadPage = () => {
     console.log('여기까지옴');
 
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}${COURSE}/create`,
-        allCourses,
-        {
-          headers: {
-            Authorization: `Bearer ${userAuth.token}`,
+      if (id) {
+        // ✅ 수정 요청
+
+        console.log(form);
+
+        const res = await axios.post(
+          `${API_BASE_URL}${COURSE}/edit/${id}`,
+          {
+            productName: form.productName,
+            description: form.description,
+            price: parseInt(form.price),
+            category: form.category,
+            filePath: form.filePath,
           },
-          withCredentials: true,
-          // },
-        },
-      ); // MSA Gateway 경유 가능
-      if (res.status === 201) {
-        alert('강의가 등록되었습니다.');
-        navigate('/mypage');
-        setCourseList([]);
-        setForm({
-          productName: '',
-          category: '',
-          description: '',
-          price: '',
-          filePath: '',
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${userAuth.token}`,
+            },
+            withCredentials: true,
+          },
+        );
+
+        if (res.status === 200) {
+          alert('강의가 수정되었습니다.');
+          navigate('/mypage');
+        }
+      } else {
+        // ✅ 새 등록
+        const res = await axios.post(
+          `${API_BASE_URL}${COURSE}/create`,
+          allCourses,
+          {
+            headers: {
+              Authorization: `Bearer ${userAuth.token}`,
+            },
+            withCredentials: true,
+          },
+        );
+
+        if (res.status === 201) {
+          alert('강의가 등록되었습니다.');
+          navigate('/mypage');
+          setCourseList([]);
+          setForm({
+            productName: '',
+            category: '',
+            description: '',
+            price: '',
+            filePath: '',
+          });
+        }
       }
     } catch (err) {
       alert('등록 중 오류 발생');
+      console.log(err);
+
       console.log('강의등록err : ' + err);
     }
   };
@@ -180,7 +244,7 @@ const CourseUploadPage = () => {
         <button type='button' onClick={handleAddCourse}>
           +
         </button>
-        <button type='submit'>등록하기</button>
+        <button type='submit'>{id ? '수정하기' : '등록하기'}</button>
       </div>
 
       {courseList.length > 0 && (

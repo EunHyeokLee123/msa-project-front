@@ -127,13 +127,27 @@ const DashBoardPage = ({ id }) => {
                       >
                         {order.productName}
                       </TableCell>
-                      {user.role === 'ADMIN' ? (
+                      {user.role === 'ADMIN' && (
                         <>
                           <TableCell>{order.productId}</TableCell>
                           <TableCell>
                             {order.active ? '활성화' : '비활성'}
                           </TableCell>
-                          <TableCell></TableCell>
+
+                          <TableCell>
+                            <Button
+                              variant='outlined'
+                              size='small'
+                              color='primary'
+                              onClick={() =>
+                                navigate(`/create/${order.productId}`)
+                              }
+                              style={{ marginRight: '10px' }}
+                            >
+                              수정
+                            </Button>
+                          </TableCell>
+
                           <TableCell>
                             {order.active && (
                               <Button
@@ -146,7 +160,7 @@ const DashBoardPage = ({ id }) => {
                             )}
                           </TableCell>
                         </>
-                      ) : null}
+                      )}
                     </TableRow>
                   </React.Fragment>
                 ))
