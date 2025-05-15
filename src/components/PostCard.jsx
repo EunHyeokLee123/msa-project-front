@@ -144,7 +144,7 @@ const PostCard = ({ Id, type }) => {
             color='primary'
             onClick={() =>
               navigate('/post/create', {
-                state: { id: courseId }, // courseId 변수 정의 필요
+                state: { id: fromId }, // courseId 변수 정의 필요
               })
             }
           >

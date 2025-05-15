@@ -145,7 +145,7 @@ const CourseDetailPage = () => {
           ) : (
             <div className='side-info'>
               <div className='price-info'>
-                <span className="Pinfo">수강 가격 : </span>
+                <span className='Pinfo'>수강 가격 : </span>
                 <span className='price'>{course.price.toLocaleString()}원</span>
               </div>
               <button onClick={handleAddToCart}>장바구니 담기</button>
