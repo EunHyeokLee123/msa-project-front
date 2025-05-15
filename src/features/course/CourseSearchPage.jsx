@@ -60,13 +60,13 @@ const CourseSearchPage = () => {
 
     let url;
 
-    // console.log("selectedCategory은 " + selectedCategory);
+    console.log("selectedCategory은 " + selectedCategory);
 
     try {
       if (selectedCategory !== "전체" && selectedCategory !== undefined && selectedCategory !== '') {
         let category;
         if (selectedCategory === 'HTML/CSS') {
-          category = 'HTML';
+          category = 'HTMLCSS';
         } else {
           category = selectedCategory;
         }
