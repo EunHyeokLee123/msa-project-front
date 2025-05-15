@@ -4,7 +4,7 @@ import OrderListComponent from '../features/order/OrderListComponent';
 import DashBoardPage from '../features/order/DashBoardPage';
 import AdminOrderListComponent from '../features/order/AdminOrderListComponent';
 
-const MyTabBar = ({ userRole }) => {
+const MyTabBar = ({ userRole, userId }) => {
   const [value, setValue] = useState(0);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -26,9 +26,9 @@ const MyTabBar = ({ userRole }) => {
       <Box mt={2}>
         {tabIndex === 0 ? (
           userRole === 'USER' ? (
-            <DashBoardPage />
+            <DashBoardPage id={userId} />
           ) : (
-            <DashBoardPage />
+            <DashBoardPage id={userId} />
           )
         ) : tabIndex === 1 ? (
           userRole === 'USER' ? (
