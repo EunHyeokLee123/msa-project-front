@@ -91,7 +91,7 @@ const Header = () => {
 
                 setSelectedCategory('전체');
                 setActiveTab('전체');
-                navigate('/');
+                navigate('/all');
               }}
             >
               Inflearn
@@ -155,7 +155,7 @@ const Header = () => {
                   onClick={() => {
                     logout();
                     alert('로그아웃되었습니다.');
-                    navigate('/');
+                    navigate('/all');
                   }}
                 >
                   로그아웃
@@ -206,7 +206,7 @@ const Header = () => {
                   setSelectedCategory(label);
                   setActiveTab(label);
                   if (label === '전체') {
-                    navigate('/');
+                    navigate('/all');
                   } else {
                     if (label === 'HTML/CSS') {
                       label = 'HTML'
