@@ -109,55 +109,57 @@ const CourseListPage = () => {
   }
 
   return (
-    <div className={styles['course-list']}>
-      {courses.map((course) => (
-        <div
-          key={course.productId}
-          className={styles['course-card']}
-          onClick={() =>
-            navigate(`/info/${course.productId}`, {
-              state: { courseId: course.productId },
-            })
-          }
-          style={{ cursor: 'pointer' }}
-        >
-          <img src={categoryImages[course.category]} alt={course.category} />
+    <>
+      <div className={styles['course-list']}>
+        {courses.map((course) => (
+          <div className={styles['course-card']}
+            key={course.productId}
+            onClick={() =>
+              navigate(`/info/${course.productId}`, {
+                state: { courseId: course.productId },
+              })
+            }
+            style={{ cursor: 'pointer' }}
+          >
+            <img src={categoryImages[course.category]} alt={course.category} />
 
-          <div className={styles.info}>
-            <h3 className={styles.title}>
-              <a className={styles.filePath} href={course.filePath}>
-                {course.productName}
-              </a>
-            </h3>
-            <p className={styles.instructor}>{course.instructor}</p>
-            <div className={styles.bottom}>
-              <span className={styles.price}>
-                ₩{course.price.toLocaleString()}
-              </span>
-              {/* <span className={styles.category}>{course.category}</span> */}
+            <div className={styles.info}>
+              <h3 className={styles.title}>
+                <a className={styles.filePath} href={course.filePath}>
+                  {course.productName}
+                </a>
+              </h3>
+              <p className={styles.instructor}>{course.instructor}</p>
+              <div className={styles.bottom}>
+                <span className={styles.price}>
+                  ₩{course.price.toLocaleString()}
+                </span>
+                {/* <span className={styles.category}>{course.category}</span> */}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-
-      <div className='pagination'>
-        <button onClick={handlePrev} disabled={page === 0}>
-          이전
-        </button>
-        {[...Array(totalPages)].map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setPage(idx)}
-            className={page === idx ? 'active' : ''}
-          >
-            {idx + 1}
-          </button>
         ))}
-        <button onClick={handleNext} disabled={page === totalPages - 1}>
-          다음
-        </button>
       </div>
-    </div>
+      <div className={styles['pagination-section']}>
+        <div className={styles.pagination}>
+          <button onClick={handlePrev} disabled={page === 0}>
+            이전
+          </button>
+          {[...Array(totalPages)].map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setPage(idx)}
+              className={page === idx ? 'active' : ''}
+            >
+              {idx + 1}
+            </button>
+          ))}
+          <button onClick={handleNext} disabled={page === totalPages - 1}>
+            다음
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

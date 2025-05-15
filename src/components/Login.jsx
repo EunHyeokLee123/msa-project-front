@@ -72,7 +72,10 @@ const Login = () => {
         navigate('/'); // React Router 사용 시
       }
     } catch (err) {
-      if (err.response && err.response.status === 401) {
+      if (
+        err.response &&
+        (err.response.status === 400 || err.response.status === 404)
+      ) {
         setLoginError('아이디 또는 비밀번호가 올바르지 않습니다.');
       } else {
         alert('서버 오류입니다. 관리자에게 문의하세요.');
