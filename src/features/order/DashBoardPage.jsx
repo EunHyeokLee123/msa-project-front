@@ -41,7 +41,6 @@ const DashBoardPage = ({ id }) => {
             { userId: id },
           );
         }
-
         setOrderList(res.data.result);
       } catch (e) {
         console.log('orderlistComponent 에러 발생 ', e);
@@ -50,6 +49,28 @@ const DashBoardPage = ({ id }) => {
 
     fetchOrders();
   }, [user.role]);
+
+  const courseDelete = async (id) => {
+    console.log('id', id);
+
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+      const res = await axiosInstance.patch(
+        `${API_BASE_URL}${COURSE}/delete/${id}`,
+      );
+      // 주문 상태 업데이트
+      setOrderList((prevList) =>
+        prevList.map((order) =>
+          order.id === id ? { ...order, active: false } : order,
+        ),
+      );
+    } catch (e) {
+      console.log('orderlistComponent 에러 발생 ', e);
+    }
+  };
+
+  console.log(orderList);
 
   return (
     <>
@@ -73,7 +94,14 @@ const DashBoardPage = ({ id }) => {
               <TableRow>
                 <TableCell>번호</TableCell>
                 <TableCell>강의명</TableCell>
-                <TableCell></TableCell>
+                {user.role === 'ADMIN' ? (
+                  <>
+                    <TableCell>강의번호</TableCell>
+                    <TableCell>강의상태</TableCell>
+                    <TableCell>수정</TableCell>
+                    <TableCell>삭제</TableCell>
+                  </>
+                ) : null}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -99,6 +127,26 @@ const DashBoardPage = ({ id }) => {
                       >
                         {order.productName}
                       </TableCell>
+                      {user.role === 'ADMIN' ? (
+                        <>
+                          <TableCell>{order.productId}</TableCell>
+                          <TableCell>
+                            {order.active ? '활성화' : '비활성'}
+                          </TableCell>
+                          <TableCell></TableCell>
+                          <TableCell>
+                            {order.active && (
+                              <Button
+                                color='secondary'
+                                size='small'
+                                onClick={() => courseDelete(order.productId)}
+                              >
+                                DELETE
+                              </Button>
+                            )}
+                          </TableCell>
+                        </>
+                      ) : null}
                     </TableRow>
                   </React.Fragment>
                 ))
@@ -114,7 +162,7 @@ const DashBoardPage = ({ id }) => {
           <h2>질문 목록</h2>
         </div>
       ) : user.role === 'ADMIN' ? (
-        // ADMIN일 경우 강의 생성 버튼 중앙 정렬
+        // ADMIN일 경우
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <Button
             variant='contained'

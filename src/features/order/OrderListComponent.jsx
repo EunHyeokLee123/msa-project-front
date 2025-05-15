@@ -45,11 +45,11 @@ const OrderListComponent = () => {
         `${API_BASE_URL}${ORDER}/cancel/${id}`,
       );
       // 주문 상태 업데이트
-      setOrderList((prevList) =>
-        prevList.map((order) =>
-          order.id === id ? { ...order, orderStatus: 'CANCELED' } : order,
-        ),
-      );
+      // setOrderList((prevList) =>
+      //   prevList.map((order) =>
+      //     order.id === id ? { ...order, orderStatus: 'CANCELED' } : order,
+      //   ),
+      // );
     } catch (e) {
       console.log('orderlistComponent 에러 발생 ', e);
     }
