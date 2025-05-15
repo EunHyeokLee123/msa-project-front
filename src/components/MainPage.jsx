@@ -37,7 +37,7 @@ const MainPage = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
-  const pageSize = 15;
+  const pageSize = 100;
 
   const navigate = useNavigate();
 
