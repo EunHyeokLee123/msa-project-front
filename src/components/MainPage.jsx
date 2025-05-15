@@ -37,7 +37,7 @@ const MainPage = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
-  const pageSize = 15;
+  const pageSize = 18;
 
   const navigate = useNavigate();
 
@@ -74,7 +74,7 @@ const MainPage = () => {
 
       console.log('baseUrl : ' + baseUrl);
       const response = await axios.get(baseUrl);
-      console.log(response);
+      console.log('response 값: ', response);
       console.log('response.length: ', response.data.length);
 
       if (response.data.length === 0) {
@@ -88,6 +88,8 @@ const MainPage = () => {
       }
     } catch (error) {
       console.log('강의 불러오기 실패:', error);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -147,7 +149,7 @@ const MainPage = () => {
           </div>
         </div>
       ))}
-      {(loading && currentPage) > 0 && <div>loading...</div>}
+      {/* {(loading && currentPage) > 0 && <div>loading...</div>} */}
     </div>
   );
 };
