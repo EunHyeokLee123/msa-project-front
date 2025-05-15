@@ -14,18 +14,20 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../configs/axios-config';
-import { API_BASE_URL, ORDER } from '../../configs/host-config';
+import { API_BASE_URL, COURSE, ORDER } from '../../configs/host-config';
 
 import { useAuth } from '../../context/TokenContext';
 import PostCard from '../../components/PostCard';
 
-const DashBoardPage = () => {
+const DashBoardPage = ({ id }) => {
   const [orderList, setOrderList] = useState([]);
 
   const navigate = useNavigate();
   const user = useAuth();
 
   //console.log('user: ', user);
+
+  console.log(id);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -34,10 +36,13 @@ const DashBoardPage = () => {
         if (user.role === 'USER') {
           res = await axiosInstance.get(`${API_BASE_URL}${ORDER}/dashboard`);
         } else {
-          res = await axiosInstance.get(
-            `${API_BASE_URL}${ORDER}/my-course-order`,
+          res = await axiosInstance.post(
+            `${API_BASE_URL}${COURSE}/findCourses`,
+            { userId: id },
           );
         }
+        console.log(res);
+
         setOrderList(res.data.result);
       } catch (e) {
         console.log('orderlistComponent 에러 발생 ', e);
@@ -93,11 +98,12 @@ const DashBoardPage = () => {
                       >
                         {order.productName}
                       </TableCell>
+                      {/* 이제 더 이상 주문 상태는 볼 수 없음!
                       <TableCell>
                         {order.orderStatus === 'ORDERED'
                           ? '주문 완료'
                           : '주문 취소됨'}
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   </React.Fragment>
                 ))

@@ -50,6 +50,7 @@ function App() {
                   path='/order/my-order'
                   element={<OrderListComponent />}
                 />
+                <Route path='/create' element={<CourseUploadPage />} />
                 <Route path='/dashboard' element={<DashBoardPage />} />
                 <Route
                   path='/order/my-course-order'
