@@ -95,7 +95,7 @@ const MainPage = () => {
   const scrollPagination = () => {
     const isBottom =
       window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.scrollHeight - 100;
+      document.documentElement.scrollHeight - 600;
     if (isBottom && !isLastPage && !loading) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
