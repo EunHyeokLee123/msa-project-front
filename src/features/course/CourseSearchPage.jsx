@@ -81,7 +81,7 @@ const CourseSearchPage = () => {
         url = `${API_BASE_URL}${COURSE}/all`;
       }
 
-      // console.log("url은 " + url);
+      console.log(url);
 
       const response = await axios.get(url);
 

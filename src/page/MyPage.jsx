@@ -80,7 +80,7 @@ const MyPage = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout();
     navigate('/login');
   };
 
