@@ -56,17 +56,19 @@ const DashBoardPage = ({ id }) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      const res = await axiosInstance.patch(
+      let res = await axiosInstance.patch(
         `${API_BASE_URL}${COURSE}/delete/${id}`,
       );
+      alert('강의가 삭제되었습니다.');
       // 주문 상태 업데이트
-      setOrderList((prevList) =>
-        prevList.map((order) =>
-          order.id === id ? { ...order, active: false } : order,
-        ),
-      );
+      // 강의 목록 다시 불러오기
+      res = await axiosInstance.post(`${API_BASE_URL}${COURSE}/findCourses`, {
+        userId: id,
+      });
+      setOrderList(res.data.result);
     } catch (e) {
       console.log('orderlistComponent 에러 발생 ', e);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 
