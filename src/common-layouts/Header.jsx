@@ -42,6 +42,21 @@ const Header = () => {
 
   const { isLoggedIn, logout } = useAuth();
 
+  const [keyword, setKeyword] = useState("");
+
+  const handleSearch = () => {
+    if (keyword.trim() !== "") {
+      navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+
   return (
     <AppBar
       position='static'
@@ -103,8 +118,14 @@ const Header = () => {
           >
             <SearchIcon sx={{ color: '#777' }} />
             <InputBase
+              type="text"
               placeholder='나의 진짜 성장을 도와줄 실무 강의를 찾아보세요'
-              sx={{ ml: 1, flex: 1 }}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
+              sx={{ ml: 1, flex: 1 }
+
+              }
             />
           </Box>
 
