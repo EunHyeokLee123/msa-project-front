@@ -142,11 +142,15 @@ const PostCard = ({ Id, type }) => {
           <Button
             variant='contained'
             color='primary'
-            onClick={() =>
+            onClick={() => {
+              if (!token) {
+                alert('로그인을 해주세요.');
+                return;
+              }
               navigate('/post/create', {
-                state: { id: courseId }, // courseId 변수 정의 필요
-              })
-            }
+                state: { id: fromId }, // courseId 변수 정의 필요
+              });
+            }}
           >
             질문 생성
           </Button>
