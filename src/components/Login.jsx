@@ -69,7 +69,7 @@ const Login = () => {
         localStorage.setItem('token', response.data.result.token);
         localStorage.setItem('role', response.data.result.role);
         login(token, role);
-        navigate('/'); // React Router 사용 시
+        navigate('/all'); // React Router 사용 시
       }
     } catch (err) {
       if (
