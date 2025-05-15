@@ -29,7 +29,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8000/post-service/post/comment/find',
+          'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/comment/find',
           {
             params: { id: post.id },
           },
@@ -62,7 +62,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/post-service/post/comment/create',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/comment/create',
         {
           content: newComment,
           postId: post.id,
@@ -139,7 +139,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
                   console.log(comment);
 
                   const response = await axios.delete(
-                    'http://localhost:8000/post-service/post/comment/delete',
+                    'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/comment/delete',
                     {
                       params: { id: comment.commentId },
                       headers: {

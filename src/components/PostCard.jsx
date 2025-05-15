@@ -26,14 +26,14 @@ const PostCard = ({ Id, type }) => {
         let response;
         if (type === 'course') {
           response = await axios.get(
-            'http://localhost:8000/post-service/post/list',
+            'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/list',
             {
               params: { id: fromId },
             },
           );
         } else {
           response = await axios.get(
-            'http://localhost:8000/post-service/post/myquestions',
+            'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/myquestions',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const PostCard = ({ Id, type }) => {
   const handleDeletePost = async (postId) => {
     try {
       const response = await axios.delete(
-        'http://localhost:8000/post-service/post/delete',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/delete',
         {
           params: { id: postId },
           headers: {
@@ -94,7 +94,7 @@ const PostCard = ({ Id, type }) => {
   const handleUpdatePost = async (postId, newTitle, newContent) => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/post-service/post/modify',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/modify',
         {
           postId: postId,
           title: newTitle,

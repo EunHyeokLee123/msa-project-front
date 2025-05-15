@@ -35,7 +35,7 @@ const CreatePost = () => {
       console.log(courseId);
 
       const response = await axios.post(
-        'http://localhost:8000/post-service/post/create',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/create',
         {
           title,
           content,

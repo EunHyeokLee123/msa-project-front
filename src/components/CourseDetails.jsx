@@ -38,7 +38,9 @@ const CourseDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/course-service/courses/info/${courseId}`)
+      .get(
+        `http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/course-service/courses/info/${courseId}`,
+      )
       .then((res) => {
         setCourse(res.data);
       })

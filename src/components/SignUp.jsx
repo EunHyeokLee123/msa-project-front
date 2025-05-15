@@ -91,7 +91,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:8000/user-service/user/create',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user-service/user/create',
         {
           username,
           email,
