@@ -144,11 +144,11 @@ const CourseSearchPage = () => {
 
             <div className={styles.info}>
               <h3 className={styles.title}>
-                <a className={styles.filePath} href={course.filePath}>
+                <a className={styles.filePath}>
                   {course.productName}
                 </a>
               </h3>
-              <p className={styles.instructor}>{course.instructor}</p>
+              <p className={styles.instructor}>{course.username} [{course.category}]</p>
               <div className={styles.bottom}>
                 <span className={styles.price}>
                   ₩{course.price.toLocaleString()}
