@@ -160,6 +160,11 @@ const OrderPage = () => {
     .reduce((sum, product) => sum + product.price, 0);
 
   const orderCreate = async () => {
+    if (!user.token) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
+
     // 백엔드가 달라는 형태로 줘야하니까 그에 맞게 객체를 매핑
     const orderProducts = productsInCart
       .filter((p) => selectedProducts.includes(p.id))

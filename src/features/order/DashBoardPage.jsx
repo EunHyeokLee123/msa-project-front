@@ -41,7 +41,6 @@ const DashBoardPage = ({ id }) => {
             { userId: id },
           );
         }
-        console.log(res);
 
         setOrderList(res.data.result);
       } catch (e) {
@@ -72,6 +71,7 @@ const DashBoardPage = ({ id }) => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>번호</TableCell>
                 <TableCell>강의명</TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -89,21 +89,16 @@ const DashBoardPage = ({ id }) => {
                   </TableCell>
                 </TableRow>
               ) : (
-                orderList.map((order) => (
+                orderList.map((order, index) => (
                   <React.Fragment key={order.id}>
                     <TableRow>
+                      <TableCell>{index + 1}</TableCell>
                       <TableCell
                         sx={{ cursor: 'pointer' }}
                         onClick={() => navigate(`/info/${order.productId}`)}
                       >
                         {order.productName}
                       </TableCell>
-                      {/* 이제 더 이상 주문 상태는 볼 수 없음!
-                      <TableCell>
-                        {order.orderStatus === 'ORDERED'
-                          ? '주문 완료'
-                          : '주문 취소됨'}
-                      </TableCell> */}
                     </TableRow>
                   </React.Fragment>
                 ))
