@@ -55,13 +55,13 @@ const DashBoardPage = () => {
           margin: 'auto',
         }}
       >
-        {user.role === 'USER' ? (
+        {/* {user.role === 'USER' ? (
           // USER일 경우 질문 목록 렌더링
           <h2>내 학습</h2>
         ) : user.role === 'ADMIN' ? (
           // ADMIN일 경우 강의 생성 버튼 중앙 정렬
           <h2>내 강의</h2>
-        ) : null}
+        ) : null} */}
 
         <TableContainer>
           <Table>
@@ -75,7 +75,12 @@ const DashBoardPage = () => {
               {orderList.length < 1 ? (
                 <TableRow>
                   <TableCell colSpan={5} align='center'>
-                    학습 중인 강의가 없습니다
+                    {user.role === 'USER' ? (
+                      // USER일 경우 질문 목록 렌더링
+                      <p>학습 중인 강의가 없습니다.</p>
+                    ) : user.role === 'ADMIN' ? (
+                      <p>등록된 강의가 없습니다.</p>
+                    ) : null}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -113,7 +118,7 @@ const DashBoardPage = () => {
           <Button
             variant='contained'
             color='primary'
-            onClick={() => navigate('/create')} // 강의 생성 페이지로 이동
+            onClick={() => navigate('/courseCreate')} // 강의 생성 페이지로 이동
             style={{ marginTop: '30px' }}
           >
             강의 생성

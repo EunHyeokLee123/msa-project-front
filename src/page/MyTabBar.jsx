@@ -25,11 +25,7 @@ const MyTabBar = ({ userRole }) => {
       </Tabs>
       <Box mt={2}>
         {tabIndex === 0 ? (
-          userRole === 'USER' ? (
-            <DashBoardPage />
-          ) : (
-            <DashBoardPage />
-          )
+          <DashBoardPage />
         ) : tabIndex === 1 ? (
           userRole === 'USER' ? (
             <OrderListComponent />
