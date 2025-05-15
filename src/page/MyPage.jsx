@@ -28,7 +28,7 @@ const MyPage = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await axios.get(
-          'http://localhost:8000/user-service/user/myinfo',
+          'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user-service/user/myinfo',
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ const MyPage = () => {
 
     try {
       await axios.post(
-        'http://localhost:8000/user-service/user/password',
+        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user-service/user/password',
         {
           email: userInfo.email,
           newPassword: newPassword,
