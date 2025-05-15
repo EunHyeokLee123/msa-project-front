@@ -42,20 +42,19 @@ const Header = () => {
 
   const { isLoggedIn, logout } = useAuth();
 
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
 
   const handleSearch = () => {
-    if (keyword.trim() !== "") {
+    if (keyword.trim() !== '') {
       navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSearch();
     }
   };
-
 
   return (
     <AppBar
@@ -91,7 +90,7 @@ const Header = () => {
 
                 setSelectedCategory('전체');
                 setActiveTab('전체');
-                navigate('/all');
+                navigate('/');
               }}
             >
               Inflearn
@@ -118,14 +117,12 @@ const Header = () => {
           >
             <SearchIcon sx={{ color: '#777' }} />
             <InputBase
-              type="text"
+              type='text'
               placeholder='나의 진짜 성장을 도와줄 실무 강의를 찾아보세요'
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={handleKeyDown}
-              sx={{ ml: 1, flex: 1 }
-
-              }
+              sx={{ ml: 1, flex: 1 }}
             />
           </Box>
 
@@ -155,7 +152,7 @@ const Header = () => {
                   onClick={() => {
                     logout();
                     alert('로그아웃되었습니다.');
-                    navigate('/all');
+                    navigate('/');
                   }}
                 >
                   로그아웃
@@ -206,10 +203,10 @@ const Header = () => {
                   setSelectedCategory(label);
                   setActiveTab(label);
                   if (label === '전체') {
-                    navigate('/all');
+                    navigate('/');
                   } else {
                     if (label === 'HTML/CSS') {
-                      label = 'HTMLCSS'
+                      label = 'HTMLCSS';
                     }
                     navigate(`/category/${label}`);
                   }
