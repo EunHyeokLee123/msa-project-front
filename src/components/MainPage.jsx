@@ -57,8 +57,10 @@ const MainPage = () => {
 
   //강의 불러오는 함수
   const fetchCourses = async () => {
-    if (loading || isLastPage) return;
+    if (isLastPage) return;
+
     console.log('아직 보여줄 컨텐트 더 있음');
+    console.log('현재 페이지: ', currentPage);
 
     const params = {
       size: pageSize,
@@ -73,21 +75,19 @@ const MainPage = () => {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
 
       console.log('baseUrl : ' + baseUrl);
-      const response = await axios.get(baseUrl);
-      console.log(response);
+      const response = await axios.get(baseUrl, { params });
+      console.log('response 값: ', response);
       console.log('response.length: ', response.data.length);
 
       if (response.data.length === 0) {
         setLastPage(true);
       } else {
         setCourses((prevCourses) => [...prevCourses, ...response.data]);
-        // console.log(
-        //   'courses ids',
-        //   courses.map((c) => c.productId),
-        // );
       }
     } catch (error) {
       console.log('강의 불러오기 실패:', error);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -147,7 +147,7 @@ const MainPage = () => {
           </div>
         </div>
       ))}
-      {(loading && currentPage) > 0 && <div>loading...</div>}
+      {/* {(loading && currentPage) > 0 && <div>loading...</div>} */}
     </div>
   );
 };
