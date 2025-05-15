@@ -26,7 +26,8 @@ const categoryImages = {
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './CourseSearchPage.scss';
+// import './CourseSearchPage.scss';
+import styles from './CourseSearchPage.module.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import { useCategory } from '../../context/CategoryContext';
 import { useNavigate } from 'react-router-dom';
@@ -101,11 +102,11 @@ const CourseListPage = () => {
   }
 
   return (
-    <div className='course-list'>
+    <div className={styles['course-list']}>
       {courses.map((course) => (
         <div
           key={course.productId}
-          className='course-card'
+          className={styles['course-card']}
           onClick={() =>
             navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
@@ -115,17 +116,16 @@ const CourseListPage = () => {
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
-          <div className='info'>
-            <h3 className='title'>
-              <a className='filePath' href={course.filePath}>
+          <div className={styles.info}>
+            <h3 className={styles.title}>
+              <a className={styles.filePath} href={course.filePath}>
                 {course.productName}
               </a>
             </h3>
-            <p className='instructor'>{course.instructor}</p>
-            <div className='bottom'>
-              <span className='price'>{course.category}</span>
-              <span className='price'>{course.description}</span>
-              <span className='price'>₩{course.price.toLocaleString()}</span>
+            <p className={styles.instructor}>{course.instructor}</p>
+            <div className={styles.bottom}>
+              <span className={styles.price}>₩{course.price.toLocaleString()}</span>
+              {/* <span className={styles.category}>{course.category}</span> */}
             </div>
           </div>
         </div>

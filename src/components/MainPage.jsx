@@ -29,7 +29,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE } from '../configs/host-config';
-import './CourseSearchPage.scss';
+import styles from './MainPage.module.scss';
 import { useAuth } from '../context/TokenContext';
 
 const MainPage = () => {
@@ -39,12 +39,12 @@ const MainPage = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
-  const pageSize = 12;
+  const pageSize = 15;
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCourses(0);
+    fetchCourses();
 
     const throttledScroll = throttle(scrollPagination, 1000);
 
@@ -54,11 +54,11 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    if (currentPage > 0) fetchCourses(currentPage);
+    if (currentPage > 0) fetchCourses();
   }, [currentPage]);
 
   //강의 불러오는 함수
-  const fetchCourses = async (page = currentPage) => {
+  const fetchCourses = async () => {
     if (loading || isLastPage) return;
     console.log('아직 보여줄 컨텐트 더 있음');
 
@@ -73,6 +73,7 @@ const MainPage = () => {
 
     try {
       const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+
       console.log('baseUrl : ' + baseUrl);
       const response = await axios.get(baseUrl);
       console.log(response);
@@ -82,12 +83,11 @@ const MainPage = () => {
         setLastPage(true);
       } else {
         setCourses((prevCourses) => [...prevCourses, ...response.data]);
-        console.log(
-          'courses ids',
-          courses.map((c) => c.productId),
-        );
+        // console.log(
+        //   'courses ids',
+        //   courses.map((c) => c.productId),
+        // );
       }
-      setLoading(false);
     } catch (error) {
       console.log('강의 불러오기 실패:', error);
       setLoading(false);
@@ -97,51 +97,39 @@ const MainPage = () => {
   const scrollPagination = () => {
     const isBottom =
       window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.scrollHeight - 200;
+      document.documentElement.scrollHeight - 100;
     if (isBottom && !isLastPage && !loading) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
   console.log('스크롤 위치', window.scrollY);
 
-  if (loading) {
-    return <div className='course-list'>로딩 중...</div>;
-  }
+  // if (loading && currentPage === 0) {
+  //   return <div className='course-list'>로딩 중...</div>;
+  // }
 
-  if (!courses || courses.length === 0) {
+  if (currentPage === 0 && (!courses || courses.length === 0)) {
     return <div className='course-list'>현재 강의가 없습니다.</div>;
   }
 
   return (
-    <div className='course-list'>
+    <div className={styles['course-list']}>
       {courses.map((course) => (
         <div
           key={course.productId}
-          className='course-card'
+          className={styles['course-card']}
           onClick={() =>
             navigate(`/info/${course.productId}`, {
               state: { courseId: course.productId },
             })
           }
-          sx={{
-            height: '45px',
-            lineHeight: 1.4,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            color: 'rgb(33, 37, 41)',
-            fontSize: '1rem',
-            textDecoration: 'none',
-            fontWeight: '500',
-            textUnderlinePosition: 'under',
-          }}
         >
           <img src={categoryImages[course.category]} alt={course.category} />
 
-          <div className='info'>
-            <h3 className='title'>
+          <div className={styles.info}>
+            <h3 className={styles.title}>
               <a
-                className='filePath'
+                className={styles.filePath}
                 href={course.filePath}
                 target='_blank'
                 rel='noopener noreferrer'
@@ -149,14 +137,19 @@ const MainPage = () => {
                 {course.productName}
               </a>
             </h3>
-            <p className='instructor'>{course.username}</p>
-            <div className='bottom'>
-              <span className='price'>₩{course.price.toLocaleString()}</span>
-              <span className='category'>{course.category}</span>
+            <p className={styles.instructor}>
+              {course.username} [{course.category}]
+            </p>
+            <div className={styles.bottom}>
+              <span className={styles.price}>
+                ₩{course.price.toLocaleString()}
+              </span>
+              {/* <span className={styles.category}>{course.category}</span> */}
             </div>
           </div>
         </div>
       ))}
+      {(loading && currentPage) > 0 && <div>loading...</div>}
     </div>
   );
 };

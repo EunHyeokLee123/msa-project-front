@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
 import DashBoardPage from '../features/order/DashBoardPage';
+import MyTabBar from './MyTabBar';
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -21,7 +22,7 @@ const MyPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
-  const { token, logout } = useAuth();
+  const { token, logout, role } = useAuth();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -95,7 +96,14 @@ const MyPage = () => {
               <Typography variant='h6'>사용자 정보</Typography>
               <Typography>Email: {userInfo.email}</Typography>
               <Typography>이름: {userInfo.username}</Typography>
-              <Typography>역할: {userInfo.role}</Typography>
+              <Typography>
+                역할:
+                {userInfo.role === 'USER'
+                  ? ' 학생'
+                  : userInfo.role === 'ADMIN'
+                  ? ' 강사'
+                  : ''}
+              </Typography>
 
               <Box component='form' onSubmit={handlePasswordChange} mt={4}>
                 <Typography variant='h6'>비밀번호 변경</Typography>
@@ -144,7 +152,7 @@ const MyPage = () => {
           </Card>
         </Grid>
       </Grid>
-      <DashBoardPage />
+      <MyTabBar userRole={role} />
     </>
   );
 };
