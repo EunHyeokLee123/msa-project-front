@@ -209,7 +209,7 @@ const Header = () => {
                     navigate('/all');
                   } else {
                     if (label === 'HTML/CSS') {
-                      label = 'HTML'
+                      label = 'HTMLCSS'
                     }
                     navigate(`/category/${label}`);
                   }
