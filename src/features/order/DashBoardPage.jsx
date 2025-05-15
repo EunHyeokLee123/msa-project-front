@@ -99,6 +99,50 @@ const DashBoardPage = ({ id }) => {
                       >
                         {order.productName}
                       </TableCell>
+                      {/* ADMIN인 경우 수정/삭제 버튼 표시 */}
+                      {user.role === 'ADMIN' && (
+                        <TableCell>
+                          <Button
+                            variant='outlined'
+                            size='small'
+                            color='primary'
+                            onClick={() =>
+                              navigate(`/create/${order.productId}`)
+                            }
+                            style={{ marginRight: '10px' }}
+                          >
+                            수정
+                          </Button>
+                          <Button
+                            variant='outlined'
+                            size='small'
+                            color='error'
+                            onClick={async () => {
+                              const confirmDelete =
+                                window.confirm('강의를 삭제하시겠습니까?');
+                              if (confirmDelete) {
+                                try {
+                                  await axiosInstance.delete(
+                                    `${API_BASE_URL}${COURSE}/delete/${order.productId}`,
+                                  );
+                                  alert('강의가 삭제되었습니다.');
+                                  // 강의 목록 다시 불러오기
+                                  const res = await axiosInstance.post(
+                                    `${API_BASE_URL}${COURSE}/findCourses`,
+                                    { userId: id },
+                                  );
+                                  setOrderList(res.data.result);
+                                } catch (err) {
+                                  console.error('삭제 실패:', err);
+                                  alert('삭제 중 오류가 발생했습니다.');
+                                }
+                              }
+                            }}
+                          >
+                            삭제
+                          </Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   </React.Fragment>
                 ))
