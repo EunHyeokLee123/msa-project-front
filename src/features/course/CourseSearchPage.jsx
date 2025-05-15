@@ -35,7 +35,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const PAGE_SIZE = 12;
 
 const CourseSearchPage = () => {
-  console.log("페이지 진입ㅃ!");
+  console.log('페이지 진입ㅃ!');
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,9 +45,7 @@ const CourseSearchPage = () => {
   const { selectedCategory } = useCategory();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const keyword = queryParams.get("keyword") || "";
-
-
+  const keyword = queryParams.get('keyword') || '';
 
   // const filteredCourses = allCourses.filter((course) =>
   //   course.title.toLowerCase().includes(keyword.toLowerCase())
@@ -60,10 +58,14 @@ const CourseSearchPage = () => {
 
     let url;
 
-    console.log("selectedCategory은 " + selectedCategory);
+    console.log('selectedCategory은 ' + selectedCategory);
 
     try {
-      if (selectedCategory !== "전체" && selectedCategory !== undefined && selectedCategory !== '') {
+      if (
+        selectedCategory !== '전체' &&
+        selectedCategory !== undefined &&
+        selectedCategory !== ''
+      ) {
         let category;
         if (selectedCategory === 'HTML/CSS') {
           category = 'HTMLCSS';
@@ -71,11 +73,14 @@ const CourseSearchPage = () => {
           category = selectedCategory;
         }
 
-        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(category,
+        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
+          category,
         )}?page=${page}&size=${12}`;
       } else if (keyword !== undefined && keyword !== '') {
         // console.log("keyword은 " + keyword);
-        url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(keyword,)}`;
+        url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(
+          keyword,
+        )}`;
       } else {
         // url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
         url = `${API_BASE_URL}${COURSE}/all`;
@@ -131,7 +136,8 @@ const CourseSearchPage = () => {
     <>
       <div className={styles['course-list']}>
         {courses.map((course) => (
-          <div className={styles['course-card']}
+          <div
+            className={styles['course-card']}
             key={course.productId}
             onClick={() =>
               navigate(`/info/${course.productId}`, {
@@ -144,11 +150,11 @@ const CourseSearchPage = () => {
 
             <div className={styles.info}>
               <h3 className={styles.title}>
-                <a className={styles.filePath} href={course.filePath}>
-                  {course.productName}
-                </a>
+                <a className={styles.filePath}>{course.productName}</a>
               </h3>
-              <p className={styles.instructor}>{course.instructor}</p>
+              <p className={styles.instructor}>
+                {course.username} [{course.category}]
+              </p>
               <div className={styles.bottom}>
                 <span className={styles.price}>
                   ₩{course.price.toLocaleString()}
