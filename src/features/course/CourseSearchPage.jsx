@@ -30,17 +30,29 @@ import axios from 'axios';
 import styles from './CourseSearchPage.module.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import { useCategory } from '../../context/CategoryContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PAGE_SIZE = 12;
 
-const CourseListPage = () => {
+const CourseSearchPage = () => {
+  console.log("페이지 진입ㅃ!");
+
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
   const { selectedCategory } = useCategory();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const keyword = queryParams.get("keyword") || "";
+
+
+
+  // const filteredCourses = allCourses.filter((course) =>
+  //   course.title.toLowerCase().includes(keyword.toLowerCase())
+  // );
+
   const navigate = useNavigate();
 
   const fetchCourses = async (page) => {
@@ -48,8 +60,10 @@ const CourseListPage = () => {
 
     let url;
 
+    // console.log("selectedCategory은 " + selectedCategory);
+
     try {
-      if (selectedCategory !== undefined && selectedCategory !== '') {
+      if (selectedCategory !== "전체" && selectedCategory !== undefined && selectedCategory !== '') {
         let category;
         if (selectedCategory === 'HTML/CSS') {
           category = 'HTML';
@@ -57,14 +71,17 @@ const CourseListPage = () => {
           category = selectedCategory;
         }
 
-        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
-          category,
-        )}?page=${page}&size=${16}`;
+        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(category,
+        )}?page=${page}&size=${12}`;
+      } else if (keyword !== undefined && keyword !== '') {
+        // console.log("keyword은 " + keyword);
+        url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(keyword,)}`;
       } else {
-        url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
+        // url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
+        url = `${API_BASE_URL}${COURSE}/all`;
       }
 
-      console.log(url);
+      // console.log("url은 " + url);
 
       const response = await axios.get(url);
 
@@ -88,7 +105,7 @@ const CourseListPage = () => {
 
   useEffect(() => {
     fetchCourses(page);
-  }, [selectedCategory, page]);
+  }, [selectedCategory, page, keyword]);
 
   useEffect(() => {
     fetchCourses(page);
@@ -165,4 +182,4 @@ const CourseListPage = () => {
   );
 };
 
-export default CourseListPage;
+export default CourseSearchPage;

@@ -30,6 +30,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<MainPage />} />
                 <Route path='/info/:courseId' element={<CourseDetail />} />
+                <Route path='/search' element={<CourseSearchPage />} />
                 <Route
                   path='/list?page=:page&size:size'
                   element={<CourseSearchPage />}
