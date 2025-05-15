@@ -3,6 +3,7 @@ import axios from 'axios';
 import './CourseUploadPage.scss';
 import { API_BASE_URL, COURSE } from '../../configs/host-config';
 import { useAuth } from '../../context/TokenContext';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
   'Git',
@@ -19,6 +20,7 @@ const categories = [
 
 const CourseUploadPage = () => {
   const userAuth = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     productName: '',

@@ -21,8 +21,6 @@ const categoryImages = {
   JS: jsImg,
   React: reactImg,
   Spring: springImg,
-  java: javaImg,
-  카테고리: sqlImg,
 };
 
 import React, { useEffect, useState } from 'react';

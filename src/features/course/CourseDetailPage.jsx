@@ -46,7 +46,7 @@ const CourseDetailPage = () => {
   const [orderList, setOrderList] = useState([]);
 
   const user = useAuth();
-  //console.log('user토큰: ', user.token);
+  console.log('user토큰: ', user.token);
 
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
@@ -86,11 +86,6 @@ const CourseDetailPage = () => {
 
   // 장바구니 클릭 이벤트 핸들러
   const handleAddToCart = () => {
-    if (user.token === undefined) {
-      alert('로그인이 필요합니다!');
-      return;
-    }
-
     const product = {
       id: course.productId,
       name: course.productName,
@@ -109,11 +104,6 @@ const CourseDetailPage = () => {
 
   // 수강신청하기 클릭 이벤트 핸들러
   const handleOrderCourse = () => {
-    if (user.token === undefined) {
-      alert('로그인이 필요합니다!');
-      return;
-    }
-
     const product = {
       id: course.productId,
       name: course.productName,

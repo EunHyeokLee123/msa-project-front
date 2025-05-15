@@ -72,11 +72,11 @@ const OrderListComponent = () => {
     <div
       style={{
         width: '60%',
-        margin: 'auto',
+        margin: 'auto auto 100px',
       }}
     >
       {/* <h2>{userName} 님의 주문 내역</h2> */}
-      <h2>{orderList[0]?.userEmail ?? '사용자'} 님의 주문 내역</h2>
+      {/* <h2>{orderList[0]?.userEmail ?? '사용자'} 님의 주문 내역</h2> */}
       <TableContainer>
         <Table
           sx={
