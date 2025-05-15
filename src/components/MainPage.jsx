@@ -130,7 +130,7 @@ const MainPage = () => {
             <h3 className={styles.title}>
               <a
                 className={styles.filePath}
-                href={course.filePath}
+                // href={course.filePath}
                 target='_blank'
                 rel='noopener noreferrer'
               >

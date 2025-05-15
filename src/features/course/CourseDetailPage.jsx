@@ -142,7 +142,7 @@ const CourseDetailPage = () => {
           <h2>{course.productName}</h2>
           <p className='subtitle'>{course.description}</p>
           <p className='tags'>{course.category}</p>
-          <p className='user_id'>강사 ID: {course.userId}</p>
+          <p className='user_id'>강사명 : {course.username}</p>
           {/* <p className="rating">⭐ {course.rating} ({course.reviews}개 리뷰)</p> */}
         </div>
         <div className='side-info'>
@@ -154,7 +154,10 @@ const CourseDetailPage = () => {
             </div>
           ) : (
             <div className='side-info'>
-              <div className='price'>{course.price.toLocaleString()}원</div>
+              <div className='price-info'>
+                <span className="Pinfo">수강 가격 : </span>
+                <span className='price'>{course.price.toLocaleString()}원</span>
+              </div>
               <button onClick={handleAddToCart}>장바구니 담기</button>
               <button onClick={handleOrderCourse}>수강신청 하기</button>
             </div>
