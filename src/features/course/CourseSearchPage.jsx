@@ -50,12 +50,21 @@ const CourseListPage = () => {
 
     try {
       if (selectedCategory !== undefined && selectedCategory !== '') {
+        let category;
+        if (selectedCategory === 'HTML/CSS') {
+          category = 'HTML';
+        } else {
+          category = selectedCategory;
+        }
+
         url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
-          selectedCategory,
+          category,
         )}?page=${page}&size=${16}`;
       } else {
         url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
       }
+
+      console.log(url);
 
       const response = await axios.get(url);
 
@@ -124,7 +133,9 @@ const CourseListPage = () => {
             </h3>
             <p className={styles.instructor}>{course.instructor}</p>
             <div className={styles.bottom}>
-              <span className={styles.price}>₩{course.price.toLocaleString()}</span>
+              <span className={styles.price}>
+                ₩{course.price.toLocaleString()}
+              </span>
               {/* <span className={styles.category}>{course.category}</span> */}
             </div>
           </div>
