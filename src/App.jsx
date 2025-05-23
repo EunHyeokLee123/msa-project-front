@@ -29,6 +29,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path='/' element={<MainPage />} />
+                <Route path='/all' element={<MainPage />} />
                 <Route path='/info/:courseId' element={<CourseDetail />} />
                 <Route path='/search' element={<CourseSearchPage />} />
                 <Route

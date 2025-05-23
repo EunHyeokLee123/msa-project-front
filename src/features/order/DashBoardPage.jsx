@@ -98,8 +98,8 @@ const DashBoardPage = ({ id }) => {
                 <TableCell>강의명</TableCell>
                 {user.role === 'ADMIN' ? (
                   <>
-                    <TableCell>강의번호</TableCell>
-                    <TableCell>강의상태</TableCell>
+                    {/* <TableCell>강의번호</TableCell> */}
+                    {/* <TableCell>강의상태</TableCell> */}
                     <TableCell>수정</TableCell>
                     <TableCell>삭제</TableCell>
                   </>
@@ -131,10 +131,10 @@ const DashBoardPage = ({ id }) => {
                       </TableCell>
                       {user.role === 'ADMIN' && (
                         <>
-                          <TableCell>{order.productId}</TableCell>
-                          <TableCell>
+                          {/* <TableCell>{order.productId}</TableCell> */}
+                          {/* <TableCell>
                             {order.active ? '활성화' : '비활성'}
-                          </TableCell>
+                          </TableCell> */}
 
                           <TableCell>
                             <Button
