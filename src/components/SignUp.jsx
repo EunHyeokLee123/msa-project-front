@@ -16,6 +16,7 @@ import {
   Radio,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { USER } from '../configs/host-config';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -90,15 +91,12 @@ const Signup = () => {
     }
 
     try {
-      const res = await axios.post(
-        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user-service/user/create',
-        {
-          username,
-          email,
-          password,
-          role,
-        },
-      );
+      const res = await axios.post(`${API_BASE_URL}${USER}/create`, {
+        username,
+        email,
+        password,
+        role,
+      });
       if (res.status === 201) {
         alert('회원가입 성공!');
         setUsername('');

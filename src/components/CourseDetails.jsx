@@ -29,6 +29,7 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import PostCard from './PostCard';
 import CartContext from '../context/CartContext';
+import { API_BASE_URL, COURSE } from '../configs/host-config';
 
 const CourseDetails = () => {
   const [course, setCourse] = useState(null);
@@ -38,9 +39,7 @@ const CourseDetails = () => {
 
   useEffect(() => {
     axios
-      .get(
-        `http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/course-service/courses/info/${courseId}`,
-      )
+      .get(`${API_BASE_URL}${COURSE}/info/${courseId}`)
       .then((res) => {
         setCourse(res.data);
       })

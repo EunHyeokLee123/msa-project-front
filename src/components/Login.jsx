@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -51,13 +52,10 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(
-        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user-service/user/login',
-        {
-          email: id,
-          password: password,
-        },
-      );
+      const response = await axios.post(`${API_BASE_URL}${USER}/login`, {
+        email: id,
+        password: password,
+      });
 
       if (response.status === 200) {
         alert('로그인 성공!');

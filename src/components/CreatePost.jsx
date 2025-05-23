@@ -3,6 +3,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthProvider, useAuth } from '../context/TokenContext';
+import { API_BASE_URL } from '../configs/host-config';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
@@ -35,7 +36,7 @@ const CreatePost = () => {
       console.log(courseId);
 
       const response = await axios.post(
-        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/post-service/post/create',
+        `${API_BASE_URL}${POST}/create`,
         {
           title,
           content,

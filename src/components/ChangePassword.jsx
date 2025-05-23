@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const ChangePassword = () => {
   const [email, setEmail] = useState('');
@@ -30,14 +31,11 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await axios.put(
-        'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000/user/password',
-        {
-          email,
-          currentPassword,
-          newPassword,
-        },
-      );
+      const response = await axios.put(`${API_BASE_URL}${USER}/password`, {
+        email,
+        currentPassword,
+        newPassword,
+      });
 
       if (response.status === 200) {
         alert('비밀번호가 성공적으로 변경되었습니다.');
