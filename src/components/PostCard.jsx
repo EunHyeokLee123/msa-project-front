@@ -5,7 +5,7 @@ import Comment from './Comment';
 import { useLocation, useNavigate } from 'react-router-dom'; // 추가
 import { Button, Box } from '@mui/material'; // 추가
 import { useAuth } from '../context/TokenContext';
-import { API_BASE_URL } from '../configs/host-config';
+import { API_BASE_URL, POST } from '../configs/host-config';
 
 const PostCard = ({ Id, type }) => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const PostCard = ({ Id, type }) => {
             params: { id: fromId },
           });
         } else {
-          response = await axios.get('myquestions', {
+          response = await axios.get(`${API_BASE_URL}${POST}/myquestions`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
