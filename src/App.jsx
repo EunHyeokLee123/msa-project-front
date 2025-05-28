@@ -18,6 +18,7 @@ import AdminOrderListComponent from './features/order/AdminOrderListComponent';
 import { Dashboard } from '@mui/icons-material';
 import DashBoardPage from './features/order/DashBoardPage';
 import MyPage from './page/MyPage';
+import CreateEvaluation from './components/CreateEvaluation';
 
 function App() {
   return (
@@ -61,6 +62,10 @@ function App() {
                 <Route
                   path='/order/my-course-order'
                   element={<AdminOrderListComponent />}
+                />
+                <Route
+                  path='/evaluation/create'
+                  element={<CreateEvaluation />}
                 />
               </Routes>
             </Router>

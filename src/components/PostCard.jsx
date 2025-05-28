@@ -25,6 +25,7 @@ const PostCard = ({ Id, type }) => {
       try {
         setLoading(true);
         let response;
+
         if (type === 'course') {
           response = await axios.get(`${API_BASE_URL}${POST}/list`, {
             params: { id: fromId },
