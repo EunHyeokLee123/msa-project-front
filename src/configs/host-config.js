@@ -27,3 +27,4 @@ export const USER = '/user-service/user';
 export const COURSE = '/course-service/courses';
 export const ORDER = '/order-service/order';
 export const POST = '/post-service/post';
+export const EVAL = '/eval-service/eval';
