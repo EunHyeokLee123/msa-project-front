@@ -16,7 +16,7 @@ import {
   Radio,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { USER } from '../configs/host-config';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const Signup = () => {
   const [username, setUsername] = useState('');

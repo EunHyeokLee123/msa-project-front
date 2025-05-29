@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAuth } from '../context/TokenContext';
 import { API_BASE_URL, EVAL } from '../configs/host-config';
 
-const EvaluationList = ({ courseId }) => {
+const EvaluationList = ({ courseId, onEvaluationChange }) => {
   const navigate = useNavigate();
   const { token, isLoggedIn } = useAuth();
   const [evaluations, setEvaluations] = useState([]);
@@ -77,13 +77,18 @@ const EvaluationList = ({ courseId }) => {
       });
       alert('평가 삭제가 완료되었습니다.');
       fetchEvaluations();
+      onEvaluationChange?.(); // 콜백 호출로 평점 다시 가져오기
     } catch (err) {
       if (err.response?.status === 403) {
         alert('삭제 권한이 없습니다.');
         return false; // 삭제 불가능
+      } else if (err.response?.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+        return false;
+      } else {
+        alert('삭제 중 오류가 발생했습니다.');
+        console.error(err);
       }
-      alert('삭제 중 오류가 발생했습니다.');
-      console.error(err);
     }
   };
 
@@ -105,13 +110,18 @@ const EvaluationList = ({ courseId }) => {
       setEditingId(null);
       alert('평가 수정이 완료되었습니다.');
       fetchEvaluations();
+      onEvaluationChange?.(); // 콜백 호출로 평점 다시 가져오기
     } catch (err) {
       if (err.response?.status === 403) {
         alert('수정 권한이 없습니다.');
         return false; // 수정 불가능
+      } else if (err.response?.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+        return false;
+      } else {
+        alert('수정 중 오류가 발생했습니다.');
+        console.error(err);
       }
-      alert('수정 중 오류가 발생했습니다.');
-      console.error(err);
     }
   };
 
@@ -167,9 +177,12 @@ const EvaluationList = ({ courseId }) => {
       )}
 
       {evaluations.map((evaluation) => (
-        <Card key={evaluation.id} sx={{ mb: 2, mx: 2, position: 'relative' }}>
+        <Card
+          key={evaluation.evalId}
+          sx={{ mb: 2, mx: 2, position: 'relative' }}
+        >
           <CardContent>
-            {editingId === evaluation.id ? (
+            {editingId === evaluation.evalId ? (
               <>
                 <TextField
                   fullWidth
@@ -206,7 +219,7 @@ const EvaluationList = ({ courseId }) => {
                 <Rating value={evaluation.rating} readOnly />
                 <IconButton
                   onClick={() => {
-                    setEditingId(evaluation.id);
+                    setEditingId(evaluation.evalId);
                     setEditedContent(evaluation.content);
                     setEditedRating(evaluation.rating);
                   }}

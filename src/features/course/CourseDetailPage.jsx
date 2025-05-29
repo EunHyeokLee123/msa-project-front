@@ -55,6 +55,32 @@ const CourseDetailPage = () => {
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
 
+  // 평균 평점을 불러오는 로직
+  const fetchAverageRating = async () => {
+    try {
+      console.log(courseId);
+
+      const response = await axios.get(
+        `${API_BASE_URL}${EVAL}/eval-rating/${courseId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      console.log(response);
+
+      const rating = response.data.result;
+
+      if (rating !== undefined && rating !== null) {
+        setAverageRating(parseFloat(rating.toFixed(1))); //
+      }
+    } catch (error) {
+      console.error('평균 평점을 불러오는데 실패했습니다:', error);
+    }
+  };
+
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}${COURSE}/info/${courseId}`, {
@@ -81,33 +107,6 @@ const CourseDetailPage = () => {
 
   // 평점을 가져오는 메소드
   useEffect(() => {
-    const fetchAverageRating = async () => {
-      try {
-        console.log(courseId);
-
-        const response = await axios.post(
-          `${API_BASE_URL}${EVAL}/course-eval-rating`,
-          [Number(courseId)], // 리스트 형식으로 보내야 함
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-
-        console.log(response);
-
-        const ratingMap = response.data.result;
-        const ratingValue = ratingMap[courseId];
-
-        if (ratingValue !== undefined) {
-          setAverageRating(parseFloat(ratingValue.toFixed(1))); // 소수점 1자리
-        }
-      } catch (error) {
-        console.error('평균 평점을 불러오는데 실패했습니다:', error);
-      }
-    };
-
     fetchAverageRating();
   }, [courseId]);
 
@@ -174,7 +173,7 @@ const CourseDetailPage = () => {
           <p className='tags'>{course.category}</p>
           <p className='user_id'>강사명 : {course.username}</p>
           <p className='rating'>
-            ⭐ {averageRating !== null ? averageRating : '평가 없음'}
+            ⭐{averageRating !== null ? averageRating : '평가 없음'}
           </p>
         </div>
         <div className='side-info'>
@@ -217,7 +216,12 @@ const CourseDetailPage = () => {
       {/* ✅ 탭에 따라 렌더링 */}
       <div className='course-tab-content'>
         {tabIndex === 0 && <PostCard Id={courseId} type={'course'} />}
-        {tabIndex === 1 && <EvaluationList courseId={courseId} />}
+        {tabIndex === 1 && (
+          <EvaluationList
+            courseId={courseId}
+            onEvaluationChange={fetchAverageRating}
+          />
+        )}
       </div>
     </div>
   );
