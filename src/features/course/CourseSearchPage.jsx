@@ -28,7 +28,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import './CourseSearchPage.scss';
 import styles from './CourseSearchPage.module.scss';
-import { API_BASE_URL, COURSE } from '../../configs/host-config';
+import { API_BASE_URL, COURSE, EVAL } from '../../configs/host-config';
 import { useCategory } from '../../context/CategoryContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -41,6 +41,8 @@ const CourseSearchPage = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  // 평점 데이터 상태변수
+  const [ratings, setRatings] = useState({});
 
   const { selectedCategory } = useCategory();
   const location = useLocation();
@@ -52,6 +54,25 @@ const CourseSearchPage = () => {
   // );
 
   const navigate = useNavigate();
+
+  // 평점 요청용 로직
+  const fetchCourseRatings = async (productIds) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}${EVAL}/course-eval-rating`,
+        productIds,
+      );
+
+      console.log(productIds);
+      console.log(response);
+
+      if (response.data && response.data.result) {
+        setRatings(response.data.result);
+      }
+    } catch (error) {
+      console.error('평점 가져오기 실패:', error);
+    }
+  };
 
   const fetchCourses = async (page) => {
     setLoading(true);
@@ -96,14 +117,25 @@ const CourseSearchPage = () => {
         // 페이징 결과
         setCourses(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        // 평점을 볼 강의 리스트를 eva-ervice로 넘김
+        const productIds = response.data.content.map(
+          (course) => course.productId,
+        );
+        fetchCourseRatings(productIds);
       } else {
         // 전체 목록
         setCourses(response.data);
         setTotalPages(1);
+
+        const productIds = response.data.map((course) => course.productId);
+        fetchCourseRatings(productIds);
       }
     } catch (error) {
       console.error('강의 불러오기 실패:', error);
     } finally {
+      console.log(courses);
+
       setLoading(false);
     }
   };
@@ -150,16 +182,20 @@ const CourseSearchPage = () => {
 
             <div className={styles.info}>
               <h3 className={styles.title}>
-                <a className={styles.filePath}>
-                  {course.productName}
-                </a>
+                <a className={styles.filePath}>{course.productName}</a>
               </h3>
-              <p className={styles.instructor}>{course.username} [{course.category}]</p>
+              <p className={styles.instructor}>
+                {course.username} [{course.category}]
+              </p>
               <div className={styles.bottom}>
                 <span className={styles.price}>
                   ₩{course.price.toLocaleString()}
                 </span>
-                {/* <span className={styles.category}>{course.category}</span> */}
+                {
+                  <p className={styles.rating}>
+                    ⭐ {ratings[course.productId]?.toFixed(1) ?? '0.0'}
+                  </p>
+                }
               </div>
             </div>
           </div>

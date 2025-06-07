@@ -26,7 +26,7 @@ const categoryImages = {
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL, COURSE } from '../configs/host-config';
+import { API_BASE_URL, COURSE, EVAL } from '../configs/host-config';
 import styles from './MainPage.module.scss';
 import { useAuth } from '../context/TokenContext';
 
@@ -34,12 +34,27 @@ const MainPage = () => {
   const userAuth = useAuth();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [ratings, setRatings] = useState({});
 
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
   const pageSize = 100;
 
   const navigate = useNavigate();
+
+  const fetchCourseRatings = async (productIds) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}${EVAL}/course-eval-rating`,
+        productIds,
+      );
+      if (response.data && response.data.result) {
+        setRatings((prev) => ({ ...prev, ...response.data.result }));
+      }
+    } catch (error) {
+      console.error('평점 가져오기 실패:', error);
+    }
+  };
 
   useEffect(() => {
     fetchCourses();
@@ -83,6 +98,9 @@ const MainPage = () => {
         setLastPage(true);
       } else {
         setCourses((prevCourses) => [...prevCourses, ...response.data]);
+
+        const productIds = response.data.map((course) => course.productId);
+        fetchCourseRatings(productIds); // 평점 요청
       }
     } catch (error) {
       console.log('강의 불러오기 실패:', error);
@@ -138,10 +156,22 @@ const MainPage = () => {
             <p className={styles.instructor}>
               {course.username} [{course.category}]
             </p>
-            <div className={styles.bottom}>
-              <span className={styles.price}>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>
                 ₩{course.price.toLocaleString()}
               </span>
+              <p
+                style={{
+                  fontWeight: 'bold',
+                  marginLeft: '3rem',
+                }}
+              >
+                ⭐ {ratings[course.productId]?.toFixed(1) ?? '0.0'}
+              </p>
               {/* <span className={styles.category}>{course.category}</span> */}
             </div>
           </div>
