@@ -173,7 +173,7 @@ const DashBoardPage = ({ id }) => {
       </div>
       {/* 조건부 렌더링 */}
       {user.role === 'USER' ? (
-        // USER일 경우 질문 목록 렌더링
+        // USER일 경우 질문 목록 렌더링  약간 수정
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2>질문 목록</h2>
         </div>
