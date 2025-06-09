@@ -1,0 +1,106 @@
+.course-list {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+.course-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+
+  width: 220px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    margin-top: 15px;
+    overflow: visible;
+  }
+
+  .info {
+    padding: 15px;
+    width: 100%;
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      height: 38px;
+      overflow: hidden;
+      font-size: 20px;
+
+      a.filePath {
+        color: #000; // 검정색으로 링크 색상 설정
+        text-decoration: none;
+        font-size: 18px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .instructor {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .bottom {
+      display: flex;
+      font-size: 13px;
+      color: #444;
+      margin-top: 10px;
+
+      .price {
+        font-weight: bold;
+        font-size: 15px;
+      }
+
+      .category {
+        font-style: italic;
+        color: #888;
+        margin-left: 70px;
+      }
+    }
+  }
+}
+
+.pagination {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  button {
+    background-color: #1dc078;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-weight: bold;
+  }
+}
