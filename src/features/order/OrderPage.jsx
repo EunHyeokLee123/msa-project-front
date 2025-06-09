@@ -236,28 +236,15 @@ const OrderPage = () => {
         alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
       }
 
-      // fetch(`${API_BASE_URL}${ORDER}/pay/completed?orderId=${orderId}`)
-      // .then(response => {
-      //   if (!response.ok) {
-      //     throw new Error("결제 승인 실패");
-      //   }
-      //   return response.json();
-      // })
-      // .then(data => {
-      //   // 성공적으로 응답 받으면
-      //   console.log("결제 승인 응답:", data);
+      window.addEventListener('message', (event) => {
+        if (event.data?.type === 'KAKAO_PAY_SUCCESS') {
+          console.log('결제 완료 메시지 수신:', event.data.payload);
 
-      //   // 메인 창에 메시지 보내기 (선택)
-      //   if (window.opener) {
-      //     window.opener.postMessage({ type: 'KAKAO_PAY_SUCCESS', payload: data }, '*');
-      //   }
-
-      //   // 팝업 닫기
-      //   window.close();
-      // })
-
-      alert('강의 구매가 완료되었습니다.');
-      clearCart();
+          alert('강의 구매가 완료되었습니다.');
+          removeProduct();
+          navigate('/');
+        }
+      });
     } catch (error) {
       console.error('결제 요청 중 오류:', error);
       // axios 오류 처리 시, error.response를 통해 상세 정보를 얻을 수 있습니다.

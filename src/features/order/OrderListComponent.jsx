@@ -50,6 +50,7 @@ const OrderListComponent = () => {
       //     order.id === id ? { ...order, orderStatus: 'CANCELED' } : order,
       //   ),
       // );
+      alert('취소가 완료되었습니다.');
     } catch (e) {
       console.log('orderlistComponent 에러 발생 ', e);
     }
