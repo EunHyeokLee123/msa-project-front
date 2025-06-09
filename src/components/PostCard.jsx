@@ -5,6 +5,7 @@ import Comment from './Comment';
 import { useLocation, useNavigate } from 'react-router-dom'; // 추가
 import { Button, Box } from '@mui/material'; // 추가
 import { useAuth } from '../context/TokenContext';
+import { API_BASE_URL, POST } from '../configs/host-config';
 
 const PostCard = ({ Id, type }) => {
   const navigate = useNavigate();
@@ -25,21 +26,15 @@ const PostCard = ({ Id, type }) => {
         setLoading(true);
         let response;
         if (type === 'course') {
-          response = await axios.get(
-            'http://localhost:8000/post-service/post/list',
-            {
-              params: { id: fromId },
-            },
-          );
+          response = await axios.get(`${API_BASE_URL}${POST}/list`, {
+            params: { id: fromId },
+          });
         } else {
-          response = await axios.get(
-            'http://localhost:8000/post-service/post/myquestions',
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+          response = await axios.get(`${API_BASE_URL}${POST}/myquestions`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-          );
+          });
         }
 
         console.log(response);
@@ -64,15 +59,12 @@ const PostCard = ({ Id, type }) => {
 
   const handleDeletePost = async (postId) => {
     try {
-      const response = await axios.delete(
-        'http://localhost:8000/post-service/post/delete',
-        {
-          params: { id: postId },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await axios.delete(`${API_BASE_URL}${POST}/delete`, {
+        params: { id: postId },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (response.status === 200) {
         alert('게시물이 삭제되었습니다.');
@@ -94,7 +86,7 @@ const PostCard = ({ Id, type }) => {
   const handleUpdatePost = async (postId, newTitle, newContent) => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/post-service/post/modify',
+        `${API_BASE_URL}${POST}/modify`,
         {
           postId: postId,
           title: newTitle,

@@ -10,6 +10,7 @@ import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
 import PostCard from '../../components/PostCard';
 import './CourseDetailPage.scss';
+import { Box, Tab, Tabs } from '@mui/material';
 
 const categoryImages = {
   Git: gitImg,
@@ -40,6 +41,7 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const { addCart, orderCourse } = useContext(CartContext);
   const location = useLocation();
+  const [tabIndex, setTabIndex] = useState(0); // 탭 상태
   // const courseId = location.state?.courseId;
   const { courseId } = useParams();
   const navigate = useNavigate();
@@ -117,6 +119,10 @@ const CourseDetailPage = () => {
     navigate('/order/cart');
   };
 
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
+
   const handleProgress = ({ playedSeconds }) => {
     if (playedSeconds >= 10) {
       playerRef.current?.seekTo(0); // 처음으로 되감기
@@ -164,7 +170,24 @@ const CourseDetailPage = () => {
         playing
       />
 
-      <PostCard Id={courseId} type={'course'} />
+      {/* ✅ TabBar 추가 */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 3 }}>
+        <Tabs value={tabIndex} onChange={handleTabChange} centered>
+          <Tab label='강의 질문' />
+          <Tab label='강의 평가' />
+        </Tabs>
+      </Box>
+
+      {/* ✅ 탭에 따라 렌더링 */}
+      <div className='course-tab-content'>
+        {tabIndex === 0 && <PostCard Id={courseId} />}
+        {tabIndex === 1 && (
+          <div style={{ padding: '20px', textAlign: 'center' }}>
+            <h3>강의 평가 영역 (예정)</h3>
+            {/* 추후 강의 평가 컴포넌트 삽입 가능 */}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

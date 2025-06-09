@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
 import DashBoardPage from '../features/order/DashBoardPage';
 import MyTabBar from './MyTabBar';
+import { USER, API_BASE_URL } from '../configs/host-config';
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -27,14 +28,11 @@ const MyPage = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await axios.get(
-          'http://localhost:8000/user-service/user/myinfo',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const res = await axios.get(`${API_BASE_URL}${USER}/myinfo`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
         console.log(res);
 
         setUserInfo(res.data.result);
@@ -55,7 +53,7 @@ const MyPage = () => {
 
     try {
       await axios.post(
-        'http://localhost:8000/user-service/user/password',
+        `${API_BASE_URL}${USER}/password`,
         {
           email: userInfo.email,
           newPassword: newPassword,

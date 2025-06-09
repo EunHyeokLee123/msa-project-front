@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const ChangePassword = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await axios.put('http://localhost:8080/user/password', {
+      const response = await axios.put(`${API_BASE_URL}${USER}/password`, {
         email,
         currentPassword,
         newPassword,

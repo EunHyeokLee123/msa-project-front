@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete'; // 추가
 import { useAuth } from '../context/TokenContext';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, POST } from '../configs/host-config';
 
 export default function Comment({ post, onClose, onCommentsUpdated }) {
   const [comments, setComments] = useState([]);
@@ -29,7 +30,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8000/post-service/post/comment/find',
+          `${API_BASE_URL}${POST}/comment/find`,
           {
             params: { id: post.id },
           },
@@ -62,7 +63,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/post-service/post/comment/create',
+        `${API_BASE_URL}${POST}/comment/create`,
         {
           content: newComment,
           postId: post.id,
@@ -139,7 +140,7 @@ export default function Comment({ post, onClose, onCommentsUpdated }) {
                   console.log(comment);
 
                   const response = await axios.delete(
-                    'http://localhost:8000/post-service/post/comment/delete',
+                    `${API_BASE_URL}${POST}comment/delete`,
                     {
                       params: { id: comment.commentId },
                       headers: {

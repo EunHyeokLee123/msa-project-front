@@ -21,8 +21,10 @@ else if (clientHostName === 'playdatashop.com') {
   backendHostName = 'https://api.playdatashop.com';
 }
 
+//'http://ec2-3-38-145-197.ap-northeast-2.compute.amazonaws.com:8000';
 export const API_BASE_URL = backendHostName;
 export const USER = '/user-service/user';
 export const COURSE = '/course-service/courses';
 export const ORDER = '/order-service/order';
 export const POST = '/post-service/post';
+export const EVAL = '/eval-service/eval';
