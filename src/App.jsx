@@ -19,7 +19,7 @@ import { Dashboard } from '@mui/icons-material';
 import DashBoardPage from './features/order/DashBoardPage';
 import MyPage from './page/MyPage';
 import CreateEvaluation from './components/CreateEvaluation';
-
+import ResetPassword from './page/ResetPassword';
 function App() {
   return (
     <>
@@ -45,6 +45,7 @@ function App() {
                 <Route path='/post' element={<PostCard />} />
                 <Route path='/post/create' element={<CreatePost />} />
                 <Route path='/login' element={<LoginPage />} />
+                <Route path='/reset-password' element={<ResetPassword />} />
                 <Route path='/signup' element={<SignupPage />} />
                 {/* <Route path='/items' element={<CourseDetails />} /> */}
                 <Route path='/order/cart' element={<OrderPage />} />
