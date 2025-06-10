@@ -33,10 +33,10 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(
-        // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
-        `${API_BASE_URL}}${USER}/reset-password`,
-        { email },
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.get(
+        `${API_BASE_URL}${USER}/reset-password`,
+        { params: { email: email } },
       );
 
       if (response.status === 200) {
@@ -44,6 +44,7 @@ const ResetPassword = () => {
           '임시 비밀번호가 이메일로 전송되었습니다. 메일함을 확인해주세요.',
         );
       }
+      console.log(response);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         setErrorMessage('해당 이메일로 등록된 계정을 찾을 수 없습니다.');
