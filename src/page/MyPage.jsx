@@ -103,7 +103,41 @@ const MyPage = () => {
                   ? ' 강사'
                   : ''}
               </Typography>
+              {/* ✅ role이 USER일 때만 '강사로 전환' 버튼 보이기 */}
+              {userInfo.role === 'USER' && (
+                <Box mt={3} display='flex' justifyContent='center'>
+                  <Button
+                    variant='contained'
+                    color='secondary'
+                    sx={{ width: '50%' }}
+                    onClick={async () => {
+                      try {
+                        const response = await axios.get(
+                          `${API_BASE_URL}${USER}/change-role`,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
+                          },
+                        );
+                        console.log(response);
 
+                        alert(
+                          '강사로 전환이 완료되었습니다. 다시 로그인해주시기 바랍니다.',
+                        );
+                        logout();
+                        localStorage.removeItem('KAKAO');
+                        navigate('/login');
+                      } catch (error) {
+                        console.error('강사 전환 실패:', error);
+                        alert('강사 전환에 실패했습니다.');
+                      }
+                    }}
+                  >
+                    강사로 전환
+                  </Button>
+                </Box>
+              )}
               {/* ✅ 카카오 사용자가 아닐 때만 비밀번호 변경 폼 표시 */}
               {!isKakaoUser ? (
                 <Box component='form' onSubmit={handlePasswordChange} mt={4}>
