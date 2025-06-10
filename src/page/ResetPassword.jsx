@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');
@@ -33,12 +34,15 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/user-service/user/reset-password',
-        { email }
+        // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+        `${API_BASE_URL}}${USER}/reset-password`,
+        { email },
       );
 
       if (response.status === 200) {
-        setSuccessMessage('임시 비밀번호가 이메일로 전송되었습니다. 메일함을 확인해주세요.');
+        setSuccessMessage(
+          '임시 비밀번호가 이메일로 전송되었습니다. 메일함을 확인해주세요.',
+        );
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {

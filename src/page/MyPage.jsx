@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
 import MyTabBar from './MyTabBar';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -27,14 +28,12 @@ const MyPage = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await axios.get(
-          'http://localhost:8000/user-service/user/myinfo',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+        const res = await axios.get(`${API_BASE_URL}${USER}/myinfo`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUserInfo(res.data.result);
       } catch (error) {
         console.error('유저 정보를 불러오는 중 오류:', error);
@@ -53,7 +52,7 @@ const MyPage = () => {
 
     try {
       await axios.post(
-        'http://localhost:8000/user-service/user/password',
+        `${API_BASE_URL}${USER}/password`,
         {
           email: userInfo.email,
           newPassword: newPassword,
@@ -62,7 +61,7 @@ const MyPage = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       alert('비밀번호가 변경되었습니다.');

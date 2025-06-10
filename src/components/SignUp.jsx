@@ -16,6 +16,7 @@ import {
   Radio,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -93,11 +94,19 @@ const Signup = () => {
 
     try {
       setEmailSendLoading(true);
-      await axios.post('http://localhost:8000/user-service/user/email-valid', { email });
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
+        email,
+      });
       setIsEmailSent(true);
       alert('인증 이메일이 발송되었습니다.');
+      // 더미 데이터 회원을 만들기 위해 임의로 만든 로그임
+      console.log(response);
     } catch (err) {
-      alert('이메일 인증 요청 실패: ' + (err.response?.data?.message || '서버 오류'));
+      alert(
+        '이메일 인증 요청 실패: ' +
+          (err.response?.data?.message || '서버 오류'),
+      );
     } finally {
       setEmailSendLoading(false);
     }
@@ -111,7 +120,8 @@ const Signup = () => {
 
     try {
       setVerifyLoading(true);
-      const response = await axios.post('http://localhost:8000/user-service/user/email-valid', {
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
         email,
         code: verificationCode,
       });
@@ -122,7 +132,9 @@ const Signup = () => {
         alert('인증 코드가 올바르지 않습니다.');
       }
     } catch (err) {
-      alert('이메일 인증 실패: ' + (err.response?.data?.message || '서버 오류'));
+      alert(
+        '이메일 인증 실패: ' + (err.response?.data?.message || '서버 오류'),
+      );
     } finally {
       setVerifyLoading(false);
     }
@@ -146,15 +158,13 @@ const Signup = () => {
     }
 
     try {
-      const res = await axios.post(
-        'http://localhost:8000/user-service/user/create',
-        {
-          username,
-          email,
-          password,
-          role,
-        },
-      );
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const res = await axios.post(`${API_BASE_URL}${USER}/create`, {
+        username,
+        email,
+        password,
+        role,
+      });
       if (res.status === 201) {
         alert('회원가입 성공!');
         setUsername('');
@@ -205,8 +215,8 @@ const Signup = () => {
                   {emailSendLoading
                     ? '발송중...'
                     : isEmailVerified
-                      ? '인증완료'
-                      : '인증'}
+                    ? '인증완료'
+                    : '인증'}
                 </Button>
               </Box>
 

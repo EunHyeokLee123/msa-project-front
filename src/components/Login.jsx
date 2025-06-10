@@ -10,8 +10,9 @@ import {
   Grid,
   Box,
 } from '@mui/material';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
 const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
@@ -29,28 +30,23 @@ const Login = () => {
   // ✅ 카카오 로그인 메시지 수신 처리
   useEffect(() => {
     const handleKakaoMessage = (event) => {
-    
-  
-
-  
       const { type, token, role, provider } = event.data;
       if (type === 'OAUTH_SUCCESS' && provider === 'KAKAO') {
         console.log('✅ 카카오 로그인 성공!');
-  
+
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
-    
-        localStorage.setItem('KAKAO',provider);
-        
+
+        localStorage.setItem('KAKAO', provider);
+
         login(token, role);
         navigate('/');
       }
     };
-  
+
     window.addEventListener('message', handleKakaoMessage);
     return () => window.removeEventListener('message', handleKakaoMessage);
   }, [login, navigate]);
-  
 
   const onChangeIdHandler = (e) => {
     setId(e.target.value);
@@ -67,14 +63,12 @@ const Login = () => {
   const handleKakaoLogin = () => {
     console.log('카카오 로그인 버튼 클릭!');
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&prompt=login`;
-    
+
     window.open(
       kakaoAuthUrl,
       'kakao-login',
-      'width=500,height=600,scrollbars=yes,resizable=yes'
-        
+      'width=500,height=600,scrollbars=yes,resizable=yes',
     );
-
   };
 
   const onSubmitHandler = async (e) => {
@@ -91,13 +85,11 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(
-        'http://localhost:8000/user-service/user/login',
-        {
-          email: id,
-          password: password,
-        }
-      );
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.post(`${API_BASE_URL}${USER}/login`, {
+        email: id,
+        password: password,
+      });
 
       if (response.status === 200) {
         alert('로그인 성공!');
@@ -120,38 +112,37 @@ const Login = () => {
 
   return (
     <Grid container justifyContent='center'>
-      
       <Grid item xs={12} sm={8} md={5}>
         <Card sx={{ mt: 8 }}>
           <CardHeader title='로그인' sx={{ textAlign: 'center' }} />
           <CardContent>
-          <Button
-                variant='outlined'
-                fullWidth
-                onClick={handleKakaoLogin}
-                sx={{
-                  mb: 2,
-                  borderColor: '#fee500',
-                  color: '#3c1e1e',
-                  backgroundColor: '#fee500',
-                  '&:hover': {
-                    borderColor: '#fdd835',
-                    backgroundColor: '#fdd835',
-                  },
-                  textTransform: 'none',
-                  fontSize: '16px',
-                  height: '48px',
-                }}
-                startIcon={
-                  <img
-                    src='https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png'
-                    alt='Kakao'
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                }
-              >
-                Kakao로 로그인
-              </Button>
+            <Button
+              variant='outlined'
+              fullWidth
+              onClick={handleKakaoLogin}
+              sx={{
+                mb: 2,
+                borderColor: '#fee500',
+                color: '#3c1e1e',
+                backgroundColor: '#fee500',
+                '&:hover': {
+                  borderColor: '#fdd835',
+                  backgroundColor: '#fdd835',
+                },
+                textTransform: 'none',
+                fontSize: '16px',
+                height: '48px',
+              }}
+              startIcon={
+                <img
+                  src='https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png'
+                  alt='Kakao'
+                  style={{ width: '20px', height: '20px' }}
+                />
+              }
+            >
+              Kakao로 로그인
+            </Button>
             <Box component='form' onSubmit={onSubmitHandler}>
               <TextField
                 label='이메일'
@@ -198,13 +189,13 @@ const Login = () => {
                 회원가입
               </Button>
               <Button
-  variant='text'
-  fullWidth
-  sx={{ mt: 1, textDecoration: 'underline' }}
-  onClick={() => navigate('/reset-password')}
->
-  비밀번호를 잊으셨나요?
-</Button>
+                variant='text'
+                fullWidth
+                sx={{ mt: 1, textDecoration: 'underline' }}
+                onClick={() => navigate('/reset-password')}
+              >
+                비밀번호를 잊으셨나요?
+              </Button>
             </Box>
           </CardContent>
         </Card>
