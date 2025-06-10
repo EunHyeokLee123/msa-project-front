@@ -12,9 +12,8 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/TokenContext';
-import DashBoardPage from '../features/order/DashBoardPage';
 import MyTabBar from './MyTabBar';
-import { USER, API_BASE_URL } from '../configs/host-config';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -22,19 +21,19 @@ const MyPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-
   const { token, logout, role } = useAuth();
+
+  const isKakaoUser = localStorage.getItem('KAKAO') === 'KAKAO';
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
+        // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
         const res = await axios.get(`${API_BASE_URL}${USER}/myinfo`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(res);
-
         setUserInfo(res.data.result);
       } catch (error) {
         console.error('유저 정보를 불러오는 중 오류:', error);
@@ -78,7 +77,9 @@ const MyPage = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('KAKAO'); // ✅ 카카오 정보 제거
     navigate('/login');
   };
 
@@ -103,38 +104,46 @@ const MyPage = () => {
                   : ''}
               </Typography>
 
-              <Box component='form' onSubmit={handlePasswordChange} mt={4}>
-                <Typography variant='h6'>비밀번호 변경</Typography>
-                <TextField
-                  label='새 비밀번호'
-                  type='password'
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  fullWidth
-                  margin='normal'
-                />
-                <TextField
-                  label='비밀번호 확인'
-                  type='password'
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  fullWidth
-                  margin='normal'
-                />
-                {errorMsg && (
-                  <Typography color='error' variant='body2'>
-                    {errorMsg}
-                  </Typography>
-                )}
-                <Button
-                  type='submit'
-                  variant='contained'
-                  color='primary'
-                  fullWidth
-                >
-                  비밀번호 변경
-                </Button>
-              </Box>
+              {/* ✅ 카카오 사용자가 아닐 때만 비밀번호 변경 폼 표시 */}
+              {!isKakaoUser ? (
+                <Box component='form' onSubmit={handlePasswordChange} mt={4}>
+                  <Typography variant='h6'>비밀번호 변경</Typography>
+                  <TextField
+                    label='새 비밀번호'
+                    type='password'
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    fullWidth
+                    margin='normal'
+                  />
+                  <TextField
+                    label='비밀번호 확인'
+                    type='password'
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    fullWidth
+                    margin='normal'
+                  />
+                  {errorMsg && (
+                    <Typography color='error' variant='body2'>
+                      {errorMsg}
+                    </Typography>
+                  )}
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    fullWidth
+                    sx={{ mt: 2 }}
+                  >
+                    비밀번호 변경
+                  </Button>
+                </Box>
+              ) : (
+                <Typography sx={{ mt: 4 }} color='text.secondary'>
+                  카카오 로그인 사용자는 비밀번호를 변경할 수 없습니다.
+                </Typography>
+              )}
 
               <Box mt={3}>
                 <Button
@@ -150,7 +159,7 @@ const MyPage = () => {
           </Card>
         </Grid>
       </Grid>
-      <MyTabBar userRole={role} userId={userInfo.userId} />
+      <MyTabBar userRole={role} />
     </>
   );
 };

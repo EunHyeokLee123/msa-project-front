@@ -32,10 +32,11 @@ import axios from 'axios';
 import CartContext from '../../context/CartContext';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/TokenContext';
-import { API_BASE_URL, COURSE, ORDER } from '../../configs/host-config';
+import { API_BASE_URL, COURSE, ORDER, EVAL } from '../../configs/host-config';
 import './CourseDetailPage.scss';
 import axiosInstance from '../../configs/axios-config';
 import ReactPlayer from 'react-player';
+import EvaluationList from '../../components/EvaluationList';
 
 const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
@@ -46,12 +47,39 @@ const CourseDetailPage = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const [orderList, setOrderList] = useState([]);
+  const [averageRating, setAverageRating] = useState(null);
 
   const user = useAuth();
   console.log('user토큰: ', user.token);
 
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
+
+  // 평균 평점을 불러오는 로직
+  const fetchAverageRating = async () => {
+    try {
+      console.log(courseId);
+
+      const response = await axios.get(
+        `${API_BASE_URL}${EVAL}/eval-rating/${courseId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      console.log(response);
+
+      const rating = response.data.result;
+
+      if (rating !== undefined && rating !== null) {
+        setAverageRating(parseFloat(rating.toFixed(1))); //
+      }
+    } catch (error) {
+      console.error('평균 평점을 불러오는데 실패했습니다:', error);
+    }
+  };
 
   useEffect(() => {
     axios
@@ -76,6 +104,11 @@ const CourseDetailPage = () => {
     };
     fetchOrders();
   }, []);
+
+  // 평점을 가져오는 메소드
+  useEffect(() => {
+    fetchAverageRating();
+  }, [courseId]);
 
   console.log('orderList: ', orderList);
 
@@ -139,7 +172,9 @@ const CourseDetailPage = () => {
           <p className='subtitle'>{course.description}</p>
           <p className='tags'>{course.category}</p>
           <p className='user_id'>강사명 : {course.username}</p>
-          {/* <p className="rating">⭐ {course.rating} ({course.reviews}개 리뷰)</p> */}
+          <p className='rating'>
+            ⭐{averageRating !== null ? averageRating : '평가 없음'}
+          </p>
         </div>
         <div className='side-info'>
           {isEnrolled ? (
@@ -180,12 +215,12 @@ const CourseDetailPage = () => {
 
       {/* ✅ 탭에 따라 렌더링 */}
       <div className='course-tab-content'>
-        {tabIndex === 0 && <PostCard Id={courseId} />}
+        {tabIndex === 0 && <PostCard Id={courseId} type={'course'} />}
         {tabIndex === 1 && (
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h3>강의 평가 영역 (예정)</h3>
-            {/* 추후 강의 평가 컴포넌트 삽입 가능 */}
-          </div>
+          <EvaluationList
+            courseId={courseId}
+            onEvaluationChange={fetchAverageRating}
+          />
         )}
       </div>
     </div>

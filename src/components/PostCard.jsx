@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import PostItem from './PostItem';
 import Comment from './Comment';
-import { useLocation, useNavigate } from 'react-router-dom'; // 추가
-import { Button, Box } from '@mui/material'; // 추가
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button, Box } from '@mui/material';
 import { useAuth } from '../context/TokenContext';
 import { API_BASE_URL, POST } from '../configs/host-config';
 
@@ -25,6 +25,7 @@ const PostCard = ({ Id, type }) => {
       try {
         setLoading(true);
         let response;
+
         if (type === 'course') {
           response = await axios.get(`${API_BASE_URL}${POST}/list`, {
             params: { id: fromId },

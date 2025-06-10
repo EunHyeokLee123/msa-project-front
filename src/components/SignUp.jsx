@@ -16,7 +16,7 @@ import {
   Radio,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { USER } from '../configs/host-config';
+import { API_BASE_URL, USER } from '../configs/host-config';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -29,6 +29,12 @@ const Signup = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
+
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [emailSendLoading, setEmailSendLoading] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,6 +54,12 @@ const Signup = () => {
       setEmailError('유효한 이메일 형식을 입력해주세요.');
     } else {
       setEmailError('');
+    }
+
+    // 이메일이 변경되면 인증 상태 초기화
+    if (isEmailSent || isEmailVerified) {
+      setIsEmailSent(false);
+      setIsEmailVerified(false);
     }
   };
 
@@ -74,6 +86,60 @@ const Signup = () => {
     setConfirmError(cf && pw !== cf ? '비밀번호가 일치하지 않습니다.' : '');
   };
 
+  const sendVerificationEmail = async () => {
+    if (!email) {
+      setEmailError('이메일을 입력해주세요.');
+      return;
+    }
+
+    try {
+      setEmailSendLoading(true);
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
+        email,
+      });
+      setIsEmailSent(true);
+      alert('인증 이메일이 발송되었습니다.');
+      // 더미 데이터 회원을 만들기 위해 임의로 만든 로그임
+      console.log(response);
+    } catch (err) {
+      alert(
+        '이메일 인증 요청 실패: ' +
+          (err.response?.data?.message || '서버 오류'),
+      );
+    } finally {
+      setEmailSendLoading(false);
+    }
+  };
+
+  const verifyEmailCode = async () => {
+    if (!verificationCode) {
+      alert('인증 코드를 입력해주세요.');
+      return;
+    }
+
+    try {
+      setVerifyLoading(true);
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
+      const response = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
+        email,
+        code: verificationCode,
+      });
+      if (response.status === 200) {
+        setIsEmailVerified(true);
+        alert('이메일 인증이 완료되었습니다.');
+      } else {
+        alert('인증 코드가 올바르지 않습니다.');
+      }
+    } catch (err) {
+      alert(
+        '이메일 인증 실패: ' + (err.response?.data?.message || '서버 오류'),
+      );
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (
@@ -84,13 +150,15 @@ const Signup = () => {
       passwordError ||
       confirmError ||
       !password ||
-      !confirm
+      !confirm ||
+      !isEmailVerified
     ) {
-      alert('입력값을 확인해주세요.');
+      alert('입력값을 확인해주세요. 이메일 인증을 완료해주세요.');
       return;
     }
 
     try {
+      // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
       const res = await axios.post(`${API_BASE_URL}${USER}/create`, {
         username,
         email,
@@ -102,7 +170,7 @@ const Signup = () => {
         setUsername('');
         setEmail('');
         setPassword('');
-
+        setConfirm('');
         setRole('USER');
         navigate('/login');
       }
@@ -129,15 +197,49 @@ const Signup = () => {
                 margin='normal'
               />
 
-              <TextField
-                fullWidth
-                label='이메일'
-                value={email}
-                onChange={onChangeEmailHandler}
-                error={!!emailError}
-                helperText={emailError}
-                margin='normal'
-              />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                <TextField
+                  fullWidth
+                  label='이메일'
+                  value={email}
+                  onChange={onChangeEmailHandler}
+                  error={!!emailError}
+                  helperText={emailError}
+                  margin='normal'
+                />
+                <Button
+                  variant='outlined'
+                  onClick={sendVerificationEmail}
+                  sx={{ mb: 1, minWidth: '100px' }}
+                >
+                  {emailSendLoading
+                    ? '발송중...'
+                    : isEmailVerified
+                    ? '인증완료'
+                    : '인증'}
+                </Button>
+              </Box>
+
+              {isEmailSent && !isEmailVerified && (
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                  <TextField
+                    label='인증 코드'
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    fullWidth
+                    margin='normal'
+                    placeholder='이메일로 받은 인증 코드를 입력하세요'
+                  />
+                  <Button
+                    variant='outlined'
+                    onClick={verifyEmailCode}
+                    disabled={!verificationCode || verifyLoading}
+                    sx={{ mb: 1, minWidth: '100px' }}
+                  >
+                    {verifyLoading ? '확인중...' : '확인'}
+                  </Button>
+                </Box>
+              )}
 
               <FormControl component='fieldset' margin='normal'>
                 <FormLabel component='legend'>
