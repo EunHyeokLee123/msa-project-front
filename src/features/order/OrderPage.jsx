@@ -179,12 +179,13 @@ const OrderPage = () => {
     const yesOrNo = confirm(
       `${orderProducts.length}개의 강의를 신청하시겠습니까?`,
     );
-    if (user.role === 'ADMIN') {
-      alert('학생만 구매 가능합니다.');
-      return;
-    }
 
-    if (!yesOrNo) {
+    if (yesOrNo) {
+      if (user.role === 'ADMIN') {
+        alert('학생만 구매 가능합니다.');
+        return;
+      }
+    } else {
       alert('구매가 취소되었습니다.');
       return;
     }
@@ -209,6 +210,30 @@ const OrderPage = () => {
   // 카카오페이
   const handleKakaoPay = async () => {
     console.log('카카오페이 버튼 클릭!');
+
+    if (!user.token) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
+
+    if (orderProducts.length < 1) {
+      alert('구매 선택한 강의가 없습니다!');
+      return;
+    }
+
+    const yesOrNo = confirm(
+      `${orderProducts.length}개의 강의를 신청하시겠습니까?`,
+    );
+
+    if (yesOrNo) {
+      if (user.role === 'ADMIN') {
+        alert('학생만 구매 가능합니다.');
+        return;
+      }
+    } else {
+      alert('구매가 취소되었습니다.');
+      return;
+    }
 
     try {
       // 서버에 결제 준비 요청
