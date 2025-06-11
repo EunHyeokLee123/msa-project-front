@@ -49,6 +49,10 @@ const CourseDetailPage = () => {
   const [orderList, setOrderList] = useState([]);
   const [averageRating, setAverageRating] = useState(null);
 
+  // 구매를 하지 않은 사용자들은 1분만 강의를 볼 수 있게끔 하기 위한 상태 변수
+  const [trialEnded, setTrialEnded] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(true);
+
   const user = useAuth();
   console.log('user토큰: ', user.token);
 
@@ -157,9 +161,16 @@ const CourseDetailPage = () => {
   };
 
   const handleProgress = ({ playedSeconds }) => {
-    if (playedSeconds >= 10) {
-      playerRef.current?.seekTo(0); // 처음으로 되감기
-      setPlaying(false);
+    // if (playedSeconds >= 10) {
+    //   playerRef.current?.seekTo(0); // 처음으로 되감기
+    //   setPlaying(false);
+    // }
+
+    // 강의를 구매하지 않은 학생이나 로그인을 하지 않은 유저의 경우 1분만 강의를 볼 수 있게끔 하는 로직
+    if (!isEnrolled && playedSeconds >= 60 && !trialEnded) {
+      setTrialEnded(true);
+      setShowPlayer(false); // ReactPlayer 숨기기
+      alert('강의 체험 시간 1분이 모두 지났습니다.');
     }
   };
 
@@ -196,14 +207,16 @@ const CourseDetailPage = () => {
         </div>
       </div>
 
-      <ReactPlayer
-        url={course.filePath}
-        controls
-        className='player'
-        onProgress={handleProgress}
-        ref={playerRef}
-        playing
-      />
+      {showPlayer && (
+        <ReactPlayer
+          url={course.filePath}
+          controls
+          className='player'
+          onProgress={handleProgress}
+          ref={playerRef}
+          playing
+        />
+      )}
 
       {/* ✅ TabBar 추가 */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 3 }}>
