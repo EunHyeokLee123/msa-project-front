@@ -111,7 +111,7 @@ const Signup = () => {
 
     try {
       setVerifyLoading(true);
-      const response = await axios.post('http://localhost:8000/user-service/user/email-valid', {
+      const response = await axios.post('http://localhost:8000/user-service/user/verify', {
         email,
         code: verificationCode,
       });
