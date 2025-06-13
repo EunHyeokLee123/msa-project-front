@@ -42,7 +42,7 @@ const OrderListComponent = () => {
 
     try {
       const res = await axiosInstance.patch(
-        `${API_BASE_URL}${ORDER}/cancel/${id}`,
+        `${API_BASE_URL}${ORDER}/refund?orderId=${id}`,
       );
       // 주문 상태 업데이트
       // setOrderList((prevList) =>
@@ -50,6 +50,7 @@ const OrderListComponent = () => {
       //     order.id === id ? { ...order, orderStatus: 'CANCELED' } : order,
       //   ),
       // );
+      alert('취소가 완료되었습니다.');
     } catch (e) {
       console.log('orderlistComponent 에러 발생 ', e);
     }
