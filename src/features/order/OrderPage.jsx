@@ -35,6 +35,7 @@ import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
 import PostCard from '../../components/PostCard';
 import { useNavigate } from 'react-router-dom';
+import kakaopayIcon from '../../assets/payment_icon.png';
 
 const categoryImages = {
   Git: gitImg,
@@ -144,6 +145,8 @@ const OrderPage = () => {
 
   // 선택 항목 개별 삭제
   const removeProduct = (productId) => {
+    console.log('productId는 ', productId);
+
     // 장바구니에서 해당 제품을 삭제
     const updatedCart = productsInCart.filter(
       (product) => product.id !== productId,
@@ -159,16 +162,16 @@ const OrderPage = () => {
     .filter((product) => selectedProducts.includes(product.id))
     .reduce((sum, product) => sum + product.price, 0);
 
+  // 백엔드가 달라는 형태로 줘야하니까 그에 맞게 객체를 매핑
+  const orderProducts = productsInCart
+    .filter((p) => selectedProducts.includes(p.id))
+    .map((p) => ({ productId: p.id }));
+
   const orderCreate = async () => {
     if (!user.token) {
       alert('로그인이 필요합니다!');
       return;
     }
-
-    // 백엔드가 달라는 형태로 줘야하니까 그에 맞게 객체를 매핑
-    const orderProducts = productsInCart
-      .filter((p) => selectedProducts.includes(p.id))
-      .map((p) => ({ productId: p.id }));
 
     if (orderProducts.length < 1) {
       alert('구매 선택한 강의가 없습니다!');
@@ -178,12 +181,13 @@ const OrderPage = () => {
     const yesOrNo = confirm(
       `${orderProducts.length}개의 강의를 신청하시겠습니까?`,
     );
-    if (user.role === 'ADMIN') {
-      alert('학생만 구매 가능합니다.');
-      return;
-    }
 
-    if (!yesOrNo) {
+    if (yesOrNo) {
+      if (user.role === 'ADMIN') {
+        alert('학생만 구매 가능합니다.');
+        return;
+      }
+    } else {
       alert('구매가 취소되었습니다.');
       return;
     }
@@ -198,10 +202,94 @@ const OrderPage = () => {
 
       // const data = res.json(); -> fetch를 사용했을 때는 데이터를 꺼내는 과정이 있음.
       alert('강의 구매가 완료되었습니다.');
-      clearCart();
+      deleteCart();
     } catch (err) {
       // handleAxiosError(err);
       console.error('강의 구매 실패!: ', err);
+    }
+  };
+
+  // 카카오페이
+  const handleKakaoPay = async () => {
+    console.log('카카오페이 버튼 클릭!');
+
+    if (!user.token) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
+
+    if (orderProducts.length < 1) {
+      alert('구매 선택한 강의가 없습니다!');
+      return;
+    }
+
+    const yesOrNo = confirm(
+      `${orderProducts.length}개의 강의를 신청하시겠습니까?`,
+    );
+
+    if (yesOrNo) {
+      if (user.role === 'ADMIN') {
+        alert('학생만 구매 가능합니다.');
+        return;
+      }
+    } else {
+      alert('구매가 취소되었습니다.');
+      return;
+    }
+
+    try {
+      // 서버에 결제 준비 요청
+      const response = await axiosInstance.post(
+        `${API_BASE_URL}${ORDER}/pay/ready`,
+        orderProducts,
+      );
+
+      console.log('이거는 response.data', response.data);
+
+      // if (!response.ok) {
+      //   throw new Error('서버 요청 실패');
+      // }
+
+      const data = response.data;
+
+      // 카카오페이 결제창 열기
+      const popup = window.open(
+        data.next_redirect_pc_url,
+        'kakao-pay',
+        'width=500,height=600,scrollbars=yes,resizable=yes',
+      );
+
+      if (!popup) {
+        alert('팝업이 차단되었습니다. 브라우저 설정을 확인하세요.');
+      }
+
+      window.addEventListener('message', (event) => {
+        if (event.data?.type === 'KAKAO_PAY_SUCCESS') {
+          console.log('결제 완료 메시지 수신:', event.data.payload);
+
+          // 창 닫힌 후 alert 실행
+          setTimeout(() => {
+            alert('강의 구매가 완료되었습니다.');
+            deleteCart();
+            navigate('/');
+          }, 300); // 300ms 딜레이
+        }
+      });
+    } catch (error) {
+      console.error('결제 요청 중 오류:', error);
+      // axios 오류 처리 시, error.response를 통해 상세 정보를 얻을 수 있습니다.
+      if (error.response) {
+        console.error('서버 응답 데이터:', error.response.data);
+        console.error('서버 응답 상태:', error.response.status);
+        console.error('서버 응답 헤더:', error.response.headers);
+      } else if (error.request) {
+        // 요청이 전송되었지만 응답을 받지 못했습니다.
+        console.error('응답 없음:', error.request);
+      } else {
+        // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+        console.error('오류 메시지:', error.message);
+      }
+      alert('결제 요청 중 오류가 발생했습니다.');
     }
   };
 
@@ -353,6 +441,19 @@ const OrderPage = () => {
             >
               결제하기
             </Button>
+            <Button
+              onClick={handleKakaoPay}
+              startIcon={
+                <img
+                  src={kakaopayIcon}
+                  alt='KakaoPay'
+                  style={{ width: '60px' }}
+                />
+              }
+            >
+              카카오페이
+            </Button>
+
             <p
               style={{
                 color: '#868e96',

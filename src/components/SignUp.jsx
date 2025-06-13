@@ -121,7 +121,7 @@ const Signup = () => {
     try {
       setVerifyLoading(true);
       // url 직접 기재하지 말아주세요. 배포시 하나하나 다 찾아서 변경하는 일이 없어야 합니다.
-      const response = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
+      const response = await axios.post(`${API_BASE_URL}${USER}/verify`, {
         email,
         code: verificationCode,
       });
