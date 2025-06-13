@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -55,6 +55,18 @@ const Header = () => {
       handleSearch();
     }
   };
+
+  // // 강의 정렬 로직직
+  const [courses, setCourses] = useState([]);
+  // const [sortOption, setSortOption] = useState("default");
+
+  // // 정렬 옵션 바뀔 때마다 데이터 fetch
+  // useEffect(() => {
+  //   fetch(`/sort?sort=${sortOption}`)
+  //     .then((res) => res.json())
+  //     .then((data) => setCourses(data))
+  //     .catch((err) => console.error("강의 데이터를 가져오는 데 실패했습니다.", err));
+  // }, [sortOption]);
 
   return (
     <AppBar
@@ -218,6 +230,38 @@ const Header = () => {
           </Box>
         </Toolbar>
       </Box>
+
+      <div style={{ padding: "20px" }}>
+        {/* <h2>강의 목록</h2> */}
+        {/* 강의 카드 리스트 */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+          {courses.map((course) => (
+            <div
+              key={course.productId}
+              style={{
+                width: "200px",
+                border: "1px solid #ddd",
+                borderRadius: "10px",
+                padding: "15px",
+                textAlign: "center",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+              }}
+            >
+              <img
+                src={course.filePath}
+                alt={course.productName}
+                style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "5px" }}
+              />
+              <h4 style={{ margin: "10px 0" }}>{course.productName}</h4>
+              <p>₩{course.price.toLocaleString()}</p>
+              <p style={{ fontSize: "14px", color: "#888" }}>{course.category}</p>
+              <p style={{ fontSize: "13px" }}>강사: {course.username}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+
     </AppBar>
   );
 };
