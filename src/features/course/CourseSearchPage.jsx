@@ -32,19 +32,15 @@ const SORT_OPTIONS = [
   { label: '평점 낮은순', value: 'ratingAsc' },
 ];
 
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import './CourseSearchPage.scss';
 import styles from './CourseSearchPage.module.scss';
 import { API_BASE_URL, COURSE, EVAL } from '../../configs/host-config';
 import { useCategory } from '../../context/CategoryContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 const PAGE_SIZE = 12;
-
-
 
 const CourseSearchPage = () => {
   console.log('페이지 진입ㅃ!');
@@ -82,7 +78,6 @@ const CourseSearchPage = () => {
     };
     fetchCourses();
   }, [sort]);
-
 
   // const filteredCourses = allCourses.filter((course) =>
   //   course.title.toLowerCase().includes(keyword.toLowerCase())
