@@ -24,6 +24,16 @@ const categoryImages = {
   //카테고리: sqlImg,
 };
 
+const SORT_OPTIONS = [
+  { label: '이름순', value: 'name' },
+  { label: '가격 낮은순', value: 'priceAsc' },
+  { label: '가격 높은순', value: 'priceDesc' },
+  { label: '평점 높은순', value: 'ratingDesc' },
+  { label: '평점 낮은순', value: 'ratingAsc' },
+];
+
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import './CourseSearchPage.scss';
@@ -33,6 +43,8 @@ import { useCategory } from '../../context/CategoryContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const PAGE_SIZE = 12;
+
+
 
 const CourseSearchPage = () => {
   console.log('페이지 진입ㅃ!');
@@ -48,6 +60,29 @@ const CourseSearchPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get('keyword') || '';
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || 'name';
+
+  // 드롭다운 변경 시 URL 쿼리 갱신
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+    setSearchParams({ sort: selectedSort });
+  };
+
+  // 정렬 기준 바뀌면 API 호출
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`/api/courses?sort=${sort}`);
+        setCourses(response.data);
+      } catch (error) {
+        console.error('강의 목록 정렬로 불러오기 실패:', error);
+      }
+    };
+    fetchCourses();
+  }, [sort]);
+
 
   // const filteredCourses = allCourses.filter((course) =>
   //   course.title.toLowerCase().includes(keyword.toLowerCase())
@@ -166,6 +201,29 @@ const CourseSearchPage = () => {
 
   return (
     <>
+      <div>
+        <div>
+          <label>정렬: </label>
+          <select value={sort} onChange={handleSortChange}>
+            {SORT_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <ul>
+          {courses.map((course) => (
+            <li key={course.productId}>
+              <h3>{course.productName}</h3>
+              <p>{course.description}</p>
+              <p>₩{course.price}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className={styles['course-list']}>
         {courses.map((course) => (
           <div

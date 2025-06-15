@@ -145,6 +145,8 @@ const OrderPage = () => {
 
   // 선택 항목 개별 삭제
   const removeProduct = (productId) => {
+    console.log('productId는 ', productId);
+
     // 장바구니에서 해당 제품을 삭제
     const updatedCart = productsInCart.filter(
       (product) => product.id !== productId,
@@ -200,7 +202,7 @@ const OrderPage = () => {
 
       // const data = res.json(); -> fetch를 사용했을 때는 데이터를 꺼내는 과정이 있음.
       alert('강의 구매가 완료되었습니다.');
-      clearCart();
+      deleteCart();
     } catch (err) {
       // handleAxiosError(err);
       console.error('강의 구매 실패!: ', err);
@@ -265,9 +267,12 @@ const OrderPage = () => {
         if (event.data?.type === 'KAKAO_PAY_SUCCESS') {
           console.log('결제 완료 메시지 수신:', event.data.payload);
 
-          alert('강의 구매가 완료되었습니다.');
-          removeProduct();
-          navigate('/');
+          // 창 닫힌 후 alert 실행
+          setTimeout(() => {
+            alert('강의 구매가 완료되었습니다.');
+            deleteCart();
+            navigate('/');
+          }, 300); // 300ms 딜레이
         }
       });
     } catch (error) {

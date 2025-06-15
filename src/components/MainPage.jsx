@@ -24,8 +24,8 @@ const categoryImages = {
 };
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, COURSE, EVAL } from '../configs/host-config';
 import styles from './MainPage.module.scss';
 import { useAuth } from '../context/TokenContext';
@@ -39,6 +39,9 @@ const MainPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
   const pageSize = 100;
+
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
 
   const navigate = useNavigate();
 
@@ -57,6 +60,13 @@ const MainPage = () => {
   };
 
   useEffect(() => {
+    setCourses([]);
+    setRatings({});
+    setCurrentPage(0);
+    setLastPage(false);
+  }, [sort]);
+
+  useEffect(() => {
     fetchCourses();
 
     const throttledScroll = throttle(scrollPagination, 1000);
@@ -67,8 +77,21 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    if (currentPage > 0) fetchCourses();
-  }, [currentPage]);
+    if (!isLastPage) {
+      fetchCourses();
+    }
+  }, [currentPage, sort]);
+
+  // ⭐ 정렬 드롭다운 핸들러
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+    // setSearchParams({ sort: selectedSort });
+    setCourses([]);
+    setRatings({});
+    setCurrentPage(0);
+    setLastPage(false);
+    navigate(`/?sort=${selectedSort}`);
+  };
 
   //강의 불러오는 함수
   const fetchCourses = async () => {
@@ -87,19 +110,57 @@ const MainPage = () => {
     setLoading(true);
 
     try {
-      const baseUrl = `${API_BASE_URL}${COURSE}/all`;
+      let baseUrl = ''; // ✅ baseUrl 선언 추가
+
+      if (sort) {
+        baseUrl = `${API_BASE_URL}${COURSE}/all/sort`;
+      } else {
+        baseUrl = `${API_BASE_URL}${COURSE}/all`;
+      }
 
       console.log('baseUrl : ' + baseUrl);
-      const response = await axios.get(baseUrl, { params });
-      console.log('response 값: ', response);
+
+      const response = await axios.get(baseUrl, {
+        params: {
+          ...params,
+          ...(sort ? { sort } : {}),
+        },
+        headers: {
+          Authorization: `Bearer ${userAuth.token}`,
+        },
+      });
+
+      console.log('response 값: ', response.data);
+      console.log('response.content: ', response.content);
       console.log('response.length: ', response.data.length);
 
-      if (response.data.length === 0) {
+      let newCourses = response.content;
+      let courseCnt = response.data.length;
+      if (response.data.content) {
+        console.log('response.data.content 있음');
+        newCourses = response.data.content;
+        courseCnt = response.data.length;
+      } else {
+        console.log('response.data.content 없음');
+        newCourses = response.data;
+        courseCnt = response.data.length;
+      }
+
+      console.log('newCourses: ', newCourses);
+      console.log('courseCnt: ', courseCnt);
+
+      if (courseCnt === 0) {
         setLastPage(true);
       } else {
-        setCourses((prevCourses) => [...prevCourses, ...response.data]);
+        setCourses((prevCourses) => {
+          const existingIds = new Set(prevCourses.map((c) => c.productId));
+          const filteredCourses = newCourses.filter(
+            (c) => !existingIds.has(c.productId),
+          );
+          return [...prevCourses, ...filteredCourses];
+        });
 
-        const productIds = response.data.map((course) => course.productId);
+        const productIds = newCourses.map((course) => course.productId); // ✅ 수정
         fetchCourseRatings(productIds); // 평점 요청
       }
     } catch (error) {
@@ -128,57 +189,74 @@ const MainPage = () => {
     return <div className='course-list'>현재 강의가 없습니다.</div>;
   }
 
-  return (
-    <div className={styles['course-list']}>
-      {courses.map((course) => (
-        <div
-          key={course.productId}
-          className={styles['course-card']}
-          onClick={() =>
-            navigate(`/info/${course.productId}`, {
-              state: { courseId: course.productId },
-            })
-          }
-        >
-          <img src={categoryImages[course.category]} alt={course.category} />
 
-          <div className={styles.info}>
-            <h3 className={styles.title}>
-              <a
-                className={styles.filePath}
-                // href={course.filePath}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {course.productName}
-              </a>
-            </h3>
-            <p className={styles.instructor}>
-              {course.username} [{course.category}]
-            </p>
-            <div
-              style={{
-                display: 'flex',
-              }}
-            >
-              <span style={{ fontWeight: 'bold' }}>
-                ₩{course.price.toLocaleString()}
-              </span>
-              <p
+
+  return (
+    <>
+      <div style={{ padding: "18px" }}>
+        <h2>강의 목록</h2>
+      </div>
+      <div className={styles['sort-bar']}>
+        <select value={sort} onChange={handleSortChange}>
+          <option value=''>기본 정렬</option>
+          <option value='name'>이름순</option>
+          <option value='priceAsc'>가격 낮은 순</option>
+          <option value='priceDesc'>가격 높은 순</option>
+          <option value='ratingDesc'>평점 높은 순</option>
+          <option value='ratingAsc'>평점 낮은 순</option>
+        </select>
+      </div>
+      <div className={styles['course-list']}>
+        {courses.map((course) => (
+          <div
+            key={course.productId}
+            className={styles['course-card']}
+            onClick={() =>
+              navigate(`/info/${course.productId}`, {
+                state: { courseId: course.productId },
+              })
+            }
+          >
+            <img src={categoryImages[course.category]} alt={course.category} />
+
+            <div className={styles.info}>
+              <h3 className={styles.title}>
+                <a
+                  className={styles.filePath}
+                  // href={course.filePath}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {course.productName}
+                </a>
+              </h3>
+              <p className={styles.instructor}>
+                {course.username} [{course.category}]
+              </p>
+              <div
                 style={{
-                  fontWeight: 'bold',
-                  marginLeft: '3rem',
+                  display: 'flex',
                 }}
               >
-                ⭐ {ratings[course.productId]?.toFixed(1) ?? '0.0'}
-              </p>
-              {/* <span className={styles.category}>{course.category}</span> */}
+                <span style={{ fontWeight: 'bold' }}>
+                  ₩{course.price.toLocaleString()}
+                </span>
+                <p
+                  style={{
+                    fontWeight: 'bold',
+                    marginLeft: '3rem',
+                  }}
+                >
+                  ⭐ {ratings[course.productId]?.toFixed(1) ?? '0.0'}
+                </p>
+                {/* <span className={styles.category}>{course.category}</span> */}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-      {/* {(loading && currentPage) > 0 && <div>loading...</div>} */}
-    </div>
+        ))}
+        {/* {(loading && currentPage) > 0 && <div>loading...</div>} */}
+      </div>
+    </>
   );
 };
 
