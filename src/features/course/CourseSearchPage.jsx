@@ -8,6 +8,7 @@ import htmlcssImg from '../../assets/html-css.jpg';
 import jsImg from '../../assets/js.png';
 import reactImg from '../../assets/react.png';
 import springImg from '../../assets/spring.jpg';
+import { useAuth } from '../../context/TokenContext';
 
 const categoryImages = {
   Git: gitImg,
@@ -43,12 +44,15 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 const PAGE_SIZE = 12;
 
 const CourseSearchPage = () => {
+  const userAuth = useAuth();
   console.log('페이지 진입ㅃ!');
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
+
   const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLastPage, setLastPage] = useState(false);
   // 평점 데이터 상태변수
   const [ratings, setRatings] = useState({});
 
@@ -59,25 +63,43 @@ const CourseSearchPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || 'name';
+  const pageParam = parseInt(searchParams.get('page') || '0', 10);
+  const [page, setPage] = useState(0);
+  const pageSize = 16;
 
-  // 드롭다운 변경 시 URL 쿼리 갱신
+  useEffect(() => {
+    if (!isLastPage) {
+      fetchCourses();
+    }
+  }, [currentPage, sort]);
+
+  // ⭐ 정렬 드롭다운 핸들러
   const handleSortChange = (e) => {
     const selectedSort = e.target.value;
-    setSearchParams({ sort: selectedSort });
-  };
+    const params = new URLSearchParams();
+    // setSearchParams({ sort: selectedSort });
+    if (keyword) params.set('keyword', keyword);
+    params.set('sort', selectedSort);
 
+    setCourses([]);
+    setRatings({});
+    setCurrentPage(0);
+    setLastPage(false);
+    // navigate(`/?sort=${selectedSort}`);
+    navigate(`${location.pathname}?${params.toString()}`);
+  };
   // 정렬 기준 바뀌면 API 호출
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(`/api/courses?sort=${sort}`);
-        setCourses(response.data);
-      } catch (error) {
-        console.error('강의 목록 정렬로 불러오기 실패:', error);
-      }
-    };
-    fetchCourses();
-  }, [sort]);
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       const response = await axios.get(`/api/courses?sort=${sort}`);
+  //       setCourses(response.data);
+  //     } catch (error) {
+  //       console.error('강의 목록 정렬로 불러오기 실패:', error);
+  //     }
+  //   };
+  //   fetchCourses();
+  // }, [sort]);
 
   // const filteredCourses = allCourses.filter((course) =>
   //   course.title.toLowerCase().includes(keyword.toLowerCase())
@@ -104,62 +126,112 @@ const CourseSearchPage = () => {
     }
   };
 
+  //강의 불러오는 함수
   const fetchCourses = async (page) => {
+    setCourses([]);
+
+    const params = {
+      size: pageSize,
+      page: currentPage,
+    };
+
     setLoading(true);
 
     let url;
-
     console.log('selectedCategory은 ' + selectedCategory);
+    const category = selectedCategory === 'HTML/CSS' ? 'HTMLCSS' : selectedCategory;
+    const isKeywordSearch = keyword !== '';
+    const isCategorySearch = selectedCategory && selectedCategory !== '전체' && selectedCategory !== '';
+    const isSortSet = !!sort;
+
+    // try {
+    // if (
+    //   selectedCategory !== '전체' &&
+    //   selectedCategory !== undefined &&
+    //   selectedCategory !== ''
+    // ) {
+    //   url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
+    //     category,
+    //   )}?page=${page}&size=${12}`;
+    // } else if (keyword !== undefined && keyword !== '') {
+    //   // console.log("keyword은 " + keyword);
+    //   url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(
+    //     keyword,
+    //   )}`;
+    // } else {
+    //   // url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
+    //   url = `${API_BASE_URL}${COURSE}/all`;
+    // }
 
     try {
-      if (
-        selectedCategory !== '전체' &&
-        selectedCategory !== undefined &&
-        selectedCategory !== ''
-      ) {
-        let category;
-        if (selectedCategory === 'HTML/CSS') {
-          category = 'HTMLCSS';
-        } else {
-          category = selectedCategory;
-        }
-
-        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(
-          category,
-        )}?page=${page}&size=${12}`;
-      } else if (keyword !== undefined && keyword !== '') {
-        // console.log("keyword은 " + keyword);
-        url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(
-          keyword,
-        )}`;
-      } else {
-        // url = `${API_BASE_URL}${COURSE}/list?page=${page}&size=${PAGE_SIZE}`;
-        url = `${API_BASE_URL}${COURSE}/all`;
+      // ✅ 1. 키워드만
+      if (isKeywordSearch && !isCategorySearch && !isSortSet) {
+        url = `${API_BASE_URL}${COURSE}/search?keyword=${encodeURIComponent(keyword)}`;
       }
 
-      console.log(url);
+      // ✅ 2. 카테고리만
+      else if (!isKeywordSearch && isCategorySearch && !isSortSet) {
+        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(category)}`;
+      }
 
-      const response = await axios.get(url);
+      // ✅ 3. 정렬만
+      else if (!isKeywordSearch && !isCategorySearch && isSortSet) {
+        url = `${API_BASE_URL}${COURSE}/all/sort`;
+      }
 
-      console.log(response);
+      // ✅ 4. 카테고리 + 정렬
+      else if (!isKeywordSearch && isCategorySearch && isSortSet) {
+        url = `${API_BASE_URL}${COURSE}/category/${encodeURIComponent(category)}/sort`;
+      }
 
+
+      console.log('[fetchCourses] URL:', url);
+      const response = await axios.get(url, {
+        params: {
+          ...params,
+          ...(sort ? { sort } : {}),
+        },
+        headers: {
+          Authorization: `Bearer ${userAuth.token}`,
+        },
+      });
+      // setCourses(response.data);
+
+      console.log('response.data 값: ', response.data);
+      console.log('response.content: ', response.content);
+      console.log('response.data.length: ', response.data.length);
+      console.log('response.data.content: ', response.data.content);
+      console.log('response.data.content.length: ', response.data.content.length);
+
+
+      let newCourses = response.content;
+      let courseCnt = response.data.length;
       if (response.data.content) {
-        // 페이징 결과
-        setCourses(response.data.content);
-        setTotalPages(response.data.totalPages);
-
-        // 평점을 볼 강의 리스트를 eva-ervice로 넘김
-        const productIds = response.data.content.map(
-          (course) => course.productId,
-        );
-        fetchCourseRatings(productIds);
+        console.log('response.data.content 있음');
+        newCourses = response.data.content;
+        courseCnt = response.data.content.length;
       } else {
-        // 전체 목록
-        setCourses(response.data);
-        setTotalPages(1);
+        console.log('response.data.content 없음');
+        newCourses = response.data;
+        courseCnt = response.data.length;
+      }
 
-        const productIds = response.data.map((course) => course.productId);
-        fetchCourseRatings(productIds);
+      console.log('newCourses: ', newCourses);
+      console.log('courseCnt: ', courseCnt);
+
+      if (courseCnt === 0) {
+        setLastPage(true);
+      } else {
+        setCourses((prevCourses) => {
+          const existingIds = new Set(prevCourses.map((c) => c.productId));
+          const filteredCourses = newCourses.filter(
+            (c) => !existingIds.has(c.productId),
+          );
+          return [...prevCourses, ...filteredCourses];
+        });
+
+        const productIds = newCourses.map((course) => course.productId); // ✅ 수정
+        fetchCourseRatings(productIds); // 평점 요청
       }
     } catch (error) {
       console.error('강의 불러오기 실패:', error);
@@ -172,18 +244,20 @@ const CourseSearchPage = () => {
 
   useEffect(() => {
     fetchCourses(page);
-  }, [selectedCategory, page, keyword]);
+  }, [selectedCategory, keyword, sort, page]);
 
-  useEffect(() => {
-    fetchCourses(page);
-  }, [page]);
+  const updatePage = (newPage) => {
+    searchParams.set('page', newPage);
+    setSearchParams(searchParams);
+    setPage(newPage);
+  };
 
   const handlePrev = () => {
-    if (page > 0) setPage(page - 1);
+    if (page > 0) updatePage(page - 1);
   };
 
   const handleNext = () => {
-    if (page < totalPages - 1) setPage(page + 1);
+    if (page < totalPages - 1) updatePage(page + 1);
   };
 
   if (loading) {
@@ -196,28 +270,20 @@ const CourseSearchPage = () => {
 
   return (
     <>
-      <div>
-        <div>
-          <label>정렬: </label>
-          <select value={sort} onChange={handleSortChange}>
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <ul>
-          {courses.map((course) => (
-            <li key={course.productId}>
-              <h3>{course.productName}</h3>
-              <p>{course.description}</p>
-              <p>₩{course.price}</p>
-            </li>
-          ))}
-        </ul>
+      <div style={{ padding: "18px" }}>
+        <h2>강의 목록</h2>
       </div>
+      <div className={styles['sort-bar']}>
+        <select value={sort} onChange={handleSortChange}>
+          <option value=''>기본 정렬</option>
+          <option value='name'>이름순</option>
+          <option value='priceAsc'>가격 낮은 순</option>
+          <option value='priceDesc'>가격 높은 순</option>
+          <option value='ratingDesc'>평점 높은 순</option>
+          <option value='ratingAsc'>평점 낮은 순</option>
+        </select>
+      </div>
+
 
       <div className={styles['course-list']}>
         {courses.map((course) => (
@@ -237,6 +303,9 @@ const CourseSearchPage = () => {
               <h3 className={styles.title}>
                 <a className={styles.filePath}>{course.productName}</a>
               </h3>
+              <p className={styles.description}>
+                {course.description}
+              </p>
               <p className={styles.instructor}>
                 {course.username} [{course.category}]
               </p>
@@ -262,7 +331,7 @@ const CourseSearchPage = () => {
           {[...Array(totalPages)].map((_, idx) => (
             <button
               key={idx}
-              onClick={() => setPage(idx)}
+              onClick={() => updatePage(idx)}
               className={page === idx ? 'active' : ''}
             >
               {idx + 1}

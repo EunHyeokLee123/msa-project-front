@@ -47,11 +47,14 @@ const MainPage = () => {
 
   const fetchCourseRatings = async (productIds) => {
     try {
+      console.log("요청 url: ", `${API_BASE_URL}${EVAL}/course-eval-rating`)
+      console.log("post 데이타: ", productIds)
       const response = await axios.post(
-        `${API_BASE_URL}${EVAL}/course-eval-rating`,
+        `${API_BASE_URL}${EVAL}/course-eval-rating-feign`,
         productIds,
       );
       if (response.data && response.data.result) {
+        console.log("평점 response값: ", response)
         setRatings((prev) => ({ ...prev, ...response.data.result }));
       }
     } catch (error) {
@@ -230,6 +233,9 @@ const MainPage = () => {
                   {course.productName}
                 </a>
               </h3>
+              <p className={styles.description}>
+                {course.description}
+              </p>
               <p className={styles.instructor}>
                 {course.username} [{course.category}]
               </p>
