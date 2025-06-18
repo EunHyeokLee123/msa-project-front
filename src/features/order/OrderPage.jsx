@@ -244,6 +244,8 @@ const OrderPage = () => {
         orderProducts,
       );
 
+      console.log(response);
+
       console.log('이거는 response.data', response.data);
 
       // if (!response.ok) {
