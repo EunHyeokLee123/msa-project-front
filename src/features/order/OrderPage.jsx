@@ -244,15 +244,15 @@ const OrderPage = () => {
         orderProducts,
       );
 
-      // console.log(response);
+      console.log(response);
 
-      // console.log('이거는 response.data', response.data);
+      console.log('이거는 response.data', response.data);
 
       // if (!response.ok) {
       //   throw new Error('서버 요청 실패');
       // }
 
-      const data = response;
+      const data = response.data;
 
       // 카카오페이 결제창 열기
       const popup = window.open(
